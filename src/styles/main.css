@@ -1,0 +1,24 @@
+body{
+    background-color: #0C0910;
+}
+
+header{
+    align-items: center;
+    display: flex;
+    gap: 0 20px;
+    height: 40px;
+    justify-content: flex-end;
+    padding-right: 10px;
+    border: 1px solid red;
+}
+header img{
+    cursor: pointer;
+}
+
+#title-web-page{
+    color: #FFF;
+    font-size: 40px;
+}
+main{
+    border: 1px solid blue;
+}
