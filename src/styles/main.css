@@ -1,7 +1,20 @@
+/* @import url('https://fonts.googleapis.com/css2?family=Ubuntu+Mono&display=swap');
+@import url('https://fonts.cdnfonts.com/css/garishing-worse');
+@import url('https://fonts.cdnfonts.com/css/ignis-et-glacies-extra-sharp'); */
+@import url('https://fonts.cdnfonts.com/css/battambang-2');
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu+Mono');
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300&display=swap');
+
 body{
-    background-color: #0C0910;
+    /* background-color: #002bb9;
+    background-image: linear-gradient(180deg, #002bb9 0%, #112d5e 8%, #1d1a27 100%); */
+    background-color: #112d5e;
+    background-image: linear-gradient(180deg, #112d5e 0%, #1d1a27 90%);
+
+    min-height: 100vh;
 }
 
+/* header */
 header{
     align-items: center;
     display: flex;
@@ -9,16 +22,74 @@ header{
     height: 40px;
     justify-content: flex-end;
     padding-right: 10px;
-    border: 1px solid red;
 }
 header img{
     cursor: pointer;
 }
 
+/* main */
+main{
+    /* border: 1px solid blue; */
+}
 #title-web-page{
     color: #FFF;
-    font-size: 40px;
+    font-size: 60px;
+    font-family: 'Battambang', sans-serif;                           
+    text-align: center;
+    word-wrap: break-word;
 }
-main{
-    border: 1px solid blue;
+.search{
+}
+.search__container{
+    box-sizing: border-box;
+    margin: 0 auto;
+    width: 50%;
+    border-radius: 20px;
+    color: #000;
+    display: grid;  
+    grid-template-columns: 1fr 8fr 1fr;
+    /* height: 50px; */
+    /* min-height: 50px; */
+}
+
+.search__button{
+    background-color:  #FFF;
+    border: none;
+    cursor: pointer;
+}
+.search__button:focus{
+    box-shadow:  0px 0px 10px 2px rgb(66, 50, 216);
+    outline: 2px solid blue;
+}
+
+.search__button--left{
+    border-radius: 20px 0 0 20px;
+}
+.search__button--right{
+    border-radius: 0 20px 20px 0;
+}
+.search__input{
+    border: none;
+    box-sizing: border-box;
+    font-size: 20px;
+    padding: 10px;
+}
+.search__input:focus{
+    outline: none;
+}
+
+
+
+
+
+
+
+
+code{
+    font-family: 'Ubuntu Mono', monospace;
+    color: #FFF;
+}
+#info{
+    font-family: 'Ubuntu', sans-serif;
+    color: #FFF;
 }
