@@ -6,11 +6,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300&display=swap');
 
 body{
-    /* background-color: #002bb9;
-    background-image: linear-gradient(180deg, #002bb9 0%, #112d5e 8%, #1d1a27 100%); */
     background-color: #112d5e;
-    background-image: linear-gradient(180deg, #112d5e 0%, #1d1a27 90%);
-
+    background-image: linear-gradient(180deg, #0c2653 0%, #1d1a27 80%);
+    color: #FFF;
     min-height: 100vh;
 }
 
@@ -18,6 +16,7 @@ body{
 header{
     align-items: center;
     display: flex;
+    box-sizing: border-box;
     gap: 0 20px;
     height: 40px;
     justify-content: flex-end;
@@ -28,40 +27,32 @@ header img{
 }
 
 /* main */
-main{
-    /* border: 1px solid blue; */
-}
 #title-web-page{
     color: #FFF;
-    font-size: 60px;
     font-family: 'Battambang', sans-serif;                           
+    font-size: 60px;
     text-align: center;
     word-wrap: break-word;
 }
 .search{
-}
-.search__container{
     box-sizing: border-box;
-    margin: 0 auto;
-    width: 50%;
     border-radius: 20px;
     color: #000;
     display: grid;  
     grid-template-columns: 1fr 8fr 1fr;
-    /* height: 50px; */
-    /* min-height: 50px; */
+    margin: 0 auto;
+    width: 50%;
 }
-
 .search__button{
     background-color:  #FFF;
     border: none;
     cursor: pointer;
+    z-index: 1;
 }
 .search__button:focus{
-    box-shadow:  0px 0px 10px 2px rgb(66, 50, 216);
-    outline: 2px solid blue;
+    box-shadow:  0px 0px 10px 2px #ce04a2;
+    outline: 2px solid #ce04a2;
 }
-
 .search__button--left{
     border-radius: 20px 0 0 20px;
 }
@@ -71,11 +62,24 @@ main{
 .search__input{
     border: none;
     box-sizing: border-box;
+    font-family: 'Ubuntu Mono', monospace;
     font-size: 20px;
     padding: 10px;
 }
 .search__input:focus{
     outline: none;
+}
+
+/* table */
+.my-container{
+    margin: 30px auto 0 auto;
+    width: 50%;
+}
+.table{
+    /* border: 1px solid red; */
+    background-color: #333235;
+    border-radius: 10px;
+    width: 100%;
 }
 
 
