@@ -17,10 +17,14 @@ const dev = {
     },
     devServer: {
         compress: true,
-        port: 3010
+        static: {
+          directory: path.join(__dirname, '../src'),
+        },
+        port: 3010,
       },
     // target: "web", // Ignora browserslist de package.json
     devtool: "eval-source-map",
+    // devtool: "eval",
     plugins:[
       new Dotenv({
         path: path.join(__dirname, "../.env.development.local")

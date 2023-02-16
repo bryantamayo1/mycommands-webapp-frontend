@@ -60,7 +60,7 @@ function init(){
     console.log(window.location);
     document.addEventListener("DOMContentLoaded", () => {
         handleFocusInputSearch();
-        showDefaultsCoomands();
+        // showDefaultsCoomands();
         handleButtonsLanguage();
     });
 }

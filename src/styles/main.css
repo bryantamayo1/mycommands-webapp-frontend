@@ -75,12 +75,18 @@ header img{
     margin: 30px auto 0 auto;
     width: 50%;
 }
-.table{
-    /* border: 1px solid red; */
+.list-container{
     background-color: #333235;
     border-radius: 10px;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    margin: 10px 0;
     width: 100%;
 }
+.list-container p{
+    margin: 10px 0;
+}
+
 
 
 
