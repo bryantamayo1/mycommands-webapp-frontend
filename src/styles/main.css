@@ -6,10 +6,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300&display=swap');
 
 body{
-    background-color: #112d5e;
-    background-image: linear-gradient(180deg, #0c2653 0%, #1d1a27 80%);
+    background-color: #1d1a27;
+    /* background-image: linear-gradient(180deg, #0c2653 0%, #1d1a27 30%); */
     color: #FFF;
     min-height: 100vh;
+}
+.background-home{
+    background-color: #112d5e;
+    background-image: linear-gradient(180deg, #0c2653 0%, #1d1a27 50%);
 }
 
 /* header */
@@ -26,20 +30,59 @@ header img{
     cursor: pointer;
 }
 
-/* main */
 #title-web-page{
     color: #FFF;
     font-family: 'Battambang', sans-serif;                           
-    font-size: 60px;
+    font-size: 70px;
+    margin: 0;
+    padding: 70px 0;
     text-align: center;
     word-wrap: break-word;
+}
+/* main */
+main{
+    background-color: #1d1a27;
+    min-height: calc( 100vh - 40px - 220px - 1px);
+    /* height: 100%; */
+}
+/* icon search */
+.fa-magnifying-glass{
+    box-sizing: border-box;
+    padding: 2px 0 0 5px;
+}
+/* icon filter */
+#icon-filter{
+    width: 20px;
+}
+#icon-filter div{
+    border: 1.1px solid #000;
+    box-sizing: border-box;
+    margin: 4px 0;
+    position: relative;
+    width: 100%;
+}
+.icon-filter__circle{
+    background-color: #FFF;
+    border-radius: 50%;
+    box-sizing: border-box;
+    border: 1.5px solid #000;
+    height: 5px;
+    margin: 0;
+    position: absolute;
+    top: -2.5px;
+    left: 3px;
+    width: 5px;
+    z-index: 99;
+}
+.icon-filter__circle--middle{
+    left: 10px;
 }
 .search{
     box-sizing: border-box;
     border-radius: 20px;
     color: #000;
     display: grid;  
-    grid-template-columns: 1fr 8fr 1fr;
+    grid-template-columns: 35px 8fr 35px;
     margin: 0 auto;
     width: 50%;
 }
@@ -70,21 +113,27 @@ header img{
     outline: none;
 }
 
-/* table */
+/* list */
 .my-container{
     margin: 30px auto 0 auto;
     width: 50%;
 }
 .list-container{
-    background-color: #333235;
-    border-radius: 10px;
+    background-color: #373739;
+    background-image: linear-gradient(62deg, #373739 0%, #2e2e30 33%);    
+    border-radius: 5px;
     display: grid;
-    grid-template-columns: 2fr 1fr;
-    margin: 10px 0;
+    font-family: 'Ubuntu Mono', monospace;
+    grid-template-columns: 1fr 2fr;
+    margin: 15px 0;
     width: 100%;
 }
 .list-container p{
+    box-sizing: border-box;
     margin: 10px 0;
+    padding: 0 10px;
+}
+.list-container p:first-child{
 }
 
 

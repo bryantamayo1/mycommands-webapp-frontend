@@ -4,67 +4,58 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <title>My commands</title>
 </head>
 <body>
-    <header>
-        <img src="./img/lang-es.png" alt="spanish" id="es" width="20px" height="15px"/>
-        <img src="./img/lang-en.png" alt="english" id="en" width="20px" height="15px"/>
-    </header>
-
-    <main>
+    <div class="background-home">
+        <header>
+            <img src="./img/lang-es.png" alt="spanish" id="es" width="20px" height="15px"/>
+            <img src="./img/lang-en.png" alt="english" id="en" width="20px" height="15px"/>
+        </header>
         <!-- Title web page -->
         <p id="title-web-page">My commands</p>
-        
+    </div>
+
+    <main>
         <!-- Search -->
         <section class="search">
-            <button class="search__button search__button--left">lupa</button>
+            <button class="search__button search__button--left">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
             <input class="search__input">
-            <button class="search__button search__button--right">filter</button>
+            <button class="search__button search__button--right">
+                <!-- Icon filter -->
+                <div id="icon-filter">
+                    <div>
+                        <p class="icon-filter__circle"></p>
+                    </div>
+                    <div>
+                        <p class="icon-filter__circle icon-filter__circle--middle"></p>
+                    </div>
+                    <div>
+                        <p class="icon-filter__circle"></p>
+                    </div>
+                </div>
+            </button>
         </section>
 
-        <!-- Table -->
+        <!-- List -->
         <section class="my-container">
-            <div class="list-container">
+            <!-- <div class="list-container">
                 <p>111</p>
                 <p>456</p>
-            </div>
-            <div class="list-container">
-                <p>123</p>
-                <p>456</p>
-            </div>
-            <div class="list-container">
-                <p>123</p>
-                <p>456</p>
-            </div>
-            <div class="list-container">
-                <p>aaa</p>
-                <p>999</p>
-            </div>
-            <div class="list-container">
-                <p>aaa</p>
-                <p>999</p>
-            </div>
-            <div class="list-container">
-                <p>---</p>
-                <p>999</p>
-            </div>
-            <div class="list-container">
-                <p>***</p>
-                <p>999</p>
-            </div>
-            <div class="list-container">
-                <p>qqq</p>
-                <p>dd</p>
-            </div>
-
+            </div> -->
 
 
         </section>
+
+
+
       
     </main>
     
-    <code>
+    <!-- <code>
         sudo reboot My commands
         <br>
     </code>
@@ -76,6 +67,6 @@
 
     <footer>
 
-    </footer>
+    </footer> -->
 </body>
 </html>
