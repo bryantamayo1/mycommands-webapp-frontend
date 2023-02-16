@@ -1,31 +1,10 @@
 import '../styles/normalize.css';
 import '../styles/main.css';
 import { Services } from './services';
+import { handleCloseFilters, handleFilters, handleFocusInputSearch } from './effects';
 
 // Local variables
 let inputValue = "";
-
-/**
- * Hnadle input’s focus search
- */
-const  handleFocusInputSearch = () => {
-    const input = document.getElementsByClassName("search__input")[0];
-    const search__container = document.getElementsByClassName("search")[0];
-    
-    // Handle style css
-    input.addEventListener("focus", () => {
-        search__container.style.boxShadow  = "0px 0px 10px 1px #ce04a2";
-        search__container.style.outline = "1px solid #ce04a2";
-
-        // Other style
-        // search__container.style.boxShadow  = "0px 0px 10px 2px rgb(66, 50, 216)";
-        // search__container.style.outline = "1px solid blue";
-    });
-    input.addEventListener("blur", () => {
-        search__container.style.boxShadow  = "";
-        search__container.style.outline = "";
-    });
-}
 
 /**
  * Show 20 commands
@@ -36,10 +15,7 @@ const getCommands = async(lan, page, category, command, meaning) => {
     // Clean data
     const list_container = document.querySelectorAll(".list-container")
     .forEach(item => item.remove());
-    console.log("list-container")
-    console.log(list_container);
-    // list_container?.remove();
-    console.log(list_container);
+
 
     const data = await Services.getCommands(lan, page, category, command, meaning);
     // Show data in list
@@ -72,19 +48,23 @@ const handleButtonsLanguage = () => {
 }
 
 /**
- * Hnadle input’s value
+ * Hnadle input’s value and button magnifying glass
  */
 const handleInputSearch = () => {
     const lan = "/en", page = 1, category = "all";
+    const button = document.getElementsByClassName("search__button search__button--left")[0];
     const input = document.getElementsByClassName("search__input")[0];
     input.addEventListener("keydown", async(event) => {
         // Get input's value'
         if(event.key === "Enter"){
             // Get commands
             getCommands(lan, page, category, input.value);
-
+            
             console.log(input.value);
         }
+    });
+    button.addEventListener("click", () => {
+        getCommands(lan, page, category, input.value);
     });
 }
 
@@ -92,10 +72,14 @@ function init(){
     console.log("init----");
     console.log(window.location);
     document.addEventListener("DOMContentLoaded", () => {
-        handleFocusInputSearch();
         getCommands("/en", 1);
         handleButtonsLanguage();
         handleInputSearch();
+        
+        // Effects in style
+        handleFocusInputSearch();
+        handleFilters();
+        handleCloseFilters();
     });
 }
 

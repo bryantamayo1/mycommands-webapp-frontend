@@ -6,8 +6,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300&display=swap');
 
 body{
-    background-color: #1d1a27;
-    /* background-image: linear-gradient(180deg, #0c2653 0%, #1d1a27 30%); */
     color: #FFF;
     min-height: 100vh;
 }
@@ -84,7 +82,7 @@ main{
     display: grid;  
     grid-template-columns: 35px 8fr 35px;
     margin: 0 auto;
-    width: 50%;
+    width: 500px;
 }
 .search__button{
     background-color:  #FFF;
@@ -93,7 +91,7 @@ main{
     z-index: 1;
 }
 .search__button:focus{
-    box-shadow:  0px 0px 10px 2px #ce04a2;
+    box-shadow:  0px 0px 15px 2px #ce04a2;
     outline: 2px solid #ce04a2;
 }
 .search__button--left{
@@ -108,15 +106,55 @@ main{
     font-family: 'Ubuntu Mono', monospace;
     font-size: 20px;
     padding: 10px;
+    width: 100%;
 }
 .search__input:focus{
     outline: none;
 }
+/* filter options */
+.filters{
+    background-color: #1d1a27;
+    height: 100%;
+    position: fixed;
+    right: 0;
+    top: 0;
+    width: 0;
+    z-index: 999;
+}
+.filters__close{
+    background-color: inherit;
+    cursor: pointer;
+    height: 40px;
+    opacity: 0.6;
+    position: relative;
+    transition: all 0.5s ease-in;
+    width: 40px;
+}
+.filters__close p:nth-child(1){
+    background-color: #FFF;
+    border: 1px solid #FFF;
+    margin: 0;
+    position: absolute;
+    width: 20px;
+    transform: rotate(45deg);
+}
+.filters__close p:nth-child(2){
+    background-color: #FFF;
+    border: 1px solid #FFF;
+    margin: 0;
+    position: absolute;
+    width: 20px;
+    transform: rotate(-45deg);
+}
+.filters__close:hover{
+    opacity: 1;
+}
+
 
 /* list */
 .my-container{
     margin: 30px auto 0 auto;
-    width: 50%;
+    width: 70%;
 }
 .list-container{
     background-color: #373739;
@@ -133,8 +171,7 @@ main{
     margin: 10px 0;
     padding: 0 10px;
 }
-.list-container p:first-child{
-}
+
 
 
 
@@ -151,4 +188,15 @@ code{
 #info{
     font-family: 'Ubuntu', sans-serif;
     color: #FFF;
+}
+
+@media(max-width: 768px){
+    .search{
+        width: 400px;
+    }
+}
+@media(max-width: 480px){
+    .search{
+        width: 250px;
+    }
 }
