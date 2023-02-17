@@ -5,6 +5,7 @@ import { handleCloseFilters, handleFilters, handleFocusInputSearch } from './eff
 
 // Local variables
 let inputValue = "";
+let buffer_filters = [];
 
 /**
  * Show 20 commands
@@ -59,13 +60,69 @@ const handleInputSearch = () => {
         if(event.key === "Enter"){
             // Get commands
             getCommands(lan, page, category, input.value);
-            
-            console.log(input.value);
         }
     });
     button.addEventListener("click", () => {
         getCommands(lan, page, category, input.value);
     });
+}
+
+/**
+ * Handle toggles filters, create and handle elements
+ * Besides, add btn apply
+ */
+const handleToggleFiletrs = async() => {
+    const filters = document.getElementsByClassName("filters")[0];
+    const data = await Services.getFilters();
+    const info = data.data;
+    for(let i = 0; i < info.length; i++){
+        const span = document.createElement("span");
+        span.classList.add("toggle__slider");
+
+        const btn = document.createElement("button");
+        btn.dataset.id = i;
+        btn.classList.add("toggle");
+        btn.appendChild(span);
+        buffer_filters[i] = {index: i, active: false, ...info[i]}
+        btn.addEventListener("click", (event) => handleBtnToggle(event, i));
+
+        const div = document.createElement("div");
+        div.appendChild( btn );
+        
+        const version = document.createElement("p");
+        version.appendChild( document.createTextNode( info[i].category ) );
+        div.appendChild( version );
+        div.classList.add("toggle-container");
+
+        filters.appendChild(div);
+    }
+
+    // Create btn to apply filters
+    const btn_apply = document.createElement("button");
+    btn_apply.appendChild( document.createTextNode( "Apply" ) );
+    btn_apply.classList.add("btn_apply");
+    
+    const btn_apply_container = document.createElement("div");
+    btn_apply_container.appendChild(btn_apply);
+
+    filters.appendChild(btn_apply_container);
+}
+
+/**
+ * Modify style according to active or not button
+ */
+const handleBtnToggle = (event, i) => {
+    const btn = document.getElementsByClassName("toggle")[i];
+    const circle = document.getElementsByClassName("toggle__slider")[i];
+    if(buffer_filters[i].active){
+        btn.classList.remove("toggle-active");
+        circle.classList.remove("toggle__slider--move-to-right");
+        buffer_filters[i].active = false;
+    }else{
+        btn.classList.add("toggle-active");
+        circle.classList.add("toggle__slider--move-to-right");
+        buffer_filters[i].active = true;
+    }
 }
 
 function init(){
@@ -75,6 +132,7 @@ function init(){
         getCommands("/en", 1);
         handleButtonsLanguage();
         handleInputSearch();
+        handleToggleFiletrs();
         
         // Effects in style
         handleFocusInputSearch();

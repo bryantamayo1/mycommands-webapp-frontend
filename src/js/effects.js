@@ -36,10 +36,13 @@ export const handleFilters = () => {
  * Close menu filters
  */
 export const handleCloseFilters = () => {
-    const button_filters = document.getElementsByClassName("filters__close")[0];
+    const filters__btn__close = document.getElementsByClassName("filters__btn__close")[0];
     const filters = document.getElementsByClassName("filters")[0];
+    const input = document.getElementsByClassName("search__input")[0];
 
-    button_filters.addEventListener("click", () => {   
-        filters.style.width = "0";
+    filters__btn__close.addEventListener("click", () => {   
+        filters.style.width = 0;
+        // Change focus because an error in button:focus
+        input.focus();
     });
 }
