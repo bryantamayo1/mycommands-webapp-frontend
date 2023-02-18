@@ -1,16 +1,22 @@
 import '../styles/normalize.css';
 import '../styles/main.css';
 import { Services } from './services';
-import { handleCloseFilters, handleFilters, handleFocusInputSearch } from './effects';
+import { closeMenuFilter, handleCloseFilters, handleFilters, handleFocusInputSearch } from './effects';
 
 // Local variables
-let inputValue = "";
+// Store state of each filters
 let buffer_filters = [];
+let local_lan = "/en";
+let local_page = 1;
+let loca_input_value = "";
 
 /**
  * Show 20 commands
  * @param {string} lan 
  * @param {number} page 
+ * @param {string} category 
+ * @param {string} command 
+ * @param {string} meaning 
  */
 const getCommands = async(lan, page, category, command, meaning) => {
     // Clean data
@@ -30,6 +36,7 @@ const getCommands = async(lan, page, category, command, meaning) => {
         div.appendChild(column_1);
         div.appendChild(column_2);
         div.classList.add("list-container");
+        
         my_container.appendChild(div);
     }
 }
@@ -52,18 +59,23 @@ const handleButtonsLanguage = () => {
  * Hnadle input’s value and button magnifying glass
  */
 const handleInputSearch = () => {
-    const lan = "/en", page = 1, category = "all";
     const button = document.getElementsByClassName("search__button search__button--left")[0];
     const input = document.getElementsByClassName("search__input")[0];
+    
     input.addEventListener("keydown", async(event) => {
+        let filter = buffer_filters.find(item => item.active === true);
         // Get input's value'
         if(event.key === "Enter"){
+            loca_input_value = input.value;
             // Get commands
-            getCommands(lan, page, category, input.value);
+            getCommands(local_lan, local_page, filter._id, loca_input_value);
         }
     });
     button.addEventListener("click", () => {
-        getCommands(lan, page, category, input.value);
+        loca_input_value = input.value;
+        let filter = buffer_filters.find(item => item.active === true);
+        // Search active filter
+        getCommands(local_lan, local_page, filter._id, loca_input_value);
     });
 }
 
@@ -75,16 +87,25 @@ const handleToggleFiletrs = async() => {
     const filters = document.getElementsByClassName("filters")[0];
     const data = await Services.getFilters();
     const info = data.data;
-    for(let i = 0; i < info.length; i++){
+
+    // Push first category All
+    buffer_filters[0] = {index: 0, active: true, _id: "all"}
+    const btn = document.getElementsByClassName("toggle")[0];
+    const circle = document.getElementsByClassName("toggle__slider")[0];
+    btn.classList.add("toggle-active");
+    circle.classList.add("toggle__slider--move-to-right");
+    const btn_toggle_first = document.getElementsByClassName("toggle")[0];
+    btn_toggle_first.addEventListener("click", event => handleBtnToggle(event, 0));
+
+    for(let i = 0; i < info.length; i++){       
         const span = document.createElement("span");
         span.classList.add("toggle__slider");
 
         const btn = document.createElement("button");
-        btn.dataset.id = i;
         btn.classList.add("toggle");
         btn.appendChild(span);
-        buffer_filters[i] = {index: i, active: false, ...info[i]}
-        btn.addEventListener("click", (event) => handleBtnToggle(event, i));
+        buffer_filters[i + 1] = {index: i + 1, active: false, ...info[i]}
+        btn.addEventListener("click", (event) => handleBtnToggle(event, i + 1));
 
         const div = document.createElement("div");
         div.appendChild( btn );
@@ -98,11 +119,17 @@ const handleToggleFiletrs = async() => {
     }
 
     // Create btn to apply filters
+    const text_apply = document.createElement("p");
+    text_apply.classList.add("text_apply");
+    text_apply.appendChild( document.createTextNode("Apply")  );
+
     const btn_apply = document.createElement("button");
-    btn_apply.appendChild( document.createTextNode( "Apply" ) );
+    btn_apply.addEventListener("click", handleBtnApply);
     btn_apply.classList.add("btn_apply");
+    btn_apply.appendChild(text_apply);
     
     const btn_apply_container = document.createElement("div");
+    btn_apply_container.classList.add("btn-apply-container");
     btn_apply_container.appendChild(btn_apply);
 
     filters.appendChild(btn_apply_container);
@@ -110,19 +137,39 @@ const handleToggleFiletrs = async() => {
 
 /**
  * Modify style according to active or not button
+ * Only one filter can be actived
  */
 const handleBtnToggle = (event, i) => {
     const btn = document.getElementsByClassName("toggle")[i];
     const circle = document.getElementsByClassName("toggle__slider")[i];
-    if(buffer_filters[i].active){
-        btn.classList.remove("toggle-active");
-        circle.classList.remove("toggle__slider--move-to-right");
-        buffer_filters[i].active = false;
+
+    // Search actived toggle in buffer_filters
+    const filterActived = buffer_filters.findIndex(item => item.active === true);
+    if(i === filterActived){
+        return;
     }else{
+        // Clean all filters
+        const btn_filter = document.querySelectorAll(".toggle");
+        const toggle__slider = document.querySelectorAll(".toggle__slider");
+        btn_filter.forEach( (item, index) => {
+            item.classList.remove("toggle-active");
+            toggle__slider[index].classList.remove("toggle__slider--move-to-right");
+            buffer_filters[index].active = false; 
+        });
+
         btn.classList.add("toggle-active");
         circle.classList.add("toggle__slider--move-to-right");
         buffer_filters[i].active = true;
     }
+}
+
+/**
+ * hnadle btn Apply in menu filters
+ */
+const handleBtnApply = (event) => {
+    let filter = buffer_filters.find(item => item.active === true);
+    getCommands(local_lan, local_page, filter._id, loca_input_value);
+    closeMenuFilter();
 }
 
 function init(){
