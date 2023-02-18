@@ -4,20 +4,94 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <title>My commands</title>
 </head>
 <body>
-    <header>
-        <img src="./img/lang-es.png" alt="spanish" width="20px" height="15px"/>
-        <img src="./img/lang-en.png" alt="english" width="20px" height="15px"/>
-    </header>
+    <div class="background-home">
+        <header>
+            <img src="./img/lang-es.png" alt="spanish" id="es" width="20px" height="15px"/>
+            <img src="./img/lang-en.png" alt="english" id="en" width="20px" height="15px"/>
+        </header>
+        <!-- Title web page -->
+        <p id="title-web-page">My commands</p>
+    </div>
 
     <main>
-        <p id="title-web-page">My commands</p>
+        <!-- Search -->
+        <section class="search">
+            <button class="search__button search__button--left">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+            <input class="search__input">
+            <button class="search__button search__button--right">
+                <!-- Icon filter -->
+                <div id="icon-filter">
+                    <div>
+                        <p class="icon-filter__circle"></p>
+                    </div>
+                    <div>
+                        <p class="icon-filter__circle icon-filter__circle--middle"></p>
+                    </div>
+                    <div>
+                        <p class="icon-filter__circle"></p>
+                    </div>
+                </div>
+            </button>
+        </section>
+
+        <!-- Filter options -->
+        <section class="filters">
+            <div class="filters__btn__container">
+                <button class="filters__btn__close">
+                    <p></p>
+                    <p></p>
+                </button>
+            </div>
+
+            <!-- Toggles -->
+            <div class="toggle-container">
+                <button class="toggle">
+                    <span class="toggle__slider"></span>
+                </button>
+                <p class="version-filter">All</p>
+            </div>
+
+            <!-- Btn apply -->
+            <!-- <div class="btn-apply-container">
+                <button class="btn_apply">
+                    Apply
+                </button>
+            </div> -->
+        </section>
+
+        <!-- List -->
+        <section class="my-container">
+            <!-- <div class="list-container">
+                <p>111</p>
+                <p>456</p>
+            </div> -->
+
+
+        </section>
+
+
+
+      
     </main>
+    
+    <!-- <code>
+        sudo reboot My commands
+        <br>
+    </code>
+    
+    <div id="info">
+        sudo reboot My commands
+
+    </div>
 
     <footer>
 
-    </footer>
+    </footer> -->
 </body>
 </html>

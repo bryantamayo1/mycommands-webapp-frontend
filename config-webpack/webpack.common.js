@@ -21,7 +21,14 @@ module.exports = {
                 test: /\.m?js$/,
                 include: path.resolve(__dirname, '../src/js'),
                 exclude: /node_modules/,
-                use: "babel-loader"
+                use: {
+                    loader: "babel-loader",
+                    options: {
+                        presets: [
+                            ['@babel/preset-env', { targets: "defaults" }]
+                        ]
+                    }
+                    }
             },
             // {
             //     test: /\.css$/i,
@@ -39,7 +46,7 @@ module.exports = {
     },
     plugins:[
         new HtmlWebpackPlugin({
-            filename: 'index.html',
+            // filename: 'index.html',
             template: './src/index.html'
         }),
     ]
