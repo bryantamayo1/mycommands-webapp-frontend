@@ -40,7 +40,7 @@ const getCommands = async(lan, page, category, command, meaning) => {
         icon_copy.classList.add("fa-copy");
         column_1.classList.add("container-icon");
         column_1.appendChild(icon_copy);
-        column_1.addEventListener("click", (event) => copyClipboard(event, data.data[i].command))
+        column_1.addEventListener("click", (event) => copyClipboard(event, data.data[i].command, column_1))
 
         
         icon_info.classList.add("fa-solid");
@@ -63,9 +63,21 @@ const getCommands = async(lan, page, category, command, meaning) => {
 
 /**
  * Copy in clipboard a command
+ * @param {event} event 
+ * @param {string} command 
+ * @param {NodeElement} btn 
  */
-const copyClipboard = (event, command) => {
+const copyClipboard = (event, command, btn) => {
     navigator.clipboard.writeText(command);
+    // show popover with copied successfully
+    const div = document.createElement("div");
+    div.appendChild( document.createTextNode("Copied") );
+    div.classList.add("popover-clipboard");
+    btn.appendChild(div);
+
+    setTimeout(() => {
+        div.style.display = "none";
+    }, 1000);
 }
 
 /**

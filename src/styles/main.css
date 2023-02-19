@@ -307,11 +307,34 @@ main{
     cursor: pointer;
     justify-self: center;
     height: 25px;
+    position: relative;
 }
 .container-icon:focus{
     background-color: #252529;
     box-shadow:  0px 0px 15px 2px #ce04a2;
     outline: 2px solid #ce04a2;
+}
+/* Copied successfully */
+.popover-clipboard{
+    background-color: #4d4d52;
+    border-radius: 10px;
+    box-sizing: border-box;
+    font-size: 14px;
+    left: -20px;
+    padding: 5px 15px;
+    position: absolute;
+    top: -40px;
+}
+.popover-clipboard:before{
+    background-color: inherit;
+    bottom: -5px;
+    content: "";
+    height: 10px;
+    left: 50%;
+    position: absolute;
+    transform: rotate(45deg) translateX(-50%);
+    width: 10px;
+    z-index: 2;
 }
 
 
