@@ -28,7 +28,10 @@ export const handleFilters = () => {
     const filters = document.getElementsByClassName("filters")[0];
 
     button_filters.addEventListener("click", () => {   
-        filters.style.width = "30%";
+        filters.style.display = "block";
+        setTimeout(() => {
+            filters.style.width = "30%";
+        }, 100);
     });
 }
 
@@ -36,6 +39,9 @@ export const closeMenuFilter = () => {
     const filters = document.getElementsByClassName("filters")[0];
     const input = document.getElementsByClassName("search__input")[0];
     filters.style.width = 0;
+    setTimeout(() => {
+        filters.style.display = "none";
+    }, 1000);
     // Change focus because an error in button:focus
     input.focus();
 }

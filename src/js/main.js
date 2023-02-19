@@ -11,7 +11,7 @@ let local_page = 1;
 let loca_input_value = "";
 
 /**
- * Show 20 commands
+ * Show 20 commands and create list with them
  * @param {string} lan 
  * @param {number} page 
  * @param {string} category 
@@ -29,16 +29,43 @@ const getCommands = async(lan, page, category, command, meaning) => {
     const my_container = document.getElementsByClassName("my-container")[0];
     for(let i = 0; i< data.data.length; i++){
         const div = document.createElement("div");
-        const column_1 = document.createElement("p");
-        const column_2 = document.createElement("p");
-        column_1.appendChild( document.createTextNode(data.data[i].command) );
-        column_2.appendChild( document.createTextNode(data.data[i].en) );
+        const column_1 = document.createElement("button");
+        const column_2 = document.createElement("button");
+        const column_3 = document.createElement("p");
+        const column_4 = document.createElement("p");
+        const icon_copy = document.createElement("i");
+        const icon_info = document.createElement("i");
+
+        icon_copy.classList.add("fa-solid");
+        icon_copy.classList.add("fa-copy");
+        column_1.classList.add("container-icon");
+        column_1.appendChild(icon_copy);
+        column_1.addEventListener("click", (event) => copyClipboard(event, data.data[i].command))
+
+        
+        icon_info.classList.add("fa-solid");
+        icon_info.classList.add("fa-circle-info");
+        column_2.classList.add("container-icon");
+        column_2.appendChild(icon_info);
+        
+
+        column_3.appendChild( document.createTextNode(data.data[i].command) );
+        column_4.appendChild( document.createTextNode(data.data[i].en) );
         div.appendChild(column_1);
         div.appendChild(column_2);
+        div.appendChild(column_3);
+        div.appendChild(column_4);
         div.classList.add("list-container");
         
         my_container.appendChild(div);
     }
+}
+
+/**
+ * Copy in clipboard a command
+ */
+const copyClipboard = (event, command) => {
+    navigator.clipboard.writeText(command);
 }
 
 /**
