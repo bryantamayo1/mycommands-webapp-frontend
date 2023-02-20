@@ -117,8 +117,10 @@ main{
     box-shadow: rgba(37, 29, 82, 0.445) 0px 7px 29px 0px;
     box-sizing: border-box;
     font-family: 'Ubuntu Mono', monospace;
+    font-size: 22px;
     display: none;
     height: 100%;
+    overflow-y: scroll;
     position: fixed;
     right: 0;
     top: 0;
@@ -162,14 +164,25 @@ main{
     margin-bottom: 15px;
     text-align: right;
 }
+/* search by */
+.container-filters{
+    margin: 0 auto;
+    width: 80%;
+}
+.container-filters__title{
+    font-weight: 600;
+}
+/* bar to separete section of filters */
+.bar-separated{
+    border: 1px solid #ce04a2;
+    margin: 10px auto;
+    width: 90%;
+}
 /* toggle */
 .toggle-container{
     align-items: center;
     display: grid;
-    font-size: 22px;
     grid-template-columns: 50px 1fr;
-    margin: 0 auto;
-    width: 80%;
 }
 .toggle{
     /* relation aspect 1.7  width / height*/
@@ -207,10 +220,11 @@ main{
     left: 50%;
 }
 .version-filter{
-    margin: 0;
+    margin: 15px 0;
 }
 /* btn apply */
 .btn-apply-container{
+    margin: 40px 0px;
     text-align: center;
 }
 .btn_apply{
@@ -219,10 +233,8 @@ main{
     box-sizing: border-box;
     color: #FFF;
     cursor: pointer;
-    font-size: 22px;
-    margin-top: 50px;
     overflow: hidden;
-    padding: 10px 25px;
+    padding: 10px 30px;
     position: relative;
     outline: 1px solid #000;
 }

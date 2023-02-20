@@ -5,7 +5,8 @@ import { closeMenuFilter, handleCloseFilters, handleFilters, handleFocusInputSea
 
 // Local variables
 // Store state of each filters
-let buffer_filters = [];
+let buffer_filters_categories = [];
+let buffer_filters_queries = [];
 let local_lan = "/en";
 let local_page = 1;
 let loca_input_value = "";
@@ -102,7 +103,7 @@ const handleInputSearch = () => {
     const input = document.getElementsByClassName("search__input")[0];
     
     input.addEventListener("keydown", async(event) => {
-        let filter = buffer_filters.find(item => item.active === true);
+        let filter = buffer_filters_categories.find(item => item.active === true);
         // Get input's value'
         if(event.key === "Enter"){
             loca_input_value = input.value;
@@ -112,7 +113,7 @@ const handleInputSearch = () => {
     });
     button.addEventListener("click", () => {
         loca_input_value = input.value;
-        let filter = buffer_filters.find(item => item.active === true);
+        let filter = buffer_filters_categories.find(item => item.active === true);
         // Search active filter
         getCommands(local_lan, local_page, filter._id, loca_input_value);
     });
@@ -124,11 +125,52 @@ const handleInputSearch = () => {
  */
 const handleToggleFiletrs = async() => {
     const filters = document.getElementsByClassName("filters")[0];
+    const container_filters = document.getElementsByClassName("container-filters")[0];
     const data = await Services.getFilters();
     const info = data.data;
+    const options_search_by_queries = ["Command && Meaning", "Command", "Meaning"]
+    
+    // Push filters of searching by commands and meaning
+    buffer_filters_queries[0] = {index: 0, active: true, query: "?command=&meaning="}
+    options_search_by_queries.reverse().forEach(item => {
+        const span = document.createElement("span");
+        span.classList.add("toggle__slider");
+
+        const btn = document.createElement("button");
+        btn.classList.add("toggle");
+        btn.appendChild(span);
+
+        const div = document.createElement("div");
+        div.appendChild( btn );
+
+        const version = document.createElement("p");
+        version.classList.add("version-filter");
+        version.appendChild( document.createTextNode( item ) );
+        div.appendChild( version );
+        div.classList.add("toggle-container");
+        div.classList.add("container-filters");
+
+        container_filters.after(div);
+    });
+
+    // Put line to separate filters
+    const container_filters_aux_1 = document.getElementsByClassName("container-filters")
+    [document.getElementsByClassName("container-filters").length - 2];
+    const bar = document.createElement("section");
+    bar.classList.add("bar-separated");
+    container_filters_aux_1.after(bar);
+
+    // Put title Categories
+    const title_categories = document.createElement("p");
+    title_categories.classList.add("container-filters");
+    title_categories.classList.add("container-filters__title");
+    title_categories.appendChild( document.createTextNode("Categories") );
+    const bar_separated = document.getElementsByClassName("bar-separated")[0];
+    bar_separated.after(title_categories)
+
 
     // Push first category All
-    buffer_filters[0] = {index: 0, active: true, _id: "all"}
+    buffer_filters_categories[0] = {index: 0, active: true, _id: "all"}
     const btn = document.getElementsByClassName("toggle")[0];
     const circle = document.getElementsByClassName("toggle__slider")[0];
     btn.classList.add("toggle-active");
@@ -143,16 +185,18 @@ const handleToggleFiletrs = async() => {
         const btn = document.createElement("button");
         btn.classList.add("toggle");
         btn.appendChild(span);
-        buffer_filters[i + 1] = {index: i + 1, active: false, ...info[i]}
+        buffer_filters_categories[i + 1] = {index: i + 1, active: false, ...info[i]}
         btn.addEventListener("click", (event) => handleBtnToggle(event, i + 1));
 
         const div = document.createElement("div");
         div.appendChild( btn );
         
         const version = document.createElement("p");
+        version.classList.add("version-filter");
         version.appendChild( document.createTextNode( info[i].category ) );
         div.appendChild( version );
         div.classList.add("toggle-container");
+        div.classList.add("container-filters");
 
         filters.appendChild(div);
     }
@@ -182,8 +226,8 @@ const handleBtnToggle = (event, i) => {
     const btn = document.getElementsByClassName("toggle")[i];
     const circle = document.getElementsByClassName("toggle__slider")[i];
 
-    // Search actived toggle in buffer_filters
-    const filterActived = buffer_filters.findIndex(item => item.active === true);
+    // Search actived toggle in buffer_filters_categories
+    const filterActived = buffer_filters_categories.findIndex(item => item.active === true);
     if(i === filterActived){
         return;
     }else{
@@ -193,12 +237,12 @@ const handleBtnToggle = (event, i) => {
         btn_filter.forEach( (item, index) => {
             item.classList.remove("toggle-active");
             toggle__slider[index].classList.remove("toggle__slider--move-to-right");
-            buffer_filters[index].active = false; 
+            buffer_filters_categories[index].active = false; 
         });
 
         btn.classList.add("toggle-active");
         circle.classList.add("toggle__slider--move-to-right");
-        buffer_filters[i].active = true;
+        buffer_filters_categories[i].active = true;
     }
 }
 
@@ -206,7 +250,7 @@ const handleBtnToggle = (event, i) => {
  * hnadle btn Apply in menu filters
  */
 const handleBtnApply = (event) => {
-    let filter = buffer_filters.find(item => item.active === true);
+    let filter = buffer_filters_categories.find(item => item.active === true);
     getCommands(local_lan, local_page, filter._id, loca_input_value);
     closeMenuFilter();
 }
