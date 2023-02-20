@@ -40,6 +40,7 @@ header img{
 /* main */
 main{
     background-color: #1d1a27;
+    font-family: 'Ubuntu Mono', monospace;
     min-height: calc( 100vh - 40px - 220px - 1px);
 }
 /* icon search */
@@ -109,6 +110,11 @@ main{
 }
 .search__input:focus{
     outline: none;
+}
+/* total numbers */
+.total-numbers{
+    font-size: 20px;
+    text-align: center;
 }
 /* filter options */
 .filters{
@@ -239,7 +245,7 @@ main{
     outline: 1px solid #000;
 }
 .btn_apply:after{
-    animation: rotate 8s infinite linear;
+    animation: rotate 6s infinite linear;
     background-color: #0b24fa;
     background-image: linear-gradient(62deg, #0b24fa 0%, #ce04a2 100%);    
     content: "";

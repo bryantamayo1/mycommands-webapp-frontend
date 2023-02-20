@@ -6,7 +6,11 @@ import { closeMenuFilter, handleCloseFilters, handleFilters, handleFocusInputSea
 // Local variables
 // Store state of each filters
 let buffer_filters_categories = [];
-let buffer_filters_queries = [];
+let buffer_filters_queries = [
+    {category: "Command && Meaning", index: 0, active: true, query: "?command=&meaning="},
+    {category: "Command", index: 1, active: false, query: "?command="},
+    {category: "Meaning", index: 2, active: false, query: "?meaning="},
+];
 let local_lan = "/en";
 let local_page = 1;
 let loca_input_value = "";
@@ -26,6 +30,8 @@ const getCommands = async(lan, page, category, command, meaning) => {
 
 
     const data = await Services.getCommands(lan, page, category, command, meaning);
+    showTotalCommands(data.total);
+
     // Show data in list
     const my_container = document.getElementsByClassName("my-container")[0];
     for(let i = 0; i< data.data.length; i++){
@@ -82,6 +88,22 @@ const copyClipboard = (event, command, btn) => {
 }
 
 /**
+ * Show total commands with commas
+ * @param {number} total 
+ */
+const showTotalCommands = (total) => {
+    const total_numbers = document.getElementsByClassName("total-numbers")[0];
+    const t = total.toString().split("");
+    for(let i = t.length - 1; i >= 0 ; i--){
+        if((i % 3) === 0){
+            t.splice(i - 3, 0, ",");
+        }
+    }
+    if(t[0] === ",") t.shift();
+    total_numbers.innerHTML = t.join("");
+}
+
+/**
  * Handle buttons language 'es' and 'es'
  */
 const handleButtonsLanguage = () => {
@@ -125,33 +147,36 @@ const handleInputSearch = () => {
  */
 const handleToggleFiletrs = async() => {
     const filters = document.getElementsByClassName("filters")[0];
-    const container_filters = document.getElementsByClassName("container-filters")[0];
     const data = await Services.getFilters();
     const info = data.data;
-    const options_search_by_queries = ["Command && Meaning", "Command", "Meaning"]
-    
     // Push filters of searching by commands and meaning
-    buffer_filters_queries[0] = {index: 0, active: true, query: "?command=&meaning="}
-    options_search_by_queries.reverse().forEach(item => {
+    buffer_filters_queries.forEach( (item, i) => {
+        const container_filters = document.getElementsByClassName("container-filters")[i];
         const span = document.createElement("span");
         span.classList.add("toggle__slider");
 
         const btn = document.createElement("button");
         btn.classList.add("toggle");
         btn.appendChild(span);
+        btn.addEventListener("click", event => handleBtnToggleQueries(event, i, buffer_filters_queries.length));
 
         const div = document.createElement("div");
         div.appendChild( btn );
 
         const version = document.createElement("p");
         version.classList.add("version-filter");
-        version.appendChild( document.createTextNode( item ) );
+        version.appendChild( document.createTextNode( item.category ) );
         div.appendChild( version );
         div.classList.add("toggle-container");
         div.classList.add("container-filters");
 
         container_filters.after(div);
     });
+
+    const btn_command_meaning = document.getElementsByClassName("toggle")[0];
+    btn_command_meaning.classList.add("toggle-active");
+    const span_command_meaning = document.getElementsByClassName("toggle__slider")[0];
+    span_command_meaning.classList.add("toggle__slider--move-to-right");
 
     // Put line to separate filters
     const container_filters_aux_1 = document.getElementsByClassName("container-filters")
@@ -166,17 +191,15 @@ const handleToggleFiletrs = async() => {
     title_categories.classList.add("container-filters__title");
     title_categories.appendChild( document.createTextNode("Categories") );
     const bar_separated = document.getElementsByClassName("bar-separated")[0];
-    bar_separated.after(title_categories)
-
+    bar_separated.after(title_categories);
 
     // Push first category All
     buffer_filters_categories[0] = {index: 0, active: true, _id: "all"}
-    const btn = document.getElementsByClassName("toggle")[0];
-    const circle = document.getElementsByClassName("toggle__slider")[0];
+    const btn = document.getElementById("id-btn-all");
+    const circle = document.getElementById("id-span-all");
     btn.classList.add("toggle-active");
     circle.classList.add("toggle__slider--move-to-right");
-    const btn_toggle_first = document.getElementsByClassName("toggle")[0];
-    btn_toggle_first.addEventListener("click", event => handleBtnToggle(event, 0));
+    btn.addEventListener("click", event => handleBtnToggleCategories(event, 0, buffer_filters_queries.length));
 
     for(let i = 0; i < info.length; i++){       
         const span = document.createElement("span");
@@ -186,7 +209,7 @@ const handleToggleFiletrs = async() => {
         btn.classList.add("toggle");
         btn.appendChild(span);
         buffer_filters_categories[i + 1] = {index: i + 1, active: false, ...info[i]}
-        btn.addEventListener("click", (event) => handleBtnToggle(event, i + 1));
+        btn.addEventListener("click", (event) => handleBtnToggleCategories(event, i + 1, buffer_filters_queries.length));
 
         const div = document.createElement("div");
         div.appendChild( btn );
@@ -221,19 +244,30 @@ const handleToggleFiletrs = async() => {
 /**
  * Modify style according to active or not button
  * Only one filter can be actived
+ * @param{number} sizePreviouslyFilters
  */
-const handleBtnToggle = (event, i) => {
-    const btn = document.getElementsByClassName("toggle")[i];
-    const circle = document.getElementsByClassName("toggle__slider")[i];
-
+const handleBtnToggleCategories = (event, i, sizePreviouslyFilters) => {
+    const btn = document.getElementsByClassName("toggle")[i + sizePreviouslyFilters];
+    const circle = document.getElementsByClassName("toggle__slider")[i + sizePreviouslyFilters];
+ 
     // Search actived toggle in buffer_filters_categories
     const filterActived = buffer_filters_categories.findIndex(item => item.active === true);
     if(i === filterActived){
         return;
     }else{
-        // Clean all filters
-        const btn_filter = document.querySelectorAll(".toggle");
-        const toggle__slider = document.querySelectorAll(".toggle__slider");
+        // Clone only items that we need
+        const all_togggles = document.querySelectorAll(".toggle");
+        const btn_filter = [];
+        // Copy only filters of categories
+        for(let i = sizePreviouslyFilters; i < all_togggles.length; i++){
+            btn_filter.push(all_togggles[i]);
+        }
+        const all_toggle__slider = document.querySelectorAll(".toggle__slider");
+        const toggle__slider = [];
+        for(let i = sizePreviouslyFilters; i < all_toggle__slider.length; i++){
+            toggle__slider.push(all_toggle__slider[i]);
+        }
+        
         btn_filter.forEach( (item, index) => {
             item.classList.remove("toggle-active");
             toggle__slider[index].classList.remove("toggle__slider--move-to-right");
@@ -243,6 +277,46 @@ const handleBtnToggle = (event, i) => {
         btn.classList.add("toggle-active");
         circle.classList.add("toggle__slider--move-to-right");
         buffer_filters_categories[i].active = true;
+    }
+}
+
+/**
+ * Modify style according to active or not button in filters by queries "Seacrh by"
+ * Only one filter can be actived
+ * @param{number} sizeFilters
+
+ */
+const handleBtnToggleQueries = (event, i, sizeFilters) => {
+    const btn = document.getElementsByClassName("toggle")[i];
+    const circle = document.getElementsByClassName("toggle__slider")[i];
+
+    // Search actived toggle in buffer_filters_queries
+    const filterActived = buffer_filters_queries.findIndex(item => item.active === true);
+    if(i === filterActived){
+        return;
+    }else{
+        // Clone only items that we need
+        const all_togggles = document.querySelectorAll(".toggle");
+        const btn_filter = [];
+        // Copy only filters of categories
+        for(let i = 0; i < sizeFilters; i++){
+            btn_filter.push(all_togggles[i]);
+        }
+        const all_toggle__slider = document.querySelectorAll(".toggle__slider");
+        const toggle__slider = [];
+        for(let i = 0; i < sizeFilters; i++){
+            toggle__slider.push(all_toggle__slider[i]);
+        }
+
+        btn_filter.forEach( (item, index) => {
+            item.classList.remove("toggle-active");
+            toggle__slider[index].classList.remove("toggle__slider--move-to-right");
+            buffer_filters_queries[index].active = false; 
+        });
+
+        btn.classList.add("toggle-active");
+        circle.classList.add("toggle__slider--move-to-right");
+        buffer_filters_queries[i].active = true;
     }
 }
 
