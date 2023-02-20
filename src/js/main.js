@@ -49,15 +49,24 @@ const getCommands = async(lan, page, category, command, meaning) => {
         column_1.appendChild(icon_copy);
         column_1.addEventListener("click", (event) => copyClipboard(event, data.data[i].command, column_1))
 
-        
         icon_info.classList.add("fa-solid");
         icon_info.classList.add("fa-circle-info");
         column_2.classList.add("container-icon");
         column_2.appendChild(icon_info);
         
-
         column_3.appendChild( document.createTextNode(data.data[i].command) );
-        column_4.appendChild( document.createTextNode(data.data[i].en) );
+        column_3.classList.add("command-text");
+
+        // Chage color in character hash #
+        if(data.data[i].en.charAt(0) === "#"){
+            const span = document.createElement("span");
+            span.innerHTML = "# ";
+            span.classList.add("hash-in-meaning");   
+            column_4.appendChild(span);
+            column_4.appendChild( document.createTextNode(data.data[i].en.slice(2, data.data[i].length)) );
+        }else{
+            column_4.appendChild( document.createTextNode(data.data[i].en) );
+        }
         div.appendChild(column_1);
         div.appendChild(column_2);
         div.appendChild(column_3);
