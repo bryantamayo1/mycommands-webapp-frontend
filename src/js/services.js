@@ -7,12 +7,10 @@ export class Services{
      * @param {string} meaning 
      * @returns Promise
      */
-    static async getCommands(lan = "/en", page = 1, category = "all", command, meaning){
+    static async getCommands(lan = "/en", page = 1, category = "all", commandAndMeaning){
         let query = "";
-        if(command){
-            query = query + "&command=" + command;
-        }else if(meaning){
-            query = query + "&meaning=" + meaning;
+        if(commandAndMeaning){
+            query = commandAndMeaning;
         }
         const data = await fetch(process.env.API_URL + "/commands" + lan + `/?page=${page}&category=${category}${query}`)
         return data.json();

@@ -2,18 +2,19 @@ import '../styles/normalize.css';
 import '../styles/main.css';
 import { Services } from './services';
 import { closeMenuFilter, handleCloseFilters, handleFilters, handleFocusInputSearch } from './effects';
+import { parseQuery } from './utils';
 
 // Local variables
 // Store state of each filters
 let buffer_filters_categories = [];
 let buffer_filters_queries = [
-    {category: "Command && Meaning", index: 0, active: true, query: "?command=&meaning="},
-    {category: "Command", index: 1, active: false, query: "?command="},
-    {category: "Meaning", index: 2, active: false, query: "?meaning="},
+    {category: "Command && Meaning", index: 0, active: true, query: "&command=&meaning="},
+    {category: "Command", index: 1, active: false, query: "&command="},
+    {category: "Meaning", index: 2, active: false, query: "&meaning="},
 ];
-let local_lan = "/en";
-let local_page = 1;
-let loca_input_value = "";
+let global_lan = "/en";
+let global_page = 1;
+let global_input_value = "";
 
 /**
  * Show 20 commands and create list with them
@@ -23,13 +24,24 @@ let loca_input_value = "";
  * @param {string} command 
  * @param {string} meaning 
  */
-const getCommands = async(lan, page, category, command, meaning) => {
+const getCommands = async(lan, page, category) => {
     // Clean data
     const list_container = document.querySelectorAll(".list-container")
     .forEach(item => item.remove());
 
+    // Get commands
+    // Prepare queries
+    // 1ª Search actived toggle in buffer_filters_queries
+    const input_value_direct = document.getElementsByClassName("search__input")[0];
 
-    const data = await Services.getCommands(lan, page, category, command, meaning);
+    const commandAndMeaning = parseQuery(buffer_filters_queries, input_value_direct.value);
+
+    const data = await Services.getCommands(
+        global_lan,
+        global_page,
+        category,
+        commandAndMeaning
+    );
     showTotalCommands(data.total);
 
     // Show data in list
@@ -137,16 +149,16 @@ const handleInputSearch = () => {
         let filter = buffer_filters_categories.find(item => item.active === true);
         // Get input's value'
         if(event.key === "Enter"){
-            loca_input_value = input.value;
+            global_input_value = input.value;
             // Get commands
-            getCommands(local_lan, local_page, filter._id, loca_input_value);
+            getCommands(global_lan, global_page, filter._id);
         }
     });
     button.addEventListener("click", () => {
-        loca_input_value = input.value;
+        global_input_value = input.value;
         let filter = buffer_filters_categories.find(item => item.active === true);
         // Search active filter
-        getCommands(local_lan, local_page, filter._id, loca_input_value);
+        getCommands(global_lan, global_page, filter._id);
     });
 }
 
@@ -334,7 +346,7 @@ const handleBtnToggleQueries = (event, i, sizeFilters) => {
  */
 const handleBtnApply = (event) => {
     let filter = buffer_filters_categories.find(item => item.active === true);
-    getCommands(local_lan, local_page, filter._id, loca_input_value);
+    getCommands(global_lan, global_page, filter._id);
     closeMenuFilter();
 }
 
