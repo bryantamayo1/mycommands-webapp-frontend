@@ -14,7 +14,6 @@ let buffer_filters_queries = [
 ];
 let global_lan = "/en";
 let global_page = 1;
-let global_input_value = "";
 
 /**
  * Show 20 commands and create list with them
@@ -149,13 +148,11 @@ const handleInputSearch = () => {
         let filter = buffer_filters_categories.find(item => item.active === true);
         // Get input's value'
         if(event.key === "Enter"){
-            global_input_value = input.value;
             // Get commands
             getCommands(global_lan, global_page, filter._id);
         }
     });
     button.addEventListener("click", () => {
-        global_input_value = input.value;
         let filter = buffer_filters_categories.find(item => item.active === true);
         // Search active filter
         getCommands(global_lan, global_page, filter._id);

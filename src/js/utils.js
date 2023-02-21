@@ -2,10 +2,8 @@
  * Parse queries
  */
 export const parseQuery = (buffer, input_value) => {
-    console.log(input_value)
     // 1ª Search actived toggle in buffer_filters_queries
     const filterActived = buffer.find(item => item.active === true);
-    console.log(filterActived)
     let query = filterActived.query;
     if(input_value !== ""){
         switch (filterActived.index) {
