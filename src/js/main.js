@@ -7,7 +7,7 @@ import { closeMenuFilter, handleCloseFilters, handleFilters, handleFocusInputSea
 import { getQueries, parseQuery } from './utils';
 import { handlePagination } from './pagination';
 
-// Local variables
+// Global variables
 // Store state of each filters
 let buffer_filters_categories = [];
 let buffer_filters_queries = [

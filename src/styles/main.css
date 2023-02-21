@@ -391,3 +391,8 @@ code{
         width: 250px;
     }
 }
+
+/* Utils */
+.not-visible{
+    display: none !important;
+}
