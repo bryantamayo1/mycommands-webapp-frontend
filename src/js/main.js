@@ -1,9 +1,10 @@
 import '../styles/normalize.css';
 import '../styles/main.css';
 import '../styles/pagination.css';
+import '../styles/footer.css';
 import { Services } from './services';
 import { closeMenuFilter, handleCloseFilters, handleFilters, handleFocusInputSearch } from './effects';
-import { parseQuery } from './utils';
+import { getQueries, parseQuery } from './utils';
 import { handlePagination } from './pagination';
 
 // Local variables
@@ -20,14 +21,13 @@ let global_page = 1;
 /**
  * Show 20 commands and create list with them.
  * Paint total commands.
- * hnadle pagination
+ * hnadle pagination.
+ * Query command and meaning is searched in host’s url
  * @param {string} lang 
  * @param {number} page 
  * @param {string} category 
- * @param {string} command 
- * @param {string} meaning 
  */
-const getCommands = async(lang, page, category) => {
+export const getCommands = async(lang, page, category) => {
     // Clean data
     const list_container = document.querySelectorAll(".list-container")
     .forEach(item => item.remove());
@@ -38,7 +38,7 @@ const getCommands = async(lang, page, category) => {
     const input_value_direct = document.getElementsByClassName("search__input")[0];
 
     const commandAndMeaning = parseQuery(buffer_filters_queries, input_value_direct.value);
-
+    console.log(commandAndMeaning)
     const data = await Services.getCommands(
         lang,
         page,
@@ -364,11 +364,12 @@ const handleBtnToggleQueries = (event, i, sizeFilters) => {
 }
 
 /**
- * hnadle btn Apply in menu filters
+ * hnadle btn Apply in menu filters and get commands
  */
 const handleBtnApply = (event) => {
-    let filter = buffer_filters_categories.find(item => item.active === true);
-    getCommands(global_lang, global_page, filter._id);
+    const filter = buffer_filters_categories.find(item => item.active === true);
+    const query = getQueries(window.location.search);
+    getCommands("/" + query.lang, query.page, filter._id, query.category);
     closeMenuFilter();
 }
 

@@ -1,3 +1,6 @@
+/**
+ * Endpoints
+ */
 export class Services{
     /**
      * Get commands and change query in url of host
@@ -9,9 +12,10 @@ export class Services{
      * @returns Promise
      */
     static async getCommands(lang = "/en", page = 1, category = "all", commandAndMeaning){
-        // Change query in window.history
+        // Update query in window.history
         if (history.pushState) {
-            let newurl = window.location.protocol + "//" + window.location.host + `?page=${page}&lang=${lang.slice(1, lang.length)}`;
+            let newurl = window.location.protocol + "//" + window.location.host +
+            `?page=${page}&lang=${lang.slice(1, lang.length)}&category=${category}${commandAndMeaning}`;
             window.history.pushState({path:newurl},'',newurl);
         }
 
