@@ -1,8 +1,10 @@
 import '../styles/normalize.css';
 import '../styles/main.css';
+import '../styles/pagination.css';
 import { Services } from './services';
 import { closeMenuFilter, handleCloseFilters, handleFilters, handleFocusInputSearch } from './effects';
 import { parseQuery } from './utils';
+import { handlePagination } from './pagination';
 
 // Local variables
 // Store state of each filters
@@ -12,18 +14,20 @@ let buffer_filters_queries = [
     {category: "Command", index: 1, active: false, query: "&command="},
     {category: "Meaning", index: 2, active: false, query: "&meaning="},
 ];
-let global_lan = "/en";
+let global_lang = "/en";
 let global_page = 1;
 
 /**
- * Show 20 commands and create list with them
- * @param {string} lan 
+ * Show 20 commands and create list with them.
+ * Paint total commands.
+ * hnadle pagination
+ * @param {string} lang 
  * @param {number} page 
  * @param {string} category 
  * @param {string} command 
  * @param {string} meaning 
  */
-const getCommands = async(lan, page, category) => {
+const getCommands = async(lang, page, category) => {
     // Clean data
     const list_container = document.querySelectorAll(".list-container")
     .forEach(item => item.remove());
@@ -36,12 +40,14 @@ const getCommands = async(lan, page, category) => {
     const commandAndMeaning = parseQuery(buffer_filters_queries, input_value_direct.value);
 
     const data = await Services.getCommands(
-        global_lan,
-        global_page,
+        lang,
+        page,
         category,
         commandAndMeaning
     );
     showTotalCommands(data.total);
+    handlePagination(data);
+    const lang_response = data.lang;
 
     // Show data in list
     const my_container = document.getElementsByClassName("my-container")[0];
@@ -69,14 +75,14 @@ const getCommands = async(lan, page, category) => {
         column_3.classList.add("command-text");
 
         // Chage color in character hash #
-        if(data.data[i].en.charAt(0) === "#"){
+        if(data.data[i][lang_response].charAt(0) === "#"){
             const span = document.createElement("span");
             span.innerHTML = "# ";
             span.classList.add("hash-in-meaning");   
             column_4.appendChild(span);
-            column_4.appendChild( document.createTextNode(data.data[i].en.slice(2, data.data[i].length)) );
+            column_4.appendChild( document.createTextNode(data.data[i][lang_response].slice(2, data.data[i].length)) );
         }else{
-            column_4.appendChild( document.createTextNode(data.data[i].en) );
+            column_4.appendChild( document.createTextNode(data.data[i][lang_response]) );
         }
         div.appendChild(column_1);
         div.appendChild(column_2);
@@ -98,7 +104,7 @@ const copyClipboard = (event, command, btn) => {
     navigator.clipboard.writeText(command);
     // show popover with copied successfully
     const div = document.createElement("div");
-    div.appendChild( document.createTextNode("Copied") );
+    div.appendChild( document.createTextNode("Copied!") );
     div.classList.add("popover-clipboard");
     btn.appendChild(div);
 
@@ -124,16 +130,35 @@ const showTotalCommands = (total) => {
 }
 
 /**
- * Handle buttons language 'es' and 'es'
+ * Handle buttons language 'es' and 'es'.
+ * Seach commands with selected language
  */
 const handleButtonsLanguage = () => {
     const es = document.getElementById("es");
     const en = document.getElementById("en");
+    let query = window.location.search.split("");
+    const lang_index = window.location.search.indexOf("lang=");
+    
     es.addEventListener("click", () => {
-        window.location.href = "#lan=es";
+        // Change query in window.history
+        if (history.pushState){
+            query.splice(lang_index + 4, 2, "e");
+            query.splice(lang_index + 6, 1, "s");
+            let newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + query.join("");
+            window.history.pushState({path:newurl},'',newurl);
+            getCommands("/es");
+        }
     });
     en.addEventListener("click", () => {
-        window.location.href = "#lan=en";
+        // Change query in window.history
+        if (history.pushState){
+            query.splice(lang_index + 4, 2, "e");
+            query.splice(lang_index + 6, 1, "n");
+            let newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + query.join("");
+            window.history.pushState({path:newurl},'',newurl);
+            getCommands("/en");
+
+        }
     });
 }
 
@@ -149,13 +174,13 @@ const handleInputSearch = () => {
         // Get input's value'
         if(event.key === "Enter"){
             // Get commands
-            getCommands(global_lan, global_page, filter._id);
+            getCommands(global_lang, global_page, filter._id);
         }
     });
     button.addEventListener("click", () => {
         let filter = buffer_filters_categories.find(item => item.active === true);
         // Search active filter
-        getCommands(global_lan, global_page, filter._id);
+        getCommands(global_lang, global_page, filter._id);
     });
 }
 
@@ -343,13 +368,11 @@ const handleBtnToggleQueries = (event, i, sizeFilters) => {
  */
 const handleBtnApply = (event) => {
     let filter = buffer_filters_categories.find(item => item.active === true);
-    getCommands(global_lan, global_page, filter._id);
+    getCommands(global_lang, global_page, filter._id);
     closeMenuFilter();
 }
 
 function init(){
-    console.log("init----");
-    console.log(window.location);
     document.addEventListener("DOMContentLoaded", () => {
         getCommands("/en", 1);
         handleButtonsLanguage();

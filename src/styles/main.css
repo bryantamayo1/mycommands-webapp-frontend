@@ -87,6 +87,7 @@ main{
 .search__button{
     background-color:  #FFF;
     border: none;
+    box-sizing: border-box;
     cursor: pointer;
     z-index: 1;
 }
@@ -96,9 +97,11 @@ main{
 }
 .search__button--left{
     border-radius: 20px 0 0 20px;
+    box-sizing: border-box;
 }
 .search__button--right{
     border-radius: 0 20px 20px 0;
+    box-sizing: border-box;
 }
 .search__input{
     border: none;
@@ -149,6 +152,7 @@ main{
 .filters__btn__close p{
     background-color: #FFF;
     border: 1px solid #FFF;
+    box-sizing: border-box;
     margin: 0;
     position: absolute;
     width: 20px;
@@ -181,6 +185,7 @@ main{
 /* bar to separete section of filters */
 .bar-separated{
     border: 1px solid #ce04a2;
+    box-sizing: border-box;
     margin: 10px auto 20px auto;
     width: 90%;
 }
@@ -209,6 +214,7 @@ main{
 .toggle__slider{
     background-color: #FFF;
     border-radius: 50%;
+    box-sizing: border-box;
     display: block;
     height: 13px;
     left: 3px;
@@ -286,10 +292,12 @@ main{
 /* Rounded sliders */
 .slider.round{
     border-radius: 20px;
+    box-sizing: border-box;
 }
   
 .slider.round:before{
     border-radius: 50%;
+    box-sizing: border-box;
 }
 
 /* list */
@@ -302,6 +310,7 @@ main{
     background-color: #373739;
     background-image: linear-gradient(62deg, #353538 0%, #2e2e30 33%);    
     border-radius: 5px;
+    box-sizing: border-box;
     display: grid;
     font-family: 'Ubuntu Mono', monospace;
     grid-template-columns: 40px 40px 400px 1fr;
@@ -361,10 +370,6 @@ main{
 .hash-in-meaning{
     color: #12A10D;
 }
-
-
-
-
 
 
 
