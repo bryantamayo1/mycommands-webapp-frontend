@@ -2,33 +2,39 @@ import { getCommands } from "./main";
 import { getQueries } from "./utils";
 
 // Global variables
-const buffer_pagination = [];
-const limit_btns = 5;
+const global_buffer_pagination = [];
+const global_limit_btns = 5;
 
 /**
  * Hnadle pagination according to GET /commands
  * @param {object} data 
+ * @param {boolean} btn_search 
  */
 export const handlePagination = (data) => {
     const amount_pages = Math.ceil(data.total / data.limitPage);
     data.amount_pages = amount_pages;
     
-    // Push buffer_pagination, because this function is called several times
-    if(!buffer_pagination.length){
-        for(let i = 1; i <= limit_btns; i++){
-            buffer_pagination.push({ active: false, page: i });
+    // Push global_buffer_pagination, because this function is called several times
+    if(!global_buffer_pagination.length){
+        for(let i = 1; i <= global_limit_btns; i++){
+            global_buffer_pagination.push({ active: false, page: i });
         }
-        buffer_pagination[data.page - 1] = {active: true, page: data.page}
+        global_buffer_pagination[data.page - 1] = {active: true, page: data.page}
+    }else{
+        // Check last number in pagination in new search
+        const page_current = global_buffer_pagination.find(i => i.page === data.page);
+        if(!page_current){
+            global_buffer_pagination.forEach((item, index) => item.page = index + 1);
+        }
     }
-
-    createBtnPagination(amount_pages, limit_btns, data);
+    createBtnPagination(amount_pages, data);
 }
 
 /**
  * Clean and create btns of pagination
  * @param {number} increase
  */
-const createBtnPagination = (amount_pages, limit_btns, data, increase = 0) => {
+const createBtnPagination = (amount_pages, data, increase = 0) => {
     // Clean pagination
     document.querySelectorAll(".btn-pagination")
     .forEach(item => item.remove());
@@ -41,26 +47,26 @@ const createBtnPagination = (amount_pages, limit_btns, data, increase = 0) => {
     }
 
     // Create btns in pagination
-    const rest = data.page % limit_btns;
+    const rest = data.page % global_limit_btns;
     let indexStartPagination = 1;
     if(rest){
         indexStartPagination = data.page - rest + 1;
     }else{
-        indexStartPagination = data.page - limit_btns + 1;
+        indexStartPagination = data.page - global_limit_btns + 1;
     }
     
     // Move pagination to other 5 btns. Better copy with classic for and not forEach
-    buffer_pagination.forEach(item => {
+    global_buffer_pagination.forEach(item => {
         if(increase === 1){
-            item.page+=limit_btns;
+            item.page+=global_limit_btns;
         }else if(increase === -1){
-            item.page-=limit_btns;
+            item.page-=global_limit_btns;
         }
     });
 
     // Calculate limite of pages inn pagination
     let limit_buffer_pagination = 5;
-    let find_limit_n_buffer_pagination = buffer_pagination.map(i => i.page).indexOf(data.amount_pages);
+    let find_limit_n_buffer_pagination = global_buffer_pagination.map(i => i.page).indexOf(data.amount_pages);
 
     if(find_limit_n_buffer_pagination === -1){
         find_limit_n_buffer_pagination = limit_buffer_pagination;
@@ -72,8 +78,8 @@ const createBtnPagination = (amount_pages, limit_btns, data, increase = 0) => {
         const pagination_container = document.getElementsByClassName("pagination-container")[0];
         const btn_pagination = document.createElement('button');
         btn_pagination.classList.add("btn-pagination");
-        btn_pagination.addEventListener("click", event => handleBtnPagination(event, buffer_pagination[i].page) );
-        btn_pagination.appendChild( document.createTextNode( buffer_pagination[i]?.page ) );
+        btn_pagination.addEventListener("click", event => handleBtnPagination(event, global_buffer_pagination[i].page) );
+        btn_pagination.appendChild( document.createTextNode( global_buffer_pagination[i]?.page ) );
         pagination_container.appendChild(btn_pagination);
     }
 
@@ -86,7 +92,7 @@ const createBtnPagination = (amount_pages, limit_btns, data, increase = 0) => {
             item.classList.add("btn-pagination-active");
         }
     });
-    buffer_pagination.forEach(item => {
+    global_buffer_pagination.forEach(item => {
         item.active = false;
         if(item.page === data.page){
             item.active = true;
@@ -94,22 +100,22 @@ const createBtnPagination = (amount_pages, limit_btns, data, increase = 0) => {
     });
 
     // Put btn next
-    if(buffer_pagination[buffer_pagination.length - 1].page <= amount_pages){
+    if(global_buffer_pagination[global_buffer_pagination.length - 1].page <= amount_pages){
         const pagination_container = document.getElementsByClassName("pagination-container")[0];
         const btn_pagination = document.createElement('button');
         btn_pagination.classList.add("btn-pagination");
-        btn_pagination.addEventListener("click", event => handleNextPagination(event, amount_pages, limit_btns, data, 1));
+        btn_pagination.addEventListener("click", event => handleNextPagination(event, amount_pages,data, 1));
         btn_pagination.appendChild( document.createTextNode(">") );
         pagination_container.appendChild(btn_pagination);
     }
     
     // Put btn before
-    if(buffer_pagination[0].page !== 1){
+    if(global_buffer_pagination[0].page !== 1){
         const pagination_container = document.getElementsByClassName("pagination-container")[0];
         const btn_pagination_first = document.getElementsByClassName("btn-pagination")[0];
         const btn_pagination = document.createElement('button');
         btn_pagination.classList.add("btn-pagination");
-        btn_pagination.addEventListener("click", event => handleNextPagination(event, amount_pages, limit_btns, data, -1));
+        btn_pagination.addEventListener("click", event => handleNextPagination(event, amount_pages, data, -1));
         btn_pagination.appendChild( document.createTextNode("<") );
         pagination_container.insertBefore(btn_pagination, btn_pagination_first);
     }
@@ -129,8 +135,6 @@ const createBtnPagination = (amount_pages, limit_btns, data, increase = 0) => {
  * Handle btn Next in pagination
  * @param {*} event 
  */
-const handleNextPagination = (event, amount_pages, limit_btns, data, index_to_move) => {
-    // 1º Clean buffer
-    buffer_pagination.forEach(item => item.active = false);
-    createBtnPagination(amount_pages, limit_btns, data, index_to_move);
+const handleNextPagination = (event, amount_pages, data, index_to_move) => {
+    createBtnPagination(amount_pages, data, index_to_move);
 }

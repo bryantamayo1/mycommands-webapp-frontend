@@ -3,10 +3,12 @@ import '../styles/main.css';
 import '../styles/pagination.css';
 import '../styles/footer.css';
 import '../styles/spinner.css';
+import '../styles/modal.css';
 import { Services } from './services';
 import { closeMenuFilter, handleCloseFilters, handleFilters, handleFocusInputSearch } from './effects';
 import { getQueries, parseQuery } from './utils';
 import { handlePagination } from './pagination';
+import { openModal } from './modal';
 
 // Global variables
 // Store state of each filters
@@ -98,6 +100,7 @@ export const getCommands = async(lang, page, category) => {
         icon_info.classList.add("fa-circle-info");
         column_2.classList.add("container-icon");
         column_2.appendChild(icon_info);
+        column_2.addEventListener("click", event => openModal(event, data.data[i]));
         
         column_3.appendChild( document.createTextNode(data.data[i].command) );
         column_3.classList.add("command-text");
