@@ -31,12 +31,8 @@ export const handlePagination = (data) => {
  * @param {number} increase
  */
 const createBtnPagination = (amount_pages, limit_btns, data, increase = 0) => {
-    let btn_currents = 0;
-    // console.log("buffer_pagination: ", buffer_pagination);
-    // console.log("data: ", data);
-
     // Clean pagination
-    const pagination_container = document.querySelectorAll(".btn-pagination")
+    document.querySelectorAll(".btn-pagination")
     .forEach(item => item.remove());
     const pagination_container_aux = document.getElementsByClassName("pagination-container")[0];
     if(!data.results){
@@ -63,16 +59,18 @@ const createBtnPagination = (amount_pages, limit_btns, data, increase = 0) => {
             item.page-=limit_btns;
         }
     });
-    console.log("buffer_pagination: ", buffer_pagination);
 
-    if(amount_pages <= limit_btns){
-        // Show btns with according to page
-        btn_currents = amount_pages;
-    }else{
-        // Show only 5 btns
-        btn_currents = limit_btns;
+    // Calculate limite of pages inn pagination
+    let limit_buffer_pagination = 5;
+    console.log("buffer_pagination v2: ", buffer_pagination);
+    console.log("amount_pages: ", data.amount_pages);
+    let find_limit_n_buffer_pagination = buffer_pagination.map(i => i.page).indexOf(data.amount_pages);
+    console.log("find_limit_n_buffer_pagination: ", find_limit_n_buffer_pagination)
+    if(find_limit_n_buffer_pagination === -1){
+        find_limit_n_buffer_pagination = limit_buffer_pagination;
     }
-    for(let i = indexStartPagination - 1; i < indexStartPagination + limit_btns - 1;  i++){
+
+    for(let i = 0; i < find_limit_n_buffer_pagination;  i++){
         const pagination_container = document.getElementsByClassName("pagination-container")[0];
         const btn_pagination = document.createElement('button');
         btn_pagination.classList.add("btn-pagination");
@@ -96,8 +94,6 @@ const createBtnPagination = (amount_pages, limit_btns, data, increase = 0) => {
             item.active = true;
         }
     });
-
-    console.log("active: ", buffer_pagination);
 
     // Put btn next
     if(amount_pages > limit_btns){

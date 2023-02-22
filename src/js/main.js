@@ -29,7 +29,7 @@ let global_page = 1;
  */
 export const getCommands = async(lang, page, category) => {
     // Clean data
-    const list_container = document.querySelectorAll(".list-container")
+    document.querySelectorAll(".list-container")
     .forEach(item => item.remove());
 
     // Get commands
