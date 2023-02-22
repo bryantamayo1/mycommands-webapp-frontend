@@ -10,7 +10,6 @@ const limit_btns = 5;
  * @param {object} data 
  */
 export const handlePagination = (data) => {
-    console.log("data: ", data);
     const amount_pages = Math.ceil(data.total / data.limitPage);
     data.amount_pages = amount_pages;
     
@@ -21,7 +20,6 @@ export const handlePagination = (data) => {
         }
         buffer_pagination[data.page - 1] = {active: true, page: data.page}
     }
-    console.log(buffer_pagination)
 
     createBtnPagination(amount_pages, limit_btns, data);
 }
@@ -62,12 +60,12 @@ const createBtnPagination = (amount_pages, limit_btns, data, increase = 0) => {
 
     // Calculate limite of pages inn pagination
     let limit_buffer_pagination = 5;
-    console.log("buffer_pagination v2: ", buffer_pagination);
-    console.log("amount_pages: ", data.amount_pages);
     let find_limit_n_buffer_pagination = buffer_pagination.map(i => i.page).indexOf(data.amount_pages);
-    console.log("find_limit_n_buffer_pagination: ", find_limit_n_buffer_pagination)
+
     if(find_limit_n_buffer_pagination === -1){
         find_limit_n_buffer_pagination = limit_buffer_pagination;
+    }else{
+        find_limit_n_buffer_pagination+=1;
     }
 
     for(let i = 0; i < find_limit_n_buffer_pagination;  i++){
@@ -96,7 +94,7 @@ const createBtnPagination = (amount_pages, limit_btns, data, increase = 0) => {
     });
 
     // Put btn next
-    if(amount_pages > limit_btns){
+    if(buffer_pagination[buffer_pagination.length - 1].page <= amount_pages){
         const pagination_container = document.getElementsByClassName("pagination-container")[0];
         const btn_pagination = document.createElement('button');
         btn_pagination.classList.add("btn-pagination");

@@ -38,7 +38,6 @@ export const getCommands = async(lang, page, category) => {
     const input_value_direct = document.getElementsByClassName("search__input")[0];
 
     const commandAndMeaning = parseQuery(buffer_filters_queries, input_value_direct.value);
-    console.log(commandAndMeaning)
     const data = await Services.getCommands(
         lang,
         page,
