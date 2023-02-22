@@ -11,6 +11,9 @@
     padding: 10px 0;
     width: 30%;
 }
+.pagination-container--padding{
+    padding: 0;
+}
 .btn-pagination{
     background-color: inherit;
     border-radius: 50%;

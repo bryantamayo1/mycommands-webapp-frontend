@@ -2,6 +2,7 @@ import '../styles/normalize.css';
 import '../styles/main.css';
 import '../styles/pagination.css';
 import '../styles/footer.css';
+import '../styles/spinner.css';
 import { Services } from './services';
 import { closeMenuFilter, handleCloseFilters, handleFilters, handleFocusInputSearch } from './effects';
 import { getQueries, parseQuery } from './utils';
@@ -9,8 +10,8 @@ import { handlePagination } from './pagination';
 
 // Global variables
 // Store state of each filters
-let buffer_filters_categories = [];
-let buffer_filters_queries = [
+let global_buffer_filters_categories = [];
+let global_buffer_filters_queries = [
     {category: "Command && Meaning", index: 0, active: true, query: "&command=&meaning="},
     {category: "Command", index: 1, active: false, query: "&command="},
     {category: "Meaning", index: 2, active: false, query: "&meaning="},
@@ -31,19 +32,47 @@ export const getCommands = async(lang, page, category) => {
     // Clean data
     document.querySelectorAll(".list-container")
     .forEach(item => item.remove());
+    // Clean pagination
+    document.querySelectorAll(".btn-pagination")
+    .forEach(item => item.remove());
 
     // Get commands
     // Prepare queries
-    // 1ª Search actived toggle in buffer_filters_queries
+    // 1ª Search actived toggle in global_buffer_filters_queries
     const input_value_direct = document.getElementsByClassName("search__input")[0];
 
-    const commandAndMeaning = parseQuery(buffer_filters_queries, input_value_direct.value);
+    const commandAndMeaning = parseQuery(global_buffer_filters_queries, input_value_direct.value);
+
+    // Active spinner
+    const spinner_container_active = document.getElementsByClassName("spinner-container")[0];
+    spinner_container_active.classList.remove("not-visible");
+
+    // Disable total numbers
+    const total_numbers_active = document.getElementsByClassName("total-numbers")[0];
+    total_numbers_active.classList.add("not-visible");
+    
+    // Delete padding by default in pagination
+    const pagination_container_without_padding = document.getElementsByClassName("pagination-container")[0];
+    pagination_container_without_padding.classList.add("pagination-container--padding");
+
     const data = await Services.getCommands(
         lang,
         page,
         category,
         commandAndMeaning
     );
+    // Disable spinner
+    const spinner_container_not_Active = document.getElementsByClassName("spinner-container")[0];
+    spinner_container_not_Active.classList.add("not-visible");
+
+    // Add padding by default in pagination
+    const pagination_container_with_padding = document.getElementsByClassName("pagination-container")[0];
+    pagination_container_with_padding.classList.remove("pagination-container--padding");
+
+    // Disable total numbers
+    const total_numbers_not_active = document.getElementsByClassName("total-numbers")[0];
+    total_numbers_not_active.classList.remove("not-visible");
+
     showTotalCommands(data.total);
     handlePagination(data);
     const lang_response = data.lang;
@@ -169,7 +198,7 @@ const handleInputSearch = () => {
     const input = document.getElementsByClassName("search__input")[0];
     
     input.addEventListener("keydown", async(event) => {
-        let filter = buffer_filters_categories.find(item => item.active === true);
+        let filter = global_buffer_filters_categories.find(item => item.active === true);
         // Get input's value'
         if(event.key === "Enter"){
             // Get commands
@@ -177,7 +206,7 @@ const handleInputSearch = () => {
         }
     });
     button.addEventListener("click", () => {
-        let filter = buffer_filters_categories.find(item => item.active === true);
+        let filter = global_buffer_filters_categories.find(item => item.active === true);
         // Search active filter
         getCommands(global_lang, global_page, filter._id);
     });
@@ -192,7 +221,7 @@ const handleToggleFiletrs = async() => {
     const data = await Services.getFilters();
     const info = data.data;
     // Push filters of searching by commands and meaning
-    buffer_filters_queries.forEach( (item, i) => {
+    global_buffer_filters_queries.forEach( (item, i) => {
         const container_filters = document.getElementsByClassName("container-filters")[i];
         const span = document.createElement("span");
         span.classList.add("toggle__slider");
@@ -200,7 +229,7 @@ const handleToggleFiletrs = async() => {
         const btn = document.createElement("button");
         btn.classList.add("toggle");
         btn.appendChild(span);
-        btn.addEventListener("click", event => handleBtnToggleQueries(event, i, buffer_filters_queries.length));
+        btn.addEventListener("click", event => handleBtnToggleQueries(event, i, global_buffer_filters_queries.length));
 
         const div = document.createElement("div");
         div.appendChild( btn );
@@ -236,12 +265,12 @@ const handleToggleFiletrs = async() => {
     bar_separated.after(title_categories);
 
     // Push first category All
-    buffer_filters_categories[0] = {index: 0, active: true, _id: "all"}
+    global_buffer_filters_categories[0] = {index: 0, active: true, _id: "all"}
     const btn = document.getElementById("id-btn-all");
     const circle = document.getElementById("id-span-all");
     btn.classList.add("toggle-active");
     circle.classList.add("toggle__slider--move-to-right");
-    btn.addEventListener("click", event => handleBtnToggleCategories(event, 0, buffer_filters_queries.length));
+    btn.addEventListener("click", event => handleBtnToggleCategories(event, 0, global_buffer_filters_queries.length));
 
     for(let i = 0; i < info.length; i++){       
         const span = document.createElement("span");
@@ -250,8 +279,8 @@ const handleToggleFiletrs = async() => {
         const btn = document.createElement("button");
         btn.classList.add("toggle");
         btn.appendChild(span);
-        buffer_filters_categories[i + 1] = {index: i + 1, active: false, ...info[i]}
-        btn.addEventListener("click", (event) => handleBtnToggleCategories(event, i + 1, buffer_filters_queries.length));
+        global_buffer_filters_categories[i + 1] = {index: i + 1, active: false, ...info[i]}
+        btn.addEventListener("click", (event) => handleBtnToggleCategories(event, i + 1, global_buffer_filters_queries.length));
 
         const div = document.createElement("div");
         div.appendChild( btn );
@@ -292,8 +321,8 @@ const handleBtnToggleCategories = (event, i, sizePreviouslyFilters) => {
     const btn = document.getElementsByClassName("toggle")[i + sizePreviouslyFilters];
     const circle = document.getElementsByClassName("toggle__slider")[i + sizePreviouslyFilters];
  
-    // Search actived toggle in buffer_filters_categories
-    const filterActived = buffer_filters_categories.findIndex(item => item.active === true);
+    // Search actived toggle in global_buffer_filters_categories
+    const filterActived = global_buffer_filters_categories.findIndex(item => item.active === true);
     if(i === filterActived){
         return;
     }else{
@@ -313,12 +342,12 @@ const handleBtnToggleCategories = (event, i, sizePreviouslyFilters) => {
         btn_filter.forEach( (item, index) => {
             item.classList.remove("toggle-active");
             toggle__slider[index].classList.remove("toggle__slider--move-to-right");
-            buffer_filters_categories[index].active = false; 
+            global_buffer_filters_categories[index].active = false; 
         });
 
         btn.classList.add("toggle-active");
         circle.classList.add("toggle__slider--move-to-right");
-        buffer_filters_categories[i].active = true;
+        global_buffer_filters_categories[i].active = true;
     }
 }
 
@@ -332,8 +361,8 @@ const handleBtnToggleQueries = (event, i, sizeFilters) => {
     const btn = document.getElementsByClassName("toggle")[i];
     const circle = document.getElementsByClassName("toggle__slider")[i];
 
-    // Search actived toggle in buffer_filters_queries
-    const filterActived = buffer_filters_queries.findIndex(item => item.active === true);
+    // Search actived toggle in global_buffer_filters_queries
+    const filterActived = global_buffer_filters_queries.findIndex(item => item.active === true);
     if(i === filterActived){
         return;
     }else{
@@ -353,12 +382,12 @@ const handleBtnToggleQueries = (event, i, sizeFilters) => {
         btn_filter.forEach( (item, index) => {
             item.classList.remove("toggle-active");
             toggle__slider[index].classList.remove("toggle__slider--move-to-right");
-            buffer_filters_queries[index].active = false; 
+            global_buffer_filters_queries[index].active = false; 
         });
 
         btn.classList.add("toggle-active");
         circle.classList.add("toggle__slider--move-to-right");
-        buffer_filters_queries[i].active = true;
+        global_buffer_filters_queries[i].active = true;
     }
 }
 
@@ -366,7 +395,7 @@ const handleBtnToggleQueries = (event, i, sizeFilters) => {
  * hnadle btn Apply in menu filters and get commands
  */
 const handleBtnApply = (event) => {
-    const filter = buffer_filters_categories.find(item => item.active === true);
+    const filter = global_buffer_filters_categories.find(item => item.active === true);
     const query = getQueries(window.location.search);
     getCommands("/" + query.lang, query.page, filter._id, query.category);
     closeMenuFilter();
