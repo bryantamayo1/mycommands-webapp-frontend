@@ -1,3 +1,7 @@
+// Local variables
+// close = false, open = true
+let global_open_menu_filters = false;
+
 /**
  * Hnadle input’s focus search
  */
@@ -21,23 +25,33 @@
 }
 
 /**
- * Open menu filters
+ * Open and close menu filters
  */
 export const handleFilters = () => {
     const button_filters = document.getElementsByClassName("search__button search__button--right")[0];
     const filters = document.getElementsByClassName("filters")[0];
 
     button_filters.addEventListener("click", () => {   
-        filters.style.width = "30%";
+        // If menu is close
+        if(global_open_menu_filters === false){
+            global_open_menu_filters = true;
+            filters.style.display = "block";
+            setTimeout(() => {
+                filters.style.width = "30%";
+            }, 100);
+        }else{
+            closeMenuFilter();
+        }
     });
 }
 
 export const closeMenuFilter = () => {
     const filters = document.getElementsByClassName("filters")[0];
-    const input = document.getElementsByClassName("search__input")[0];
+    global_open_menu_filters = false;
     filters.style.width = 0;
-    // Change focus because an error in button:focus
-    input.focus();
+    setTimeout(() => {
+        filters.style.display = "none";
+    }, 1000);
 }
 
 /**
