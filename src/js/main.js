@@ -23,6 +23,15 @@ let global_buffer_filters_queries = [
 // Functions
 ////////////
 
+const goHome = () => {
+    const btn_house = document.getElementById("btn-house");
+    btn_house.addEventListener("click", () => {
+        const input_value_direct = document.getElementsByClassName("search__input")[0];
+        input_value_direct.value = "";
+        getCommands("/en", 1, "all", "",  false, true);
+    });
+}
+
 const getInitialQueries = () => {
     const queryObject = getQueries(window.location.search);
     const {lang, page, category} = queryObject;
@@ -44,8 +53,9 @@ const getInitialQueries = () => {
  * @param {string} category 
  * @param {string} parameterCommandAndMeaning It comes of url, It can be exist or not
  * @param {boolean} fromQueryUrl avoid update url, true = update, false = not update
+ * @param {boolean} defaultSearch search with page = 1, lang = "en" and category = "all"
  */
-export const getCommands = async(lang, page, category, parameterCommandAndMeaning, fromQueryUrl)  => {
+export const getCommands = async(lang, page, category, parameterCommandAndMeaning, fromQueryUrl, defaultSearch)  => {
     // Clean data
     document.querySelectorAll(".list-container")
     .forEach(item => item.remove());
@@ -91,7 +101,8 @@ export const getCommands = async(lang, page, category, parameterCommandAndMeanin
         page,
         category,
         parameterCommandAndMeaning,
-        fromQueryUrl
+        fromQueryUrl,
+        defaultSearch
     );
     // Disable spinner
     const spinner_container_not_Active = document.getElementsByClassName("spinner-container")[0];
@@ -220,10 +231,10 @@ const handleButtonsLanguage = () => {
             const queryObject = getQueries(window.location.search);
             const {page, category} = queryObject;
             query.splice(lang_index + 5, 2, "e");
-            query.splice(lang_index + 6, 0, "s");
+            query.splice(lang_index + 6, 0, "n");
             let newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + query.join("");
             window.history.pushState({path:newurl},'',newurl);
-            getCommands("/es", page, category, getQueriesCommanMeaning(queryObject), true);
+            getCommands("/en", page, category, getQueriesCommanMeaning(queryObject), true);
 
         }
     });
@@ -461,6 +472,7 @@ const handleCHangesUrl = () => {
 
 function init(){
     document.addEventListener("DOMContentLoaded", () => {
+        goHome();
         getInitialQueries();
         handleButtonsLanguage();
         handleInputSearch();

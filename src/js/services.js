@@ -10,11 +10,12 @@ export class Services{
      * @param {string} command 
      * @param {string} meaning 
      * @param {boolean} fromQueryUrl avoid update url, true = update, false = not update
+     * @param {boolean} defaultSearch search with page = 1, lang = "en" and category = "all"
      * @returns Promise
      */
-    static async getCommands(lang = "/en", page = 1, category = "all", commandAndMeaning, fromQueryUrl){
+    static async getCommands(lang = "/en", page = 1, category = "all", commandAndMeaning, fromQueryUrl, defaultSearch){
         // Update query in window.history
-        if (history.pushState && !fromQueryUrl) {
+        if (history.pushState && !fromQueryUrl && !defaultSearch) {
             let newurl = window.location.protocol + "//" + window.location.host +
             `?page=${page}&lang=${lang.slice(1, lang.length)}&category=${category}${commandAndMeaning}`;
             window.history.pushState({path:newurl},'',newurl);
@@ -23,6 +24,12 @@ export class Services{
         let query = "";
         if(commandAndMeaning){
             query = commandAndMeaning;
+        }
+        if(defaultSearch && defaultSearch){
+            let newurl = window.location.protocol + "//" + window.location.host +
+            `?page=${page}&lang=${lang.slice(1, lang.length)}&category=${category}`;
+            window.history.pushState({path:newurl},'',newurl);
+            query = "";
         }
         const data = await fetch(process.env.API_URL + "/commands" + lang + `/?page=${page}&category=${category}${query}`)
         return data.json();
