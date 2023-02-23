@@ -153,6 +153,7 @@ main{
     background-color: #FFF;
     border: 1px solid #FFF;
     box-sizing: border-box;
+    left: 9px;
     margin: 0;
     position: absolute;
     width: 20px;

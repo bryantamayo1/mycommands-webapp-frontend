@@ -8,7 +8,7 @@ import { Services } from './services';
 import { closeMenuFilter, handleCloseFilters, handleFilters, handleFocusInputSearch } from './effects';
 import { getQueries, parseQuery } from './utils';
 import { handlePagination } from './pagination';
-import { openModal } from './modal';
+import { closeModal, openModal } from './modal';
 
 // Global variables
 // Store state of each filters
@@ -415,6 +415,7 @@ function init(){
         handleFocusInputSearch();
         handleFilters();
         handleCloseFilters();
+        closeModal();
     });
 }
 
