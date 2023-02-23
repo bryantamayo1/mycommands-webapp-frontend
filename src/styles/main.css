@@ -27,6 +27,21 @@ header{
 header img{
     cursor: pointer;
 }
+#btn-house{
+    color: #FFF;
+    cursor: pointer;
+}
+.btn-lang{
+    align-items: center;
+    background-color: inherit;
+    display: flex;
+    justify-content: center;
+}
+.btn-lang:focus{
+    background-color: #252529;
+    box-shadow:  0px 0px 15px 2px #ce04a2;
+    outline: 2px solid #ce04a2;
+}
 
 #title-web-page{
     color: #FFF;
@@ -407,7 +422,7 @@ code{
         width: 100% !important;
     }
     .list-container{
-        grid-template-columns: 40px 40px 1fr 1fr;
+        grid-template-columns: 40px 40px 200px 1fr;
     }
     .search{
         width: 400px;
