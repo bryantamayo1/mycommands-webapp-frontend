@@ -6,7 +6,7 @@ import '../styles/spinner.css';
 import '../styles/modal.css';
 import { Services } from './services';
 import { closeMenuFilter, handleCloseFilters, handleFilters, handleFocusInputSearch } from './effects';
-import { getQueries, parseQuery } from './utils';
+import { getQueries, getQueriesCommanMeaning, parseQuery } from './utils';
 import { handlePagination } from './pagination';
 import { closeModal, copyInClipboardModalCommand, copyInClipboardModalMeaning, openModal } from './modal';
 
@@ -18,8 +18,21 @@ let global_buffer_filters_queries = [
     {category: "Command", index: 1, active: false, query: "&command="},
     {category: "Meaning", index: 2, active: false, query: "&meaning="},
 ];
-let global_lang = "/en";
-let global_page = 1;
+
+////////////
+// Functions
+////////////
+
+const getInitialQueries = () => {
+    const queryObject = getQueries(window.location.search);
+    const {lang, page, category} = queryObject;
+    // Validations
+    if(lang && page && category){
+        getCommands("/"+lang, page, category, getQueriesCommanMeaning(queryObject), true);
+    }else{
+        getCommands("/en", 1);
+    }
+}
 
 /**
  * Show 20 commands and create list with them.
@@ -29,8 +42,10 @@ let global_page = 1;
  * @param {string} lang 
  * @param {number} page 
  * @param {string} category 
+ * @param {string} parameterCommandAndMeaning It comes of url, It can be exist or not
+ * @param {boolean} fromQueryUrl avoid update url, true = update, false = not update
  */
-export const getCommands = async(lang, page, category) => {
+export const getCommands = async(lang, page, category, parameterCommandAndMeaning, fromQueryUrl)  => {
     // Clean data
     document.querySelectorAll(".list-container")
     .forEach(item => item.remove());
@@ -43,7 +58,21 @@ export const getCommands = async(lang, page, category) => {
     // 1ª Search actived toggle in global_buffer_filters_queries
     const input_value_direct = document.getElementsByClassName("search__input")[0];
 
-    const commandAndMeaning = parseQuery(global_buffer_filters_queries, input_value_direct.value);
+    if(!parameterCommandAndMeaning){
+        parameterCommandAndMeaning = parseQuery(global_buffer_filters_queries, input_value_direct.value);
+    }else{
+        const {command, meaning} = getQueries(window.location.search);
+        let input_value_of_url = "";
+        if(command && meaning){
+            input_value_of_url = command;
+        }else if(command){
+            input_value_of_url = command;
+        }else if(meaning){
+            input_value_of_url = meaning;
+        }
+        input_value_direct.value = input_value_of_url;
+        parameterCommandAndMeaning = parseQuery(global_buffer_filters_queries, input_value_of_url);
+    }
 
     // Active spinner
     const spinner_container_active = document.getElementsByClassName("spinner-container")[0];
@@ -61,7 +90,8 @@ export const getCommands = async(lang, page, category) => {
         lang,
         page,
         category,
-        commandAndMeaning
+        parameterCommandAndMeaning,
+        fromQueryUrl
     );
     // Disable spinner
     const spinner_container_not_Active = document.getElementsByClassName("spinner-container")[0];
@@ -167,27 +197,33 @@ const showTotalCommands = (total) => {
 const handleButtonsLanguage = () => {
     const es = document.getElementById("es");
     const en = document.getElementById("en");
-    let query = window.location.search.split("");
-    const lang_index = window.location.search.indexOf("lang=");
     
     es.addEventListener("click", () => {
+        let query = window.location.search.split("");
+        const lang_index = window.location.search.indexOf("lang=");
         // Change query in window.history
         if (history.pushState){
-            query.splice(lang_index + 4, 2, "e");
-            query.splice(lang_index + 6, 1, "s");
+            const queryObject = getQueries(window.location.search);
+            const {page, category} = queryObject;
+            query.splice(lang_index + 5, 2, "e");
+            query.splice(lang_index + 6, 0, "s");
             let newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + query.join("");
             window.history.pushState({path:newurl},'',newurl);
-            getCommands("/es");
+            getCommands("/es", page, category, getQueriesCommanMeaning(queryObject), true);
         }
     });
     en.addEventListener("click", () => {
+        let query = window.location.search.split("");
+        const lang_index = window.location.search.indexOf("lang=");
         // Change query in window.history
         if (history.pushState){
-            query.splice(lang_index + 4, 2, "e");
-            query.splice(lang_index + 6, 1, "n");
+            const queryObject = getQueries(window.location.search);
+            const {page, category} = queryObject;
+            query.splice(lang_index + 5, 2, "e");
+            query.splice(lang_index + 6, 0, "s");
             let newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + query.join("");
             window.history.pushState({path:newurl},'',newurl);
-            getCommands("/en");
+            getCommands("/es", page, category, getQueriesCommanMeaning(queryObject), true);
 
         }
     });
@@ -201,17 +237,19 @@ const handleInputSearch = () => {
     const input = document.getElementsByClassName("search__input")[0];
     
     input.addEventListener("keydown", async(event) => {
-        let filter = global_buffer_filters_categories.find(item => item.active === true);
+        const {lang} = getQueries(window.location.search);
+        const filter = global_buffer_filters_categories.find(item => item.active === true);
         // Get input's value'
         if(event.key === "Enter"){
             // Get commands
-            getCommands(global_lang, global_page, filter._id);
+            getCommands("/"+lang, 1, filter._id);
         }
     });
     button.addEventListener("click", () => {
+        const {lang} = getQueries(window.location.search);
         let filter = global_buffer_filters_categories.find(item => item.active === true);
         // Search active filter
-        getCommands(global_lang, global_page, filter._id);
+        getCommands("/"+lang, 1, filter._id);
     });
 }
 
@@ -412,12 +450,22 @@ const handleBtnApply = (event) => {
     closeMenuFilter();
 }
 
+const handleCHangesUrl = () => {
+    window.onpopstate = function(){
+        const queryObject = getQueries(window.location.search);
+        const {page, lang, category} = queryObject;
+        getCommands("/"+lang, page, category, getQueriesCommanMeaning(queryObject), true);
+
+    }
+}
+
 function init(){
     document.addEventListener("DOMContentLoaded", () => {
-        getCommands("/en", 1);
+        getInitialQueries();
         handleButtonsLanguage();
         handleInputSearch();
         handleToggleFiletrs();
+        handleCHangesUrl();
         
         // Effects in style
         handleFocusInputSearch();

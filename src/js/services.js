@@ -9,11 +9,12 @@ export class Services{
      * @param {string} category 
      * @param {string} command 
      * @param {string} meaning 
+     * @param {boolean} fromQueryUrl avoid update url, true = update, false = not update
      * @returns Promise
      */
-    static async getCommands(lang = "/en", page = 1, category = "all", commandAndMeaning){
+    static async getCommands(lang = "/en", page = 1, category = "all", commandAndMeaning, fromQueryUrl){
         // Update query in window.history
-        if (history.pushState) {
+        if (history.pushState && !fromQueryUrl) {
             let newurl = window.location.protocol + "//" + window.location.host +
             `?page=${page}&lang=${lang.slice(1, lang.length)}&category=${category}${commandAndMeaning}`;
             window.history.pushState({path:newurl},'',newurl);

@@ -1,5 +1,5 @@
 /**
- * Parse queries
+ * Create query &command=[data]&meaning=[data]
  */
 export const parseQuery = (buffer, input_value) => {
     // 1ª Search actived toggle in global_buffer_filters_queries
@@ -38,4 +38,20 @@ export const parseQuery = (buffer, input_value) => {
         queryAux[key] = value;
     });
     return queryAux;
+}
+
+/**
+ * Get query like a string of {command: "test", meaning: "test"}
+ * @param {object} queryObject
+ * @return string &command=test&meaning=test
+ */
+export const getQueriesCommanMeaning = (queryObject) => {
+    let result = "";
+    if(queryObject.command){
+        result = "&command=" + queryObject.command;
+    }
+    if(queryObject.meaning){
+        result = result + "&meaning=" + queryObject.meaning;
+    }
+    return result;
 }

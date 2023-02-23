@@ -407,7 +407,7 @@ code{
         width: 100% !important;
     }
     .list-container{
-        grid-template-columns: 40px 40px 1fr 1fr;
+        grid-template-columns: 40px 40px 200px 1fr;
     }
     .search{
         width: 400px;
