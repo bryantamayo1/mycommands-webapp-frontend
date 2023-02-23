@@ -5,7 +5,6 @@
  * @param {string} lang
  */
 export const openModal = (event, info, lang) => {
-    // Show modal
     const overlay = document.getElementsByClassName("overlay")[0];
     const overlay__command = document.getElementsByClassName("overlay__command")[0];
     const overlay__meaning = document.getElementsByClassName("overlay__meaning")[0];
@@ -26,6 +25,8 @@ export const openModal = (event, info, lang) => {
     }
 
     overlay__command.innerHTML = info.command;
+
+    // Show modal
     overlay.style.display = "flex";
 }
 

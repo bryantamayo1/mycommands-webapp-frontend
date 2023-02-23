@@ -51,7 +51,7 @@ export const closeMenuFilter = () => {
     filters.style.width = 0;
     setTimeout(() => {
         filters.style.display = "none";
-    }, 1000);
+    }, 100);
 }
 
 /**

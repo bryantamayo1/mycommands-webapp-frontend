@@ -290,7 +290,15 @@ const handleToggleFiletrs = async() => {
         
         const version = document.createElement("p");
         version.classList.add("version-filter");
-        version.appendChild( document.createTextNode( info[i].category ) );
+
+        // Parse property version. This is a particular case
+        let aux_category = "";
+        if(info[i].category.includes("[") && info[i].category.includes("]")){
+            aux_category = info[i].category;
+        }else{
+            aux_category = info[i].category + " " + info[i].version;
+        }
+        version.appendChild( document.createTextNode( aux_category ) );
         div.appendChild( version );
         div.classList.add("toggle-container");
         div.classList.add("container-filters");
