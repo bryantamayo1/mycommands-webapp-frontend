@@ -304,7 +304,7 @@ main{
 /* list */
 .my-container{
     margin: 30px auto 0 auto;
-    width: 70%;
+    width: 80%;
 }
 .list-container{
     align-items: center;
@@ -314,6 +314,7 @@ main{
     box-sizing: border-box;
     display: grid;
     font-family: 'Ubuntu Mono', monospace;
+    gap: 0 5px;
     grid-template-columns: 40px 40px 400px 1fr;
     margin: 15px 0;
     width: 100%;
@@ -372,7 +373,6 @@ main{
     color: #12A10D;
 }
 
-
 code{
     font-family: 'Ubuntu Mono', monospace;
     color: #FFF;
@@ -382,14 +382,61 @@ code{
     color: #FFF;
 }
 
+/* responsive */
+@media(max-width: 1200px){
+    .filters{
+        width: 40% !important;
+    }
+    .my-container{
+        width: 90%;
+    }
+}
+@media(max-width: 900px){
+    .filters{
+        width: 60% !important;
+    }
+    .list-container{
+        grid-template-columns: 40px 40px 300px 1fr;
+    }
+    .pagination-container{
+        width: 40% !important;
+    }
+}
 @media(max-width: 768px){
+    .filters{
+        width: 100% !important;
+    }
+    .list-container{
+        grid-template-columns: 40px 40px 1fr 1fr;
+    }
     .search{
         width: 400px;
     }
+    .pagination-container{
+        width: 60% !important;
+    }
+}
+@media(max-width: 600px){
+    .pagination-container{
+        flex-wrap: wrap;
+        width: 80% !important;
+    }
 }
 @media(max-width: 480px){
+    #title-web-page{
+        font-size: 50px;
+    }
+    .list-container{
+        grid-template-columns: 40px 40px 1fr;
+    }
+    .command-text{
+        display: none !important;
+    }
     .search{
         width: 250px;
+    }
+    .pagination-container{
+        width: 90% !important;
     }
 }
 

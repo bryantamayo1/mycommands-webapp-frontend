@@ -5,7 +5,6 @@
  * @param {string} lang
  */
 export const openModal = (event, info, lang) => {
-    // Show modal
     const overlay = document.getElementsByClassName("overlay")[0];
     const overlay__command = document.getElementsByClassName("overlay__command")[0];
     const overlay__meaning = document.getElementsByClassName("overlay__meaning")[0];
@@ -26,6 +25,8 @@ export const openModal = (event, info, lang) => {
     }
 
     overlay__command.innerHTML = info.command;
+
+    // Show modal
     overlay.style.display = "flex";
 }
 
@@ -48,5 +49,42 @@ export const closeModal = (event) => {
         if(!overlay__modal.contains(event_overlay.target)){
             overlay.style.display = "none";
         }
+    });
+}
+
+
+export const copyInClipboardModalCommand = () => {
+    const btn_copy = document.getElementsByClassName("container-icon")[0];
+    btn_copy.addEventListener("click", () => {
+    // Copy in clipboard a command
+    navigator.clipboard.writeText(document.getElementsByClassName("overlay__command")[0].innerHTML);
+    
+    // show popover with copied successfully
+    const div = document.createElement("div");
+    div.appendChild( document.createTextNode("Copied!") );
+    div.classList.add("popover-clipboard");
+    btn_copy.appendChild(div);
+
+    setTimeout(() => {
+        div.style.display = "none";
+    }, 1000);
+    });
+}
+
+export const copyInClipboardModalMeaning = () => {
+    const btn_copy = document.getElementsByClassName("container-icon")[1];
+    btn_copy.addEventListener("click", () => {
+    // Copy in clipboard a command
+    navigator.clipboard.writeText(document.getElementsByClassName("overlay__meaning")[0].textContent);
+    
+    // show popover with copied successfully
+    const div = document.createElement("div");
+    div.appendChild( document.createTextNode("Copied!") );
+    div.classList.add("popover-clipboard");
+    btn_copy.appendChild(div);
+
+    setTimeout(() => {
+        div.style.display = "none";
+    }, 1000);
     });
 }

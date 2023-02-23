@@ -8,7 +8,7 @@ import { Services } from './services';
 import { closeMenuFilter, handleCloseFilters, handleFilters, handleFocusInputSearch } from './effects';
 import { getQueries, parseQuery } from './utils';
 import { handlePagination } from './pagination';
-import { closeModal, openModal } from './modal';
+import { closeModal, copyInClipboardModalCommand, copyInClipboardModalMeaning, openModal } from './modal';
 
 // Global variables
 // Store state of each filters
@@ -290,7 +290,15 @@ const handleToggleFiletrs = async() => {
         
         const version = document.createElement("p");
         version.classList.add("version-filter");
-        version.appendChild( document.createTextNode( info[i].category ) );
+
+        // Parse property version. This is a particular case
+        let aux_category = "";
+        if(info[i].category.includes("[") && info[i].category.includes("]")){
+            aux_category = info[i].category;
+        }else{
+            aux_category = info[i].category + " " + info[i].version;
+        }
+        version.appendChild( document.createTextNode( aux_category ) );
         div.appendChild( version );
         div.classList.add("toggle-container");
         div.classList.add("container-filters");
@@ -416,6 +424,8 @@ function init(){
         handleFilters();
         handleCloseFilters();
         closeModal();
+        copyInClipboardModalCommand();
+        copyInClipboardModalMeaning();
     });
 }
 
