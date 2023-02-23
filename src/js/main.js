@@ -100,7 +100,7 @@ export const getCommands = async(lang, page, category) => {
         icon_info.classList.add("fa-circle-info");
         column_2.classList.add("container-icon");
         column_2.appendChild(icon_info);
-        column_2.addEventListener("click", event => openModal(event, data.data[i]));
+        column_2.addEventListener("click", event => openModal(event, data.data[i], data.lang));
         
         column_3.appendChild( document.createTextNode(data.data[i].command) );
         column_3.classList.add("command-text");

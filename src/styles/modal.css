@@ -1,6 +1,6 @@
 .overlay{
     align-items: center;
-    background-color: rgba(0, 0, 0, 0.226);
+    background-color: rgba(0, 0, 0, 0.7);
     bottom: 0;
     display: none;
     height: 100vh;
@@ -20,6 +20,19 @@
     box-sizing: border-box;
     width: 80%;
 }
+#filters__btn__container--btn-close-modal{
+    margin: 0;
+}
 #btn-close-modal{
     border: 1px solid #2E2E30;
+}
+.overlay__info{
+    align-items: center;
+    box-sizing: border-box;
+    display: grid;
+    grid-template-columns: 50px 1fr;
+    padding: 10px 15px;
+}
+#contianer-command{
+    border-bottom: 1px solid rgb(165, 165, 165);
 }

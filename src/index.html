@@ -94,14 +94,25 @@
         <!-- Overlay with modal -->
         <section class="overlay">
             <div class="overlay__modal">
-                <div class="filters__btn__container">
+                <!-- Btn close modal -->
+                <div id="filters__btn__container--btn-close-modal" class="filters__btn__container">
                     <button id="btn-close-modal" class="filters__btn__close">
                         <p></p>
                         <p></p>
                     </button>
                 </div>
-                <div>command</div>
-                <div>meaning</div>
+                <div id="contianer-command" class="overlay__info">
+                    <button class="container-icon">
+                        <i class="fa-solid fa-copy"></i>
+                    </button>
+                    <p class="overlay__command"></p>
+                </div>
+                <div class="overlay__info">
+                    <button class="container-icon">
+                        <i class="fa-solid fa-copy"></i>
+                    </button>
+                    <p class="overlay__meaning"></p>
+                </div>
             </div>
         </section>
 
