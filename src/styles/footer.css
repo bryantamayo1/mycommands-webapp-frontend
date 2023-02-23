@@ -1,4 +1,27 @@
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu');
+
 footer{
     background-color: #1d1a27;
-    height: 100px;
+    box-sizing: border-box;
+    color: rgb(133, 133, 133);
+    font-family: 'Ubuntu', sans-serif;
+    font-size: 12px;
+    padding: 40px 0 20px 0;
+    text-align: center;
+}
+footer > div{
+    display: flex;
+    gap: 0 20px;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+footer > div a{
+    color: rgb(133, 133, 133);
+    font-size: 15px;
+    padding: 2px;
+}
+footer > div a:focus{
+    box-shadow:  0px 0px 15px 2px #ce04a2;
+    color: #FFF;
+    outline: 2px solid #ce04a2; 
 }
