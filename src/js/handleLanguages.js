@@ -29,7 +29,6 @@ export const handleLanguages = (lang = "en") => {
 
     // Change in copy clipboard copied
     const copied = document.querySelectorAll(".popover-clipboard");
-    console.log(copied)
     copied.forEach(item => {
         item.innerHTML = data["copied"][lang];
     });

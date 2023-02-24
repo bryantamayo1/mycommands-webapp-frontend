@@ -4,6 +4,7 @@ import '../styles/pagination.css';
 import '../styles/footer.css';
 import '../styles/spinner.css';
 import '../styles/modal.css';
+import '../styles/handleErros.css';
 import { Services } from './services';
 import { closeMenuFilter, handleCloseFilters, handleFilters, handleFocusInputSearch } from './effects';
 import { getQueries, getQueriesCommanMeaning, parseQuery } from './utils';
@@ -11,6 +12,7 @@ import { handlePagination } from './pagination';
 import { closeModal, copyInClipboardModalCommand, copyInClipboardModalMeaning, openModal } from './modal';
 import { handleLanguages } from './handleLanguages';
 import dataJson from './data.json';
+import { handleErrors } from './handleErrors';
 
 // Global variables
 // Store state of each filters
@@ -105,73 +107,79 @@ export const getCommands = async(lang, page, category, parameterCommandAndMeanin
     const pagination_container_without_padding = document.getElementsByClassName("pagination-container")[0];
     pagination_container_without_padding.classList.add("pagination-container--padding");
 
-    const data = await Services.getCommands(
-        lang,
-        page,
-        category,
-        parameterCommandAndMeaning,
-        fromQueryUrl,
-        defaultSearch
-    );
-    // Disable spinner
-    const spinner_container_not_Active = document.getElementsByClassName("spinner-container")[0];
-    spinner_container_not_Active.classList.add("not-visible");
-
-    // Add padding by default in pagination
-    const pagination_container_with_padding = document.getElementsByClassName("pagination-container")[0];
-    pagination_container_with_padding.classList.remove("pagination-container--padding");
-
-    // Disable total numbers
-    const total_numbers_not_active = document.getElementsByClassName("total-numbers")[0];
-    total_numbers_not_active.classList.remove("not-visible");
-
-    showTotalCommands(data.total);
-    handlePagination(data);
-    const lang_response = data.lang;
-
-    // Show data in list
-    const my_container = document.getElementsByClassName("my-container")[0];
-    for(let i = 0; i< data.data.length; i++){
-        const div = document.createElement("div");
-        const column_1 = document.createElement("button");
-        const column_2 = document.createElement("button");
-        const column_3 = document.createElement("p");
-        const column_4 = document.createElement("p");
-        const icon_copy = document.createElement("i");
-        const icon_info = document.createElement("i");
-
-        icon_copy.classList.add("fa-solid");
-        icon_copy.classList.add("fa-copy");
-        column_1.classList.add("container-icon");
-        column_1.appendChild(icon_copy);
-        column_1.addEventListener("click", (event) => copyClipboard(event, data.data[i].command, column_1, data.lang))
-
-        icon_info.classList.add("fa-solid");
-        icon_info.classList.add("fa-circle-info");
-        column_2.classList.add("container-icon");
-        column_2.appendChild(icon_info);
-        column_2.addEventListener("click", event => openModal(event, data.data[i], data.lang));
-        
-        column_3.appendChild( document.createTextNode(data.data[i].command) );
-        column_3.classList.add("command-text");
-
-        // Chage color in character hash #
-        if(data.data[i][lang_response].charAt(0) === "#"){
-            const span = document.createElement("span");
-            span.innerHTML = "# ";
-            span.classList.add("hash-in-meaning");   
-            column_4.appendChild(span);
-            column_4.appendChild( document.createTextNode(data.data[i][lang_response].slice(2, data.data[i].length)) );
-        }else{
-            column_4.appendChild( document.createTextNode(data.data[i][lang_response]) );
+    try{
+        const data = await Services.getCommands(
+            lang,
+            page,
+            category,
+            parameterCommandAndMeaning,
+            fromQueryUrl,
+            defaultSearch
+        );
+        // Disable spinner
+        const spinner_container_not_Active = document.getElementsByClassName("spinner-container")[0];
+        spinner_container_not_Active.classList.add("not-visible");
+    
+        // Add padding by default in pagination
+        const pagination_container_with_padding = document.getElementsByClassName("pagination-container")[0];
+        pagination_container_with_padding.classList.remove("pagination-container--padding");
+    
+        // Disable total numbers
+        const total_numbers_not_active = document.getElementsByClassName("total-numbers")[0];
+        total_numbers_not_active.classList.remove("not-visible");
+    
+        showTotalCommands(data.total);
+        handlePagination(data);
+        const lang_response = data.lang;
+    
+        // Show data in list
+        const my_container = document.getElementsByClassName("my-container")[0];
+        for(let i = 0; i< data.data.length; i++){
+            const div = document.createElement("div");
+            const column_1 = document.createElement("button");
+            const column_2 = document.createElement("button");
+            const column_3 = document.createElement("p");
+            const column_4 = document.createElement("p");
+            const icon_copy = document.createElement("i");
+            const icon_info = document.createElement("i");
+    
+            icon_copy.classList.add("fa-solid");
+            icon_copy.classList.add("fa-copy");
+            column_1.classList.add("container-icon");
+            column_1.appendChild(icon_copy);
+            column_1.addEventListener("click", (event) => copyClipboard(event, data.data[i].command, column_1, data.lang))
+    
+            icon_info.classList.add("fa-solid");
+            icon_info.classList.add("fa-circle-info");
+            column_2.classList.add("container-icon");
+            column_2.appendChild(icon_info);
+            column_2.addEventListener("click", event => openModal(event, data.data[i], data.lang));
+            
+            column_3.appendChild( document.createTextNode(data.data[i].command) );
+            column_3.classList.add("command-text");
+    
+            // Chage color in character hash #
+            if(data.data[i][lang_response].charAt(0) === "#"){
+                const span = document.createElement("span");
+                span.innerHTML = "# ";
+                span.classList.add("hash-in-meaning");   
+                column_4.appendChild(span);
+                column_4.appendChild( document.createTextNode(data.data[i][lang_response].slice(2, data.data[i].length)) );
+            }else{
+                column_4.appendChild( document.createTextNode(data.data[i][lang_response]) );
+            }
+            div.appendChild(column_1);
+            div.appendChild(column_2);
+            div.appendChild(column_3);
+            div.appendChild(column_4);
+            div.classList.add("list-container");
+            
+            my_container.appendChild(div);
         }
-        div.appendChild(column_1);
-        div.appendChild(column_2);
-        div.appendChild(column_3);
-        div.appendChild(column_4);
-        div.classList.add("list-container");
-        
-        my_container.appendChild(div);
+    }finally{
+        // Disable spinner
+        const spinner_container_not_Active = document.getElementsByClassName("spinner-container")[0];
+        spinner_container_not_Active.classList.add("not-visible");
     }
 }
 
@@ -488,6 +496,7 @@ const handleCHangesUrl = () => {
 }
 
 function init(){
+    handleErrors();
     document.addEventListener("DOMContentLoaded", () => {
         goHome();
         getInitialQueries();
