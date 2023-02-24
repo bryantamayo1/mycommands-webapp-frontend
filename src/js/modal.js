@@ -1,3 +1,6 @@
+import { getQueries } from "./utils";
+import dataJson from './data.json';
+
 /**
  * Open modal with info selected command
  * @param {*} event
@@ -56,35 +59,39 @@ export const closeModal = (event) => {
 export const copyInClipboardModalCommand = () => {
     const btn_copy = document.getElementsByClassName("container-icon")[0];
     btn_copy.addEventListener("click", () => {
-    // Copy in clipboard a command
-    navigator.clipboard.writeText(document.getElementsByClassName("overlay__command")[0].innerHTML);
-    
-    // show popover with copied successfully
-    const div = document.createElement("div");
-    div.appendChild( document.createTextNode("Copied!") );
-    div.classList.add("popover-clipboard");
-    btn_copy.appendChild(div);
+        // Copy in clipboard a command
+        navigator.clipboard.writeText(document.getElementsByClassName("overlay__command")[0].innerHTML);
+        
+        // Get copied in url query
+        const lang = getQueries(window.location.search).lang;
+        // show popover with copied successfully
+        const div = document.createElement("div");
+        div.appendChild( document.createTextNode( dataJson.content["copied"][lang] ));
+        div.classList.add("popover-clipboard");
+        btn_copy.appendChild(div);
 
-    setTimeout(() => {
-        div.style.display = "none";
-    }, 1000);
+        setTimeout(() => {
+            div.style.display = "none";
+        }, 1000);
     });
 }
 
 export const copyInClipboardModalMeaning = () => {
     const btn_copy = document.getElementsByClassName("container-icon")[1];
     btn_copy.addEventListener("click", () => {
-    // Copy in clipboard a command
-    navigator.clipboard.writeText(document.getElementsByClassName("overlay__meaning")[0].textContent);
-    
-    // show popover with copied successfully
-    const div = document.createElement("div");
-    div.appendChild( document.createTextNode("Copied!") );
-    div.classList.add("popover-clipboard");
-    btn_copy.appendChild(div);
+        // Copy in clipboard a command
+        navigator.clipboard.writeText(document.getElementsByClassName("overlay__meaning")[0].textContent);
 
-    setTimeout(() => {
-        div.style.display = "none";
-    }, 1000);
-    });
+        // Get copied in url query
+        const lang = getQueries(window.location.search).lang;
+        // show popover with copied successfully
+        const div = document.createElement("div");
+        div.appendChild( document.createTextNode( dataJson.content["copied"][lang] ));
+        div.classList.add("popover-clipboard");
+        btn_copy.appendChild(div);
+
+        setTimeout(() => {
+            div.style.display = "none";
+        }, 1000);
+        });
 }

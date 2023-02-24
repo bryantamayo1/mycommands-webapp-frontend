@@ -1,0 +1,28 @@
+{
+    "content": {
+        "search_by": {
+            "en": "Search by",
+            "es": "Buscar por"
+        },
+        "categories": {
+            "en": "Categories",
+            "es": "Categorias"
+        },
+        "all": {
+            "en": "All",
+            "es": "Todos"
+        },
+        "btn_apply": {
+            "en": "Apply",
+            "es": "Aplicar"
+        },
+        "footer": {
+            "en": "© 2023 Copyright. Created by Bryan Tmaayo",
+            "es": "© 2023 Copyright. Creado por Bryan Tmaayo"
+        },
+        "copied": {
+            "en": "Copied!",
+            "es": "Copiado!"
+        }
+    }
+}

@@ -9,6 +9,8 @@ import { closeMenuFilter, handleCloseFilters, handleFilters, handleFocusInputSea
 import { getQueries, getQueriesCommanMeaning, parseQuery } from './utils';
 import { handlePagination } from './pagination';
 import { closeModal, copyInClipboardModalCommand, copyInClipboardModalMeaning, openModal } from './modal';
+import { handleLanguages } from './handleLanguages';
+import dataJson from './data.json';
 
 // Global variables
 // Store state of each filters
@@ -23,12 +25,19 @@ let global_buffer_filters_queries = [
 // Functions
 ////////////
 
+/**
+ * Go home with default values.
+ * Charge text of default language 'en'
+ */
 const goHome = () => {
     const btn_house = document.getElementById("btn-house");
     btn_house.addEventListener("click", () => {
         const input_value_direct = document.getElementsByClassName("search__input")[0];
         input_value_direct.value = "";
         getCommands("/en", 1, "all", "",  false, true);
+
+        // Charge text of default language
+        handleLanguages("en");
     });
 }
 
@@ -135,7 +144,7 @@ export const getCommands = async(lang, page, category, parameterCommandAndMeanin
         icon_copy.classList.add("fa-copy");
         column_1.classList.add("container-icon");
         column_1.appendChild(icon_copy);
-        column_1.addEventListener("click", (event) => copyClipboard(event, data.data[i].command, column_1))
+        column_1.addEventListener("click", (event) => copyClipboard(event, data.data[i].command, column_1, data.lang))
 
         icon_info.classList.add("fa-solid");
         icon_info.classList.add("fa-circle-info");
@@ -171,12 +180,13 @@ export const getCommands = async(lang, page, category, parameterCommandAndMeanin
  * @param {event} event 
  * @param {string} command 
  * @param {NodeElement} btn 
+ * @param {string} lang 
  */
-const copyClipboard = (event, command, btn) => {
+const copyClipboard = (event, command, btn, lang) => {
     navigator.clipboard.writeText(command);
     // show popover with copied successfully
     const div = document.createElement("div");
-    div.appendChild( document.createTextNode("Copied!") );
+    div.appendChild( document.createTextNode(dataJson.content["copied"][lang]) );
     div.classList.add("popover-clipboard");
     btn.appendChild(div);
 
@@ -221,6 +231,8 @@ const handleButtonsLanguage = () => {
             let newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + query.join("");
             window.history.pushState({path:newurl},'',newurl);
             getCommands("/es", page, category, getQueriesCommanMeaning(queryObject), true);
+            // Charge text of default language
+            handleLanguages("es");
         }
     });
     en.addEventListener("click", () => {
@@ -236,6 +248,8 @@ const handleButtonsLanguage = () => {
             window.history.pushState({path:newurl},'',newurl);
             getCommands("/en", page, category, getQueriesCommanMeaning(queryObject), true);
 
+            // Charge text of default language
+            handleLanguages("en");
         }
     });
 }
@@ -312,7 +326,7 @@ const handleToggleFiletrs = async() => {
     const title_categories = document.createElement("p");
     title_categories.classList.add("container-filters");
     title_categories.classList.add("container-filters__title");
-    title_categories.appendChild( document.createTextNode("Categories") );
+    // title_categories.appendChild( document.createTextNode("Categories") );
     const bar_separated = document.getElementsByClassName("bar-separated")[0];
     bar_separated.after(title_categories);
 
@@ -358,7 +372,7 @@ const handleToggleFiletrs = async() => {
     // Create btn to apply filters
     const text_apply = document.createElement("p");
     text_apply.classList.add("text_apply");
-    text_apply.appendChild( document.createTextNode("Apply")  );
+    // text_apply.appendChild( document.createTextNode("Apply")  );
 
     const btn_apply = document.createElement("button");
     btn_apply.addEventListener("click", handleBtnApply);
@@ -370,6 +384,9 @@ const handleToggleFiletrs = async() => {
     btn_apply_container.appendChild(btn_apply);
 
     filters.appendChild(btn_apply_container);
+
+    // Charge text of default language
+    handleLanguages("en");
 }
 
 /**
