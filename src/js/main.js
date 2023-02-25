@@ -22,10 +22,22 @@ let global_buffer_filters_queries = [
     {category: "Command", index: 1, active: false, query: "&command="},
     {category: "Meaning", index: 2, active: false, query: "&meaning="},
 ];
+let existCategoryInUrl = "";
 
 ////////////
 // Functions
 ////////////
+
+/**
+ * Execute one time like a React’s componentDidMount
+ */
+const componentDidMount = () => {
+    document.addEventListener("DOMContentLoaded", () => {
+        // Check category in query
+        const {category} = getQueries(window.location.search);
+        if(category) existCategoryInUrl = category;
+    }, {once: true});
+}
 
 /**
  * Go home with default values.
@@ -365,7 +377,7 @@ const handleToggleFiletrs = async() => {
         // Parse property version. This is a particular case
         let aux_category = "";
         if(info[i].category.includes("[") && info[i].category.includes("]")){
-            aux_category = info[i].category;
+            aux_category = info[i].category.replace(/[\[\]]/g, '');
         }else{
             aux_category = info[i].category + " " + info[i].version;
         }
@@ -407,6 +419,7 @@ const handleBtnToggleCategories = (event, i, sizePreviouslyFilters) => {
     const circle = document.getElementsByClassName("toggle__slider")[i + sizePreviouslyFilters];
  
     // Search actived toggle in global_buffer_filters_categories
+    console.log("global_buffer_filters_categories 1: ", global_buffer_filters_categories);
     const filterActived = global_buffer_filters_categories.findIndex(item => item.active === true);
     if(i === filterActived){
         return;
@@ -424,15 +437,19 @@ const handleBtnToggleCategories = (event, i, sizePreviouslyFilters) => {
             toggle__slider.push(all_toggle__slider[i]);
         }
         
+        // Active btn and put style disabled
         btn_filter.forEach( (item, index) => {
             item.classList.remove("toggle-active");
             toggle__slider[index].classList.remove("toggle__slider--move-to-right");
             global_buffer_filters_categories[index].active = false; 
         });
 
+        // Active btn and put style enabled
+        console.log("existCategoryInUrl: ", existCategoryInUrl);
+        global_buffer_filters_categories[i].active = true;
         btn.classList.add("toggle-active");
         circle.classList.add("toggle__slider--move-to-right");
-        global_buffer_filters_categories[i].active = true;
+        console.log("global_buffer_filters_categories 2: ", global_buffer_filters_categories);
     }
 }
 
@@ -496,6 +513,7 @@ const handleCHangesUrl = () => {
 }
 
 function init(){
+    componentDidMount();
     handleErrors();
     document.addEventListener("DOMContentLoaded", () => {
         goHome();
