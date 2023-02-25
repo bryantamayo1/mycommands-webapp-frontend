@@ -16,13 +16,13 @@ import { handleErrors } from './handleErrors';
 
 // Global variables
 // Store state of each filters
-let global_buffer_filters_categories = [];
+let global_buffer_filters_categories = [{index: 0, active: false, _id: "all"}];
 let global_buffer_filters_queries = [
     {category: "Command && Meaning", index: 0, active: true, query: "&command=&meaning="},
     {category: "Command", index: 1, active: false, query: "&command="},
     {category: "Meaning", index: 2, active: false, query: "&meaning="},
 ];
-let existCategoryInUrl = "";
+let queryOfFirstChargePage = {};
 
 ////////////
 // Functions
@@ -34,8 +34,10 @@ let existCategoryInUrl = "";
 const componentDidMount = () => {
     document.addEventListener("DOMContentLoaded", () => {
         // Check category in query
-        const {category} = getQueries(window.location.search);
-        if(category) existCategoryInUrl = category;
+        const {category, command, meaning} = getQueries(window.location.search);
+        if(category) queryOfFirstChargePage.category = category;
+        if(command) queryOfFirstChargePage.command = command;
+        if(meaning) queryOfFirstChargePage.meaning = meaning;
     }, {once: true});
 }
 
@@ -306,6 +308,7 @@ const handleToggleFiletrs = async() => {
     const filters = document.getElementsByClassName("filters")[0];
     const data = await Services.getFilters();
     const info = data.data;
+
     // Push filters of searching by commands and meaning
     global_buffer_filters_queries.forEach( (item, i) => {
         const container_filters = document.getElementsByClassName("container-filters")[i];
@@ -350,14 +353,12 @@ const handleToggleFiletrs = async() => {
     const bar_separated = document.getElementsByClassName("bar-separated")[0];
     bar_separated.after(title_categories);
 
-    // Push first category All
-    global_buffer_filters_categories[0] = {index: 0, active: true, _id: "all"}
+    // Hnadle btn 
     const btn = document.getElementById("id-btn-all");
     const circle = document.getElementById("id-span-all");
-    btn.classList.add("toggle-active");
-    circle.classList.add("toggle__slider--move-to-right");
     btn.addEventListener("click", event => handleBtnToggleCategories(event, 0, global_buffer_filters_queries.length));
 
+    // Buildind toggles
     for(let i = 0; i < info.length; i++){       
         const span = document.createElement("span");
         span.classList.add("toggle__slider");
@@ -373,6 +374,7 @@ const handleToggleFiletrs = async() => {
         
         const version = document.createElement("p");
         version.classList.add("version-filter");
+        version.id = info[i]._id;
 
         // Parse property version. This is a particular case
         let aux_category = "";
@@ -389,6 +391,41 @@ const handleToggleFiletrs = async() => {
         filters.appendChild(div);
     }
 
+    
+    // Active btn and put style enabled according to category which is in query. 
+    // Only it works first time in load page
+    if(queryOfFirstChargePage.category){
+        debugger
+        const indexCategory = global_buffer_filters_categories.map(i => i._id).findIndex(i => i === queryOfFirstChargePage.category);
+        if(indexCategory !== -1){
+            global_buffer_filters_categories[indexCategory] = {...global_buffer_filters_categories[indexCategory], active: true}
+            // Apply styles
+            // 1º Find btn toggle according to category query
+            const bufferWithToggles = document.querySelectorAll(".version-filter");
+            let indexFoundCategory = 0;
+            bufferWithToggles.forEach((item, indexSelectedCategory) => {
+                if(item.id === global_buffer_filters_categories[indexCategory]._id){
+                    indexFoundCategory = indexSelectedCategory;
+                }
+            });
+            const btnIndexFoundCategory = document.getElementsByClassName("toggle")[indexFoundCategory];
+            const toggle__slider = document.getElementsByClassName("toggle__slider")[indexFoundCategory];;
+            if(btnIndexFoundCategory){
+                btnIndexFoundCategory.classList.add("toggle-active");
+                toggle__slider.classList.add("toggle__slider--move-to-right");
+            }
+        }else{
+            // Push first category All
+            global_buffer_filters_categories[0] = {index: 0, active: true, _id: "all"}
+            btn.classList.add("toggle-active");
+            circle.classList.add("toggle__slider--move-to-right");
+        }
+    }else{
+        // Push first category All
+        global_buffer_filters_categories[0] = {index: 0, active: true, _id: "all"}
+        btn.classList.add("toggle-active");
+        circle.classList.add("toggle__slider--move-to-right");
+    }
     // Create btn to apply filters
     const text_apply = document.createElement("p");
     text_apply.classList.add("text_apply");
@@ -419,8 +456,7 @@ const handleBtnToggleCategories = (event, i, sizePreviouslyFilters) => {
     const circle = document.getElementsByClassName("toggle__slider")[i + sizePreviouslyFilters];
  
     // Search actived toggle in global_buffer_filters_categories
-    console.log("global_buffer_filters_categories 1: ", global_buffer_filters_categories);
-    const filterActived = global_buffer_filters_categories.findIndex(item => item.active === true);
+    const filterActived = global_buffer_filters_categories.map(i => i.active).findIndex(item => item === true);
     if(i === filterActived){
         return;
     }else{
@@ -444,12 +480,9 @@ const handleBtnToggleCategories = (event, i, sizePreviouslyFilters) => {
             global_buffer_filters_categories[index].active = false; 
         });
 
-        // Active btn and put style enabled
-        console.log("existCategoryInUrl: ", existCategoryInUrl);
         global_buffer_filters_categories[i].active = true;
         btn.classList.add("toggle-active");
         circle.classList.add("toggle__slider--move-to-right");
-        console.log("global_buffer_filters_categories 2: ", global_buffer_filters_categories);
     }
 }
 
@@ -508,7 +541,6 @@ const handleCHangesUrl = () => {
         const queryObject = getQueries(window.location.search);
         const {page, lang, category} = queryObject;
         getCommands("/"+lang, page, category, getQueriesCommanMeaning(queryObject), true);
-
     }
 }
 
