@@ -10,7 +10,7 @@ const global_limit_btns = 5;
  * @param {object} data 
  * @param {boolean} btn_search 
  */
-export const handlePagination = (data) => {
+export const handlePagination = (data) => {    
     const amount_pages = Math.ceil(data.total / data.limitPage);
     data.amount_pages = amount_pages;
     
@@ -19,6 +19,15 @@ export const handlePagination = (data) => {
         for(let i = 1; i <= global_limit_btns; i++){
             global_buffer_pagination.push({ active: false, page: i });
         }
+
+        // Special case
+        // Fill page according this conditions
+        if(data.page - 1 >= global_limit_btns){
+            for(let i = global_limit_btns + 1; i <= data.page; i++){
+                global_buffer_pagination.push({ active: false, page: i });
+            }
+        }
+
         global_buffer_pagination[data.page - 1] = {active: true, page: data.page}
     }else{
         // Check last number in pagination in new search

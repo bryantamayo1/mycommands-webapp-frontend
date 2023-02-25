@@ -142,7 +142,10 @@ export const getCommands = async(lang, page, category, parameterCommandAndMeanin
         const total_numbers_not_active = document.getElementsByClassName("total-numbers")[0];
         total_numbers_not_active.classList.remove("not-visible");
     
+        // Show total found commands 
         showTotalCommands(data.total);
+        
+        // Handle pagination: create, paint selected page, ...
         handlePagination(data);
         const lang_response = data.lang;
     
@@ -395,7 +398,6 @@ const handleToggleFiletrs = async() => {
     // Active btn and put style enabled according to category which is in query. 
     // Only it works first time in load page
     if(queryOfFirstChargePage.category){
-        debugger
         const indexCategory = global_buffer_filters_categories.map(i => i._id).findIndex(i => i === queryOfFirstChargePage.category);
         if(indexCategory !== -1){
             global_buffer_filters_categories[indexCategory] = {...global_buffer_filters_categories[indexCategory], active: true}
