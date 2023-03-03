@@ -30,6 +30,7 @@ header img{
 }
 .btn-lang{
     align-items: center;
+    border-color: transparent;
     background-color: inherit;
     display: flex;
     justify-content: center;
@@ -377,6 +378,9 @@ main{
     width: 10px;
     z-index: 2;
 }
+.command-info{
+    overflow-x: auto;
+}
 .command-text{
     overflow-x: auto;
     white-space: pre;
@@ -441,7 +445,7 @@ code{
     .list-container{
         grid-template-columns: 40px 40px 1fr;
     }
-    .command-text{
+    .command-info{
         display: none !important;
     }
     .search{

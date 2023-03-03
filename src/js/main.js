@@ -91,6 +91,7 @@ export const getCommands = async(lang, page, category, parameterCommandAndMeanin
     // Get commands
     // Prepare queries
     // 1ª Search actived toggle in global_buffer_filters_queries
+    debugger
     const input_value_direct = document.getElementsByClassName("search__input")[0];
 
     if(!parameterCommandAndMeaning){
@@ -104,6 +105,8 @@ export const getCommands = async(lang, page, category, parameterCommandAndMeanin
             input_value_of_url = command;
         }else if(meaning){
             input_value_of_url = meaning;
+        }else{
+            input_value_of_url = input_value_direct.value;
         }
         input_value_direct.value = input_value_of_url;
         parameterCommandAndMeaning = parseQuery(global_buffer_filters_queries, input_value_of_url);
@@ -173,7 +176,6 @@ export const getCommands = async(lang, page, category, parameterCommandAndMeanin
             column_2.addEventListener("click", event => openModal(event, data.data[i], data.lang));
             
             column_3.appendChild( document.createTextNode(data.data[i].command) );
-            column_3.classList.add("command-text");
     
             // Chage color in character hash #
             if(data.data[i][lang_response].charAt(0) === "#"){
@@ -181,6 +183,7 @@ export const getCommands = async(lang, page, category, parameterCommandAndMeanin
                 span.innerHTML = "# ";
                 span.classList.add("hash-in-meaning");   
                 column_4.appendChild(span);
+                column_4.classList.add("command-info");
                 column_4.appendChild( document.createTextNode(data.data[i][lang_response].slice(2, data.data[i].length)) );
             }else{
                 column_4.appendChild( document.createTextNode(data.data[i][lang_response]) );
@@ -529,7 +532,7 @@ const handleBtnToggleQueries = (event, i, sizeFilters) => {
 }
 
 /**
- * hnadle btn Apply in menu filters and get commands
+ * Handle btn Apply in menu filters and get commands
  */
 const handleBtnApply = (event) => {
     const filter = global_buffer_filters_categories.find(item => item.active === true);
