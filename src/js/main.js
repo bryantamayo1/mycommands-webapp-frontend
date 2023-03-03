@@ -18,7 +18,7 @@ import { handleErrors } from './handleErrors';
 // Store state of each filters
 let global_buffer_filters_categories = [{index: 0, active: false, _id: "all"}];
 let global_buffer_filters_queries = [
-    {category: "Command && Meaning", index: 0, active: true, query: "&command=&meaning="},
+    {category: "Command && Meaning", index: 0, active: false, query: "&command=&meaning="},
     {category: "Command", index: 1, active: false, query: "&command="},
     {category: "Meaning", index: 2, active: false, query: "&meaning="},
 ];
@@ -42,7 +42,7 @@ const componentDidMount = () => {
 }
 
 /**
- * Go home with default values.
+ * Go home btn with default values.
  * Charge text of default language 'en'
  */
 const goHome = () => {
@@ -91,7 +91,6 @@ export const getCommands = async(lang, page, category, parameterCommandAndMeanin
     // Get commands
     // Prepare queries
     // 1ª Search actived toggle in global_buffer_filters_queries
-    debugger
     const input_value_direct = document.getElementsByClassName("search__input")[0];
 
     if(!parameterCommandAndMeaning){
@@ -99,12 +98,16 @@ export const getCommands = async(lang, page, category, parameterCommandAndMeanin
     }else{
         const {command, meaning} = getQueries(window.location.search);
         let input_value_of_url = "";
+
         if(command && meaning){
             input_value_of_url = command;
+            global_buffer_filters_queries[0].active = true;
         }else if(command){
             input_value_of_url = command;
+            global_buffer_filters_queries[1].active = true;
         }else if(meaning){
             input_value_of_url = meaning;
+            global_buffer_filters_queries[2].active = true;
         }else{
             input_value_of_url = input_value_direct.value;
         }
@@ -339,9 +342,11 @@ const handleToggleFiletrs = async() => {
         container_filters.after(div);
     });
 
-    const btn_command_meaning = document.getElementsByClassName("toggle")[0];
+    // Put active toggle. By default 'Commands && Meaning'
+    const filterSearchBy = global_buffer_filters_queries.map(i => i.active).findIndex(i => i === true);
+    const btn_command_meaning = document.getElementsByClassName("toggle")[filterSearchBy];
     btn_command_meaning.classList.add("toggle-active");
-    const span_command_meaning = document.getElementsByClassName("toggle__slider")[0];
+    const span_command_meaning = document.getElementsByClassName("toggle__slider")[filterSearchBy];
     span_command_meaning.classList.add("toggle__slider--move-to-right");
 
     // Put line to separate filters
