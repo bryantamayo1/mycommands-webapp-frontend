@@ -118,7 +118,6 @@ main{
 }
 .search__input{
     border: none;
-    box-sizing: border-box;
     font-family: 'Ubuntu Mono', monospace;
     font-size: 20px;
     padding: 10px;

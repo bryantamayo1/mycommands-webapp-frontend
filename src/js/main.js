@@ -17,11 +17,23 @@ import { handleErrors } from './handleErrors';
 // Global variables
 // Store state of each filters
 let global_buffer_filters_categories = [{index: 0, active: false, _id: "all"}];
+// Get default query according to url of window.location.search
+const {command: queryCommand, meaning: queryMeaning} = getQueries(window.location.search);
 let global_buffer_filters_queries = [
     {category: "Command && Meaning", index: 0, active: false, query: "&command=&meaning="},
     {category: "Command", index: 1, active: false, query: "&command="},
     {category: "Meaning", index: 2, active: false, query: "&meaning="},
 ];
+if(queryCommand && queryMeaning){
+    global_buffer_filters_queries[0].active = true;
+}else if(queryCommand){
+    global_buffer_filters_queries[1].active = true;
+}else if(queryMeaning){
+    global_buffer_filters_queries[2].active = true;
+}else{
+    global_buffer_filters_queries[0].active = true;
+}
+
 let queryOfFirstChargePage = {};
 
 ////////////
