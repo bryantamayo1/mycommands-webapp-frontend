@@ -105,27 +105,24 @@ export const getCommands = async(lang, page, category, parameterCommandAndMeanin
     // 1ª Search actived toggle in global_buffer_filters_queries
     const input_value_direct = document.getElementsByClassName("search__input")[0];
 
-    if(!parameterCommandAndMeaning){
-        parameterCommandAndMeaning = parseQuery(global_buffer_filters_queries, input_value_direct.value);
+    // Set up when page is reload
+    let input_value_of_url = "";
+    const {command: queryCommand, meaning: queryMeaning} = getQueries(window.location.search);
+    if(queryCommand && queryMeaning){
+        input_value_of_url = queryCommand;
+    }else if(queryCommand){
+        input_value_of_url = queryCommand;
+    }else if(queryMeaning){
+        input_value_of_url = queryMeaning;
     }else{
-        const {command, meaning} = getQueries(window.location.search);
-        let input_value_of_url = "";
-
-        if(command && meaning){
-            input_value_of_url = command;
-            global_buffer_filters_queries[0].active = true;
-        }else if(command){
-            input_value_of_url = command;
-            global_buffer_filters_queries[1].active = true;
-        }else if(meaning){
-            input_value_of_url = meaning;
-            global_buffer_filters_queries[2].active = true;
-        }else{
-            input_value_of_url = input_value_direct.value;
-        }
-        input_value_direct.value = input_value_of_url;
-        parameterCommandAndMeaning = parseQuery(global_buffer_filters_queries, input_value_of_url);
+        input_value_of_url = input_value_direct.value;
     }
+    input_value_direct.value = input_value_of_url;
+    if(defaultSearch){
+        input_value_direct.value = "";
+    }
+    parameterCommandAndMeaning = parseQuery(global_buffer_filters_queries, input_value_direct.value);
+
 
     // Active spinner
     const spinner_container_active = document.getElementsByClassName("spinner-container")[0];
@@ -552,9 +549,10 @@ const handleBtnToggleQueries = (event, i, sizeFilters) => {
  * Handle btn Apply in menu filters and get commands
  */
 const handleBtnApply = (event) => {
-    const filter = global_buffer_filters_categories.find(item => item.active === true);
+    const filter = global_buffer_filters_categories.find(item => item.active);
     const query = getQueries(window.location.search);
-    getCommands("/" + query.lang, query.page, filter._id, query.category);
+    const findFilterQuery = global_buffer_filters_queries.find(item => item.active);
+    getCommands("/" + query.lang, query.page, filter._id, findFilterQuery.category);
     closeMenuFilter();
 }
 
