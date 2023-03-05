@@ -58,7 +58,7 @@ export const closeMenuFilter = () => {
  * Close menu filters
  */
 export const handleCloseFilters = () => {
-    const filters__btn__close = document.getElementsByClassName("filters__btn__close")[0];
+    const filters__btn__close = document.getElementById("filters__btn__close");
     filters__btn__close.addEventListener("click", () => {   
         closeMenuFilter();
     });

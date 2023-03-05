@@ -3,7 +3,7 @@
 }
 .spinner{
     animation: rotate-spinner 1s infinite linear;
-    border: 3px solid #1d1a27;
+    border: 3px solid transparent;
     border-left-color: #ce04a2;
     border-radius: 50%;
     box-sizing: border-box;

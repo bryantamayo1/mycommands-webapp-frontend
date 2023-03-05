@@ -3,6 +3,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300&display=swap');
 
 body{
+    background-color: #1d1a27;
     color: #FFF;
     min-height: 100vh;
 }
@@ -30,6 +31,7 @@ header img{
 }
 .btn-lang{
     align-items: center;
+    border-color: transparent;
     background-color: inherit;
     display: flex;
     justify-content: center;
@@ -51,7 +53,6 @@ header img{
 }
 /* main */
 main{
-    background-color: #1d1a27;
     font-family: 'Ubuntu Mono', monospace;
     min-height: calc( 100vh - 40px - 220px - 1px);
 }
@@ -117,7 +118,6 @@ main{
 }
 .search__input{
     border: none;
-    box-sizing: border-box;
     font-family: 'Ubuntu Mono', monospace;
     font-size: 20px;
     padding: 10px;
@@ -153,6 +153,8 @@ main{
 }
 .filters__btn__close{
     background-color: inherit;
+    border: transparent;
+    box-sizing: border-box;
     cursor: pointer;
     height: 40px;
     margin: 10px 10px 0 0;
@@ -377,6 +379,9 @@ main{
     width: 10px;
     z-index: 2;
 }
+.command-info{
+    overflow-x: auto;
+}
 .command-text{
     overflow-x: auto;
     white-space: pre;
@@ -441,7 +446,7 @@ code{
     .list-container{
         grid-template-columns: 40px 40px 1fr;
     }
-    .command-text{
+    .command-info{
         display: none !important;
     }
     .search{

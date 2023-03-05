@@ -1,5 +1,7 @@
 /**
  * Create query &command=[data]&meaning=[data]
+ * @param {array} buffer
+ * @param {input_value} string
  */
 export const parseQuery = (buffer, input_value) => {
     // 1ª Search actived toggle in global_buffer_filters_queries

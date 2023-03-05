@@ -1,4 +1,18 @@
 /**
+ * Hnadler of all endpoints
+ * @param {string} endpoint e.g. '/filters'
+ * @returns Promise
+ */
+const Api = async (endpoint = "", query = "") => {
+    const data = await fetch(process.env.API_URL + endpoint + query);
+    if(data.ok){
+        return data.json();
+    }else{
+        const resp = await data.json(); 
+        throw resp.message;
+    }
+}
+/**
  * Endpoints
  */
 export class Services{
@@ -31,15 +45,13 @@ export class Services{
             window.history.pushState({path:newurl},'',newurl);
             query = "";
         }
-        const data = await fetch(process.env.API_URL + "/commands" + lang + `/?page=${page}&category=${category}${query}`)
-        return data.json();
+        return Api("/commands" + lang, `?page=${page}&category=${category}${query}` );
     }
 
     /**
      * Get all filters
      */
-    static async getFilters(){
-        const data = await fetch(process.env.API_URL + "/filters")
-        return data.json();
+    static getFilters(){
+        return Api("/filters");
     }
 }
