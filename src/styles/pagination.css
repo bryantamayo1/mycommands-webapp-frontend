@@ -11,6 +11,8 @@
     width: 30%;
 }
 .pagination-container--padding{
+    background-color: #112d5e;
+    box-sizing: border-box;
     padding: 0;
 }
 .btn-pagination{

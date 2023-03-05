@@ -3,6 +3,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300&display=swap');
 
 body{
+    background-color: #1d1a27;
     color: #FFF;
     min-height: 100vh;
 }
@@ -52,7 +53,6 @@ header img{
 }
 /* main */
 main{
-    background-color: #1d1a27;
     font-family: 'Ubuntu Mono', monospace;
     min-height: calc( 100vh - 40px - 220px - 1px);
 }
@@ -154,6 +154,8 @@ main{
 }
 .filters__btn__close{
     background-color: inherit;
+    border: transparent;
+    box-sizing: border-box;
     cursor: pointer;
     height: 40px;
     margin: 10px 10px 0 0;

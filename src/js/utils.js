@@ -4,7 +4,7 @@
 export const parseQuery = (buffer, input_value) => {
     // 1ª Search actived toggle in global_buffer_filters_queries
     const filterActived = buffer.find(item => item.active === true);
-    let query = filterActived.query;
+    let query = filterActived?.query || "";
     if(input_value !== ""){
         switch (filterActived.index) {
             // &command=&meaning=
