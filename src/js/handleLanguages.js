@@ -15,6 +15,18 @@ export const handleLanguages = (lang = "en") => {
     const search_by = document.getElementsByClassName("container-filters container-filters__title")[0];
     search_by.innerHTML = data["search_by"][lang];
 
+    // Change Command && Meaning
+    const command_and_meaning = document.getElementsByClassName("version-filter")[0];
+    command_and_meaning.innerHTML = data["CommandsAndMeaning"][lang];
+
+    // Change Command && Meaning
+    const command = document.getElementsByClassName("version-filter")[1];
+    command.innerHTML = data["Command"][lang];
+    
+    // Change Command && Meaning
+    const meaning = document.getElementsByClassName("version-filter")[2];
+    meaning.innerHTML = data["Meaning"][lang];
+
     // Change in menu filter categories
     const categories = document.getElementsByClassName("container-filters container-filters__title")[1];
     categories.innerHTML = data["categories"][lang];

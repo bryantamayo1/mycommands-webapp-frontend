@@ -89,11 +89,12 @@ main{
     left: 10px;
 }
 .search{
+    background-color: #FFF;
     box-sizing: border-box;
     border-radius: 20px;
     color: #000;
     display: grid;  
-    grid-template-columns: 35px 8fr 35px;
+    grid-template-columns: 35px auto 35px;
     margin: 0 auto;
     width: 500px;
 }
@@ -102,7 +103,6 @@ main{
     border: none;
     box-sizing: border-box;
     cursor: pointer;
-    z-index: 1;
 }
 .search__button:focus{
     box-shadow:  0px 0px 15px 2px #ce04a2;
@@ -111,6 +111,7 @@ main{
 .search__button--left{
     border-radius: 20px 0 0 20px;
     box-sizing: border-box;
+    z-index: 1;
 }
 .search__button--right{
     border-radius: 0 20px 20px 0;
@@ -118,6 +119,7 @@ main{
 }
 .search__input{
     border: none;
+    box-sizing: border-box;
     font-family: 'Ubuntu Mono', monospace;
     font-size: 20px;
     padding: 10px;

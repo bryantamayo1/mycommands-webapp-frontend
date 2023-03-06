@@ -35,5 +35,5 @@
     "webpack-dev-server": "^4.11.1",
     "webpack-merge": "^5.8.0"
   },
-  "browserslist": "> 0.25%, not dead, not ie 11"
+  "browserslist": "> 0.1%, not dead, not ie 11"
 }

@@ -248,7 +248,7 @@ const showTotalCommands = (total) => {
         }
     }
     if(t[0] === ",") t.shift();
-    total_numbers.innerHTML = t.join("");
+    total_numbers.innerHTML = t.join("") + " commands";
 }
 
 /**

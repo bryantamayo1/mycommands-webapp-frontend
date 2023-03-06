@@ -4,6 +4,18 @@
             "en": "Search by",
             "es": "Buscar por"
         },
+        "CommandsAndMeaning": {
+            "en": "Command && Meaning",
+            "es": "Comando && significado"
+        },
+        "Command": {
+            "en": "Command",
+            "es": "Comando"
+        },
+        "Meaning": {
+            "en": "Meaning",
+            "es": "Significado"
+        },
         "categories": {
             "en": "Categories",
             "es": "Categorias"
