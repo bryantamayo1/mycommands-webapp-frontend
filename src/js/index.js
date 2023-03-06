@@ -1,5 +1,5 @@
 import '../styles/normalize.css';
-import '../styles/main.css';
+import '../styles/index.css';
 import '../styles/pagination.css';
 import '../styles/footer.css';
 import '../styles/spinner.css';

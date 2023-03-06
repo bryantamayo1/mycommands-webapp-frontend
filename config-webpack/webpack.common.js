@@ -1,11 +1,17 @@
 const path = require('path');
+const glob = require('glob');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 // const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 // const devMode = process.env.NODE_ENV !== "production";
 
 /** @type {import('webpack').Configuration} */
 module.exports = {
-    entry: "./src/js/main.js",
+    // entry: "./src/js/main.js",
+    entry: glob.sync('./src/**/index.js').reduce((acc, path) => {
+        const entry = path.replace('/index.js', '')
+        acc[entry] = path
+        return acc
+    }, {}),
     output: {
         path: path.resolve(__dirname, '../build'),
         filename: "[name].[contenthash].js",
