@@ -5,14 +5,14 @@ import '../styles/footer.css';
 import '../styles/spinner.css';
 import '../styles/modal.css';
 import '../styles/handleErros.css';
-import { Services } from './services';
+import { Services }         from './services';
 import { closeMenuFilter, handleCloseFilters, handleFilters, handleFocusInputSearch } from './effects';
 import { getQueries, getQueriesCommanMeaning, parseQuery } from './utils';
 import { handlePagination } from './pagination';
 import { closeModal, copyInClipboardModalCommand, copyInClipboardModalMeaning, openModal } from './modal';
-import { handleLanguages } from './handleLanguages';
-import dataJson from './data.json';
-import { handleErrors } from './handleErrors';
+import { handleLanguages }  from './handleLanguages';
+import dataJson             from './data.json';
+import { handleErrors }     from './handleErrors';
 
 // Global variables
 // Store state of each filters

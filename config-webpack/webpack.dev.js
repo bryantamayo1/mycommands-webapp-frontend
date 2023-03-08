@@ -1,29 +1,17 @@
-const { merge } = require("webpack-merge")
-const common = require('./webpack.common');
-const webpack  = require('webpack');
-const Dotenv = require('dotenv-webpack');
-const path = require('path');
-const glob = require('glob');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+const Dotenv                = require('dotenv-webpack');
+const path                  = require('path');
+const HtmlWebpackPlugin     = require('html-webpack-plugin');
 
 /** @type {import('webpack').Configuration} */
 module.exports = {
-    entry: "./src/js/index.js",
-    // entry: {
-    //   "src/js/index.js": "./src/js/index"
-    // },
-  //   entry: glob.sync('./src/js/index.js').reduce((acc, myPath) => {
-  //     console.log("myPath: ", myPath);
-  //     console.log("acc: ", acc);
-  //     const entry = myPath.replace('/index.js', 'index')
-  //     acc[myPath] = myPath
-  //     return acc
-  // }, {}),
-  // output: {
-  //     path: path.resolve(__dirname, '../build'),
-  //     filename: "[name].js",
-  //     clean: true
-  // },
+  entry: "./src/js/index.js",
+  output: {
+    clean: true,
+    // Name of file in dev
+    filename: "index.js",
+    // Keep original file’s name
+    assetModuleFilename: "[name][ext]",
+},
   module: {
       rules: [
           {
@@ -77,10 +65,7 @@ module.exports = {
         path: path.join(__dirname, "../.env.development.local")
       }),
       new HtmlWebpackPlugin({
-        // filename: 'index.html',
-        template: './src/index.html'
+        template: './src/index.html',
     }),
     ]
 }
-
-// module.exports = merge(common, dev);
