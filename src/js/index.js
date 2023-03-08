@@ -41,7 +41,7 @@ let queryOfFirstChargePage = {};
 ////////////
 
 /**
- * Execute one time like a React’s componentDidMount
+ * Execute only one time like a React’s componentDidMount
  */
 const componentDidMount = () => {
     document.addEventListener("DOMContentLoaded", () => {
@@ -76,7 +76,7 @@ const getInitialQueries = () => {
     if(lang && page && category){
         getCommands("/"+lang, page, category, getQueriesCommanMeaning(queryObject), true);
     }else{
-        getCommands("/en", 1);
+        getCommands("/en", 1, "all", "", false, false, true);
     }
 }
 
@@ -91,8 +91,9 @@ const getInitialQueries = () => {
  * @param {string} parameterCommandAndMeaning It comes of url, It can be exist or not
  * @param {boolean} fromQueryUrl avoid update url, true = update, false = not update
  * @param {boolean} defaultSearch search with page = 1, lang = "en" and category = "all"
+ * @param {boolean} firstSearch search only when the web page is loaded the first time. It’s an unique case
  */
-export const getCommands = async(lang, page, category, parameterCommandAndMeaning, fromQueryUrl, defaultSearch)  => {
+export const getCommands = async(lang, page, category, parameterCommandAndMeaning, fromQueryUrl, defaultSearch, firstSearch)  => {
     // Clean data
     document.querySelectorAll(".list-container")
     .forEach(item => item.remove());
@@ -108,7 +109,9 @@ export const getCommands = async(lang, page, category, parameterCommandAndMeanin
     // Set up when page is reload
     let input_value_of_url = "";
     const {command: queryCommand, meaning: queryMeaning} = getQueries(window.location.search);
-    if(queryCommand && queryMeaning){
+    if(input_value_direct.value || !parameterCommandAndMeaning){
+        input_value_of_url = input_value_direct.value;
+    }else if(queryCommand && queryMeaning){
         input_value_of_url = queryCommand;
     }else if(queryCommand){
         input_value_of_url = queryCommand;
@@ -121,8 +124,8 @@ export const getCommands = async(lang, page, category, parameterCommandAndMeanin
     if(defaultSearch){
         input_value_direct.value = "";
     }
-    parameterCommandAndMeaning = parseQuery(global_buffer_filters_queries, input_value_direct.value);
 
+    parameterCommandAndMeaning = parseQuery(global_buffer_filters_queries, input_value_direct.value);
 
     // Active spinner
     const spinner_container_active = document.getElementsByClassName("spinner-container")[0];
@@ -143,7 +146,8 @@ export const getCommands = async(lang, page, category, parameterCommandAndMeanin
             category,
             parameterCommandAndMeaning,
             fromQueryUrl,
-            defaultSearch
+            defaultSearch,
+            firstSearch
         );
         // Disable spinner
         const spinner_container_not_Active = document.getElementsByClassName("spinner-container")[0];
@@ -187,6 +191,7 @@ export const getCommands = async(lang, page, category, parameterCommandAndMeanin
             column_2.appendChild(icon_info);
             column_2.addEventListener("click", event => openModal(event, data.data[i], data.lang));
             
+            column_3.classList.add("command-text");
             column_3.appendChild( document.createTextNode(data.data[i].command) );
     
             // Chage color in character hash #
@@ -307,14 +312,14 @@ const handleInputSearch = () => {
         // Get input's value'
         if(event.key === "Enter"){
             // Get commands
-            getCommands("/"+lang, 1, filter._id);
+            getCommands("/"+lang, 1, filter._id, input.value);
         }
     });
     button.addEventListener("click", () => {
         const {lang} = getQueries(window.location.search);
         let filter = global_buffer_filters_categories.find(item => item.active === true);
         // Search active filter
-        getCommands("/"+lang, 1, filter._id);
+        getCommands("/"+lang, 1, filter._id, input.value);
     });
 }
 
@@ -564,6 +569,9 @@ const handleCHangesUrl = () => {
     }
 }
 
+/**
+ * First function in executing
+ */
 function init(){
     componentDidMount();
     handleErrors();

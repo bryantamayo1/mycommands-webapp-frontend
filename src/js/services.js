@@ -21,30 +21,39 @@ export class Services{
      * @param {string} lang is always '/es' or '/en'
      * @param {number} page 
      * @param {string} category 
-     * @param {string} command 
-     * @param {string} meaning 
-     * @param {boolean} fromQueryUrl avoid update url, true = update, false = not update
+     * @param {string} commandAndMeaning 
+     * @param {boolean} fromQueryUrl avoid update url, false = update, true = not update
      * @param {boolean} defaultSearch search with page = 1, lang = "en" and category = "all"
      * @returns Promise
      */
-    static async getCommands(lang = "/en", page = 1, category = "all", commandAndMeaning, fromQueryUrl, defaultSearch){
+    static async getCommands(lang = "/en", page = 1, category = "all", commandAndMeaning, fromQueryUrl, defaultSearch, firstSearch){
+        // Unique case, only it’s executed when the web page is loaded the first time
+        if(firstSearch){
+            let newurl = window.location.protocol + "//" + window.location.host +
+            `?page=${page}&lang=${lang.slice(1, lang.length)}&category=${category}`;
+            window.history.replaceState({path:newurl},'',newurl);
+
         // Update query in window.history
-        if (history.pushState && !fromQueryUrl && !defaultSearch) {
+        }else if (history.pushState && !fromQueryUrl && !defaultSearch) {
             let newurl = window.location.protocol + "//" + window.location.host +
             `?page=${page}&lang=${lang.slice(1, lang.length)}&category=${category}${commandAndMeaning}`;
             window.history.pushState({path:newurl},'',newurl);
         }
 
+        // Create query
         let query = "";
         if(commandAndMeaning){
             query = commandAndMeaning;
         }
-        if(defaultSearch && defaultSearch){
+
+        if(history.pushState && defaultSearch){
             let newurl = window.location.protocol + "//" + window.location.host +
             `?page=${page}&lang=${lang.slice(1, lang.length)}&category=${category}`;
             window.history.pushState({path:newurl},'',newurl);
             query = "";
         }
+
+
         return Api("/commands" + lang, `?page=${page}&category=${category}${query}` );
     }
 
