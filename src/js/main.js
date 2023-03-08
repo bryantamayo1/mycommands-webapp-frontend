@@ -109,7 +109,9 @@ export const getCommands = async(lang, page, category, parameterCommandAndMeanin
     // Set up when page is reload
     let input_value_of_url = "";
     const {command: queryCommand, meaning: queryMeaning} = getQueries(window.location.search);
-    if(queryCommand && queryMeaning){
+    if(input_value_direct.value || !parameterCommandAndMeaning){
+        input_value_of_url = input_value_direct.value;
+    }else if(queryCommand && queryMeaning){
         input_value_of_url = queryCommand;
     }else if(queryCommand){
         input_value_of_url = queryCommand;
@@ -122,8 +124,8 @@ export const getCommands = async(lang, page, category, parameterCommandAndMeanin
     if(defaultSearch){
         input_value_direct.value = "";
     }
-    parameterCommandAndMeaning = parseQuery(global_buffer_filters_queries, input_value_direct.value);
 
+    parameterCommandAndMeaning = parseQuery(global_buffer_filters_queries, input_value_direct.value);
 
     // Active spinner
     const spinner_container_active = document.getElementsByClassName("spinner-container")[0];
@@ -310,14 +312,14 @@ const handleInputSearch = () => {
         // Get input's value'
         if(event.key === "Enter"){
             // Get commands
-            getCommands("/"+lang, 1, filter._id);
+            getCommands("/"+lang, 1, filter._id, input.value);
         }
     });
     button.addEventListener("click", () => {
         const {lang} = getQueries(window.location.search);
         let filter = global_buffer_filters_categories.find(item => item.active === true);
         // Search active filter
-        getCommands("/"+lang, 1, filter._id);
+        getCommands("/"+lang, 1, filter._id, input.value);
     });
 }
 
