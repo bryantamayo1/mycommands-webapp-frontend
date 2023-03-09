@@ -1,2 +1,76 @@
 # mycommands-webapp-frontend
 > Frontend of My commands web application built with Javascript & HTML5 & CCS3 & Webpack
+
+<br/>
+
+![](/docs/home_page..PNG) 
+<br/>
+<br/>
+![](/docs/modal..PNG) 
+
+## Table of contents
+1. [About](#about)
+2. [Installation](#installation)
+3. [Structure of project](#structure-of-project)
+4. [Updates](#updates)
+
+## About
+Web page with different kind of commands such as data bases, server, S.O. and much more.
+
+## Installation
+1. Install libraries
+```
+    npm install
+```
+2. Run project
+```
+    npm start
+```
+3. Build project
+```
+    npm run build
+```
+4. Optionals
+    - 4.1. Create files: *.env.development.local* and *.env.production.local* to global variables with API_URL, e.g. API_URL=https://api.anyweb.es
+
+## Structure of project
+
+    ├── build                               # code for production
+    ├── config-webpack                      # setup of webpack
+    │   ├──  webpack.dev.js                 # setup only for dev
+    │   └──  webpack.prod.js                # setup only for prod
+    ├── docs                                # screenshots of updatings
+    ├── node_modules                        # libraries after of installing with npm install
+    ├── files-to-build                      # files to copy in build folder, e.g: manifest.json, robots.txt, etc
+    ├── src                                 # code for development
+    │   ├──  img                            # folder to images
+    │   │    └──  favicon                   # folder to favicon’s
+    │   ├──  js                             # only files javascript
+    │   │    ├──  data.json                 # info in language 'en' and 'es'
+    │   │    ├──  effects.js                # code that control effects, for instance open and close menu filter
+    │   │    ├──  handleErrors.js           # handle errors with event unhandledrejection
+    │   │    ├──  handleLanguages.js        # handle languages 'en' and 'es'
+    │   │    ├──  index.js                  # main file js
+    │   │    ├──  modal.js                  # handle modal openm close and show info inside
+    │   │    ├──  pagination.js             # handle pagination
+    │   │    ├──  services.js               # all services of web page: getCommands and getFilters
+    │   │    └──  utils.js                  # utils such as parseQuery, getQueries, getQueriesCommanMeaning
+    │   ├──  styles                         # only files css
+    │   │    ├── footer.css                 # footer’s css
+    │   │    ├── handleErros.css            # erros’s css with dialog and message
+    │   │    ├── index.css                  # main’s css
+    │   │    ├── normalize.css              # css to normalize the styles of web page
+    │   │    ├── pagination.css             # pagination’s css
+    │   │    └── spinner.css                # spinner’s css
+    │   └──  index.html                     # html file root
+    ├── .env.development.local              # development global variables, e.g. API_URL
+    ├── .env.production.local               # production global variables, e.g. API_URL
+    ├── .gitignore                          # ignore files
+    ├── babel.config.json                   # setup of library babel
+    ├── LICENSE                             # License MIT
+    ├── package.json.json                   # file setup of profect
+    ├── postcss.config.js                   # setup of library postcss
+    └── README.md                           # project’s info
+
+## Update
+Each six months it tries to update all project with npm-check-updates library.
