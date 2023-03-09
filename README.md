@@ -72,5 +72,5 @@ Web page with different kind of commands such as data bases, server, S.O. and mu
     ├── postcss.config.js                   # setup of library postcss
     └── README.md                           # project’s info
 
-## Update
+## Updates
 Each six months it tries to update all project with npm-check-updates library.
