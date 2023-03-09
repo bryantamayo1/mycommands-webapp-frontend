@@ -14,6 +14,7 @@
 2. [Installation](#installation)
 3. [Structure of project](#structure-of-project)
 4. [Updates](#updates)
+5. [Licence](#license)
 
 ## About
 Web page with different kind of commands such as data bases, servers, S.O. and much more.
@@ -75,3 +76,6 @@ Web page with different kind of commands such as data bases, servers, S.O. and m
 
 ## Updates
 Each six months it tries to update all project with npm-check-updates library.
+
+## Licence
+MIT License
