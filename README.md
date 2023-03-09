@@ -15,7 +15,7 @@
 4. [Updates](#updates)
 
 ## About
-Web page with different kind of commands such as data bases, server, S.O. and much more.
+Web page with different kind of commands such as data bases, servers, S.O. and much more.
 
 ## Installation
 1. Install libraries
