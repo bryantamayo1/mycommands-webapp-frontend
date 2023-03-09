@@ -6,6 +6,7 @@
     height: 100vh;
     justify-content: center;
     left: 0;
+    max-width:100%;
     position: fixed;
     right: 0;
     top: 0;
@@ -18,7 +19,7 @@
     border-radius: 5px;
     box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
     box-sizing: border-box;
-    width: 80%;
+    width: 90%;
 }
 #filters__btn__container--btn-close-modal{
     margin: 0;
@@ -36,4 +37,7 @@
 #container-command{
     border-bottom: 2px solid hsl(313, 96%, 41%);  
     box-sizing: border-box;
+}
+.overlay__command{
+    white-space: break-spaces;
 }
