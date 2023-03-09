@@ -1,12 +1,13 @@
-# mycommands-webapp-frontend
+# ![Logo](/docs/favicon-32x32.png) mycommands-webapp-frontend
 > Frontend of My commands web application built with Javascript & HTML5 & CCS3 & Webpack
 
 <br/>
 
-![](/docs/home_page..PNG) 
+![Home page](/docs/home_page..PNG) 
 <br/>
 <br/>
-![](/docs/modal..PNG) 
+
+![Modal](/docs/modal..PNG) 
 
 ## Table of contents
 1. [About](#about)
