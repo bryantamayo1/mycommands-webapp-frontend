@@ -63,6 +63,7 @@ const goHome = () => {
         const input_value_direct = document.getElementsByClassName("search__input")[0];
         input_value_direct.value = "";
         getCommands("/en", 1, "all", "",  false, true);
+        resetFilters();
 
         // Charge text of default language
         handleLanguages("en");
@@ -557,7 +558,7 @@ const handleBtnApply = (event) => {
     const filter = global_buffer_filters_categories.find(item => item.active);
     const query = getQueries(window.location.search);
     const findFilterQuery = global_buffer_filters_queries.find(item => item.active);
-    getCommands("/" + query.lang, query.page, filter._id, findFilterQuery.category);
+    getCommands("/" + query.lang, 1, filter._id, findFilterQuery.category);
     closeMenuFilter();
 }
 
@@ -567,6 +568,48 @@ const handleCHangesUrl = () => {
         const {page, lang, category} = queryObject;
         getCommands("/"+lang, page, category, getQueriesCommanMeaning(queryObject), true);
     }
+}
+
+/**
+ * Reset filters with default options
+ */
+const resetFilters = () => {
+    global_buffer_filters_queries = global_buffer_filters_queries.map(( item, index) => {
+        if(index === 0){
+            return {...item, active: true}
+        }else{
+            return {...item, active: false}
+        }
+    });
+    global_buffer_filters_categories = global_buffer_filters_categories.map(( item, index) => {
+        if(index === 0){
+            return {...item, active: true}
+        }else{
+            return {...item, active: false}
+        }
+    });
+
+    // Change style of toggles by default
+    const all_togggles = document.querySelectorAll(".toggle");
+    all_togggles.forEach(item => {
+        item.classList.remove("toggle-active");
+    });
+    const toggle__slider = document.querySelectorAll(".toggle__slider");
+    toggle__slider.forEach(item => {
+        item.classList.remove("toggle__slider--move-to-right");
+    });
+
+    // Active toggle by default Search by Command && Meaning and Categories All
+    const btn_commands_meaning = document.getElementsByClassName("toggle")[0];
+    const span__toggle__slider = document.getElementsByClassName("toggle__slider")[0];
+    const btn_all = document.getElementById("id-btn-all");
+    const btn_span = document.getElementById("id-span-all");
+    
+    btn_all.classList.add("toggle-active");
+    btn_commands_meaning.classList.add("toggle-active");
+    
+    span__toggle__slider.classList.add("toggle__slider--move-to-right");
+    btn_span.classList.add("toggle__slider--move-to-right");
 }
 
 /**
