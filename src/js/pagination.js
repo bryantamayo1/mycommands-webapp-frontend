@@ -109,7 +109,7 @@ const createBtnPagination = (amount_pages, data, increase = 0) => {
     });
 
     // Put btn next
-    if(global_buffer_pagination[global_buffer_pagination.length - 1].page <= amount_pages){
+    if(amount_pages > global_buffer_pagination[global_buffer_pagination.length - 1].page){
         const pagination_container = document.getElementsByClassName("pagination-container")[0];
         const btn_pagination = document.createElement('button');
         btn_pagination.classList.add("btn-pagination");
