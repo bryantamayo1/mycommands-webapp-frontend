@@ -33,10 +33,12 @@ export const openModal = (event, info, lang) => {
     overlay__command.innerHTML = info.command;
     
     // Show updatedAt
-    const info_updatedAt = moment(info.updatedAt);
+    const info_updatedAt = moment(info.updatedAt || "");
     let updatedAt = "--/--/----";
-    if(info_updatedAt){
+    if(info_updatedAt.isValid()){
         updatedAt = dataJson.content["updatedAt"][lang] + info_updatedAt.format("DD-MM-YYYY");
+    }else{
+        updatedAt = dataJson.content["updatedAt"][lang] + updatedAt;
     }
     overlay__date.innerHTML = updatedAt
 
