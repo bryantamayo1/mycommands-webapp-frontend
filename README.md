@@ -13,8 +13,9 @@
 1. [About](#about)
 2. [Installation](#installation)
 3. [Structure of project](#structure-of-project)
-4. [Updates](#updates)
-5. [Licence](#license)
+4. [Libraries](#libraries)
+5. [Updates](#updates)
+6. [Licence](#license)
 
 ## About
 Web page with different kind of commands such as data bases, servers, S.O. and much more.
@@ -73,6 +74,31 @@ Web page with different kind of commands such as data bases, servers, S.O. and m
     ├── package.json.json                   # file setup of profect
     ├── postcss.config.js                   # setup of library postcss
     └── README.md                           # project’s info
+
+## Libraries
+**Prod**
+- core-js
+- html-loader
+- moment
+**Dev**
+- @babel/cli
+- @babel/core
+- @babel/preset-env
+- autoprefixer
+- babel-loader
+- copy-webpack-plugin
+- css-loader
+- css-minimizer-webpack-plugin
+- dotenv-webpack
+- html-webpack-plugin
+- mini-css-extract-plugin
+- postcss
+- postcss-loader
+- postcss-preset-env
+- style-loader
+- webpack
+- webpack-cli
+- webpack-dev-server
 
 ## Updates
 Each six months it tries to update all project with npm-check-updates library.

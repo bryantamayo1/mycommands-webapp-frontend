@@ -1,5 +1,6 @@
-import { getQueries } from "./utils";
-import dataJson from './data.json';
+import { getQueries }   from "./utils";
+import dataJson         from './data.json';
+import moment           from 'moment';
 
 /**
  * Open modal with info selected command
@@ -11,6 +12,7 @@ export const openModal = (event, info, lang) => {
     const overlay = document.getElementsByClassName("overlay")[0];
     const overlay__command = document.getElementsByClassName("overlay__command")[0];
     const overlay__meaning = document.getElementsByClassName("overlay__meaning")[0];
+    const overlay__date = document.getElementsByClassName("overlay__date")[0];
 
     // Reset command and meaning in modal
     overlay__command.innerHTML = "";
@@ -27,7 +29,16 @@ export const openModal = (event, info, lang) => {
         overlay__meaning.appendChild( document.createTextNode(info[lang].slice(2, info[lang].length)) );
     }
 
+    // Show command
     overlay__command.innerHTML = info.command;
+    
+    // Show updatedAt
+    const info_updatedAt = moment(info.updatedAt);
+    let updatedAt = "--/--/----";
+    if(info_updatedAt){
+        updatedAt = dataJson.content["updatedAt"][lang] + info_updatedAt.format("DD-MM-YYYY");
+    }
+    overlay__date.innerHTML = updatedAt
 
     // Show modal
     overlay.style.display = "flex";
