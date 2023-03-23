@@ -35,6 +35,10 @@
         "copied": {
             "en": "Copied!",
             "es": "Copiado!"
+        },
+        "updatedAt": {
+            "en": "Last modification: ",
+            "es": "Última modificación: "
         }
     }
 }
