@@ -13,6 +13,7 @@ export const openModal = (event, info, lang) => {
     const overlay__command = document.getElementsByClassName("overlay__command")[0];
     const overlay__meaning = document.getElementsByClassName("overlay__meaning")[0];
     const overlay__date = document.getElementsByClassName("overlay__date")[0];
+    const overlay_date_key = document.getElementsByClassName("overlay_date_key")[0];
 
     // Reset command and meaning in modal
     overlay__command.innerHTML = "";
@@ -36,11 +37,12 @@ export const openModal = (event, info, lang) => {
     const info_updatedAt = moment(info.updatedAt || "");
     let updatedAt = "--/--/----";
     if(info_updatedAt.isValid()){
-        updatedAt = dataJson.content["updatedAt"][lang] + info_updatedAt.format("DD-MM-YYYY");
+        overlay_date_key.innerHTML = dataJson.content["updatedAt"][lang];
+        overlay__date.appendChild( document.createTextNode(info_updatedAt.format("DD-MM-YYYY") ));
     }else{
-        updatedAt = dataJson.content["updatedAt"][lang] + updatedAt;
+        overlay_date_key.innerHTML = dataJson.content["updatedAt"][lang];
+        overlay__date.appendChild( document.createTextNode( updatedAt ));
     }
-    overlay__date.innerHTML = updatedAt
 
     // Show modal
     overlay.style.display = "flex";

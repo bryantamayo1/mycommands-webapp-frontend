@@ -46,6 +46,9 @@
     font-size: 11px;
     padding: 10px 30px;
 }
+.overlay_date_key{
+    color: rgb(204, 204, 204);
+}
 .overlay__command,.overlay__meaning{
     white-space: break-spaces;
 }
