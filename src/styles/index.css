@@ -147,11 +147,24 @@ main{
     position: fixed;
     right: 0;
     top: 0;
-    transition-property: display, width;
-    transition-duration: 0.5s;
-    transition-timing-function: ease-in;
-    width: 0;
     z-index: 999;
+    animation: openMenuFilter 1s ease-in-out;
+}
+@keyframes openMenuFilter{
+    0% {
+      transform: translateX(100%);
+    }
+    100% {
+      transform: translateX(0);
+    }
+}
+@keyframes closeMenuFilter{
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(100%);
+    }
 }
 .filters__btn__close{
     background-color: inherit;

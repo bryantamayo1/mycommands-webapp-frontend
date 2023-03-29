@@ -36,9 +36,6 @@ export const handleFilters = () => {
         if(global_open_menu_filters === false){
             global_open_menu_filters = true;
             filters.style.display = "block";
-            setTimeout(() => {
-                filters.style.width = "30%";
-            }, 100);
         }else{
             closeMenuFilter();
         }
@@ -48,10 +45,14 @@ export const handleFilters = () => {
 export const closeMenuFilter = () => {
     const filters = document.getElementsByClassName("filters")[0];
     global_open_menu_filters = false;
-    filters.style.width = 0;
+
+    // Config in 1s according to 1s of animation
+    filters.style.animation = "closeMenuFilter 1s ease-in-out";
     setTimeout(() => {
+        filters.style.animation = "openMenuFilter 1s ease-in-out";
+        filters.style.width = "40%";
         filters.style.display = "none";
-    }, 100);
+    }, 1000);
 }
 
 /**
@@ -62,6 +63,17 @@ export const handleCloseFilters = () => {
     filters__btn__close.addEventListener("click", () => {   
         closeMenuFilter();
     });
+    
+    // Close menu filter outside himself
+    document.addEventListener('click', function(event) {
+        const containter_filters = document.getElementsByClassName("filters")[0];
+        const search__button__right = document.getElementsByClassName("search__button--right")[0];
+        const outsideClickBtnRight = !search__button__right.contains(event.target);
+        const outsideClickDOM = !containter_filters.contains(event.target);
+        if(outsideClickDOM && containter_filters.style.display === "block" && outsideClickBtnRight){
+            closeMenuFilter();
+        }
+      });
 }
 
 

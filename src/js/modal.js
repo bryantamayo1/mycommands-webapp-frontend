@@ -12,8 +12,8 @@ export const openModal = (event, info, lang) => {
     const overlay = document.getElementsByClassName("overlay")[0];
     const overlay__command = document.getElementsByClassName("overlay__command")[0];
     const overlay__meaning = document.getElementsByClassName("overlay__meaning")[0];
-    const overlay__date = document.getElementsByClassName("overlay__date")[0];
     const overlay_date_key = document.getElementsByClassName("overlay_date_key")[0];
+    const overlay_date_value = document.getElementsByClassName("overlay_date_value")[0];
 
     // Reset command and meaning in modal
     overlay__command.innerHTML = "";
@@ -35,13 +35,12 @@ export const openModal = (event, info, lang) => {
     
     // Show updatedAt
     const info_updatedAt = moment(info.updatedAt || "");
-    let updatedAt = "--/--/----";
     if(info_updatedAt.isValid()){
         overlay_date_key.innerHTML = dataJson.content["updatedAt"][lang];
-        overlay__date.appendChild( document.createTextNode(info_updatedAt.format("DD-MM-YYYY") ));
+        overlay_date_value.innerHTML = info_updatedAt.format("DD-MM-YYYY");
     }else{
         overlay_date_key.innerHTML = dataJson.content["updatedAt"][lang];
-        overlay__date.appendChild( document.createTextNode( updatedAt ));
+        overlay_date_value.innerHTML = "--/--/----";
     }
 
     // Show modal
@@ -59,7 +58,7 @@ export const closeModal = (event) => {
         const overlay = document.getElementsByClassName("overlay")[0];
         overlay.style.display = "none";
     });
-
+    
     // Close outside of modal
     const overlay = document.getElementsByClassName("overlay")[0];
     overlay.addEventListener("click", (event_overlay) => {
@@ -69,7 +68,6 @@ export const closeModal = (event) => {
         }
     });
 }
-
 
 export const copyInClipboardModalCommand = () => {
     const btn_copy = document.getElementsByClassName("container-icon")[0];
