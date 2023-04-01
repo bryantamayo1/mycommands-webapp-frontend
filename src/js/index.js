@@ -7,7 +7,7 @@ import '../styles/modal.css';
 import '../styles/handleErros.css';
 import { Services }         from './services';
 import { closeMenuFilter, handleCloseFilters, handleFilters, handleFocusInputSearch } from './effects';
-import { getQueries, getQueriesCommanMeaning, parseQuery } from './utils';
+import { colorsEnum, getQueries, getQueriesCommanMeaning, parseQuery } from './utils';
 import { handlePagination } from './pagination';
 import { closeModal, copyInClipboardModalCommand, copyInClipboardModalMeaning, openModal } from './modal';
 import { handleLanguages }  from './handleLanguages';
@@ -219,6 +219,7 @@ export const getCommands = async(lang, page, category, parameterCommandAndMeanin
             if(data.data[i].subCategories.length > 0){
                 span_subCategory.appendChild( document.createTextNode(data.data[i].subCategories[0][lang_response]) );
                 span_subCategory.classList.add("list-container__row-2__subCategory");
+                span_subCategory.style.backgroundImage  = colorsEnum[data.data[i].subCategories[0].color];
                 row_2.classList.add("list-container__row-2");
             }
             row_2.appendChild( span_subCategory );

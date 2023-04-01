@@ -358,7 +358,7 @@ main{
     margin: 10px 0;
     padding: 0 10px;
 }
-.list-container__row-2{
+.list-container__row-2, .sub-categories{
     display: flex;
     flex-direction: row-reverse;
     margin: 10px;
