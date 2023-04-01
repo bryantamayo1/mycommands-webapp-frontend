@@ -60,7 +60,7 @@ export class Services{
     /**
      * Get all filters
      */
-    static getFilters(){
-        return Api("/filters");
+    static getFilters(lang = "/en"){
+        return Api("/filters"+lang);
     }
 }

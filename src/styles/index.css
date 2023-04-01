@@ -335,17 +335,21 @@ main{
     margin: 30px auto 0 auto;
     width: 90%;
 }
-.list-container{
-    align-items: center;
+.container-list{
     background-color: #373739;
     background-image: linear-gradient(62deg, #353538 0%, #2e2e30 33%);    
+    display: flex;
+    flex-direction: column;
+    margin: 15px 0;
+}
+.list-container{
+    align-items: center;
     border-radius: 5px;
     box-sizing: border-box;
     display: grid;
     font-family: 'Ubuntu Mono', monospace;
     gap: 0 5px;
     grid-template-columns: 40px 40px 400px 1fr;
-    margin: 15px 0;
     width: 100%;
 }
 .list-container p{
@@ -353,6 +357,30 @@ main{
     display: block;
     margin: 10px 0;
     padding: 0 10px;
+}
+.list-container__row-2{
+    display: flex;
+    flex-direction: row-reverse;
+    margin: 10px;
+}
+.list-container__row-2__subCategory{
+    background-image: linear-gradient(
+        270deg,
+        hsl(313deg 96% 41%) 0%,
+        hsl(313deg 94% 41%) 11%,
+        hsl(313deg 92% 41%) 22%,
+        hsl(313deg 90% 41%) 33%,
+        hsl(313deg 88% 41%) 44%,
+        hsl(313deg 87% 41%) 56%,
+        hsl(313deg 85% 41%) 67%,
+        hsl(313deg 84% 41%) 78%,
+        hsl(313deg 83% 40%) 89%,
+        hsl(313deg 81% 40%) 100%
+    );
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-size: 13px;
+    padding: 4px 10px;
 }
 /* icons */
 .container-icon{

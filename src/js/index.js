@@ -13,6 +13,7 @@ import { closeModal, copyInClipboardModalCommand, copyInClipboardModalMeaning, o
 import { handleLanguages }  from './handleLanguages';
 import dataJson             from './data.json';
 import { handleErrors }     from './handleErrors';
+import { template_Menu_filter } from './menuFilter';
 
 // Global variables
 // Store state of each filters
@@ -96,7 +97,7 @@ const getInitialQueries = () => {
  */
 export const getCommands = async(lang, page, category, parameterCommandAndMeaning, fromQueryUrl, defaultSearch, firstSearch)  => {
     // Clean data
-    document.querySelectorAll(".list-container")
+    document.querySelectorAll(".container-list")
     .forEach(item => item.remove());
     // Clean pagination
     document.querySelectorAll(".btn-pagination")
@@ -172,13 +173,16 @@ export const getCommands = async(lang, page, category, parameterCommandAndMeanin
         // Show data in list
         const my_container = document.getElementsByClassName("my-container")[0];
         for(let i = 0; i< data.data.length; i++){
-            const div = document.createElement("div");
+            const container_list = document.createElement("div");
+            const row_1 = document.createElement("div");
+            const row_2 = document.createElement("div");
             const column_1 = document.createElement("button");
             const column_2 = document.createElement("button");
             const column_3 = document.createElement("p");
             const column_4 = document.createElement("p");
             const icon_copy = document.createElement("i");
             const icon_info = document.createElement("i");
+            const span_subCategory = document.createElement("span");
     
             icon_copy.classList.add("fa-solid");
             icon_copy.classList.add("fa-copy");
@@ -206,13 +210,24 @@ export const getCommands = async(lang, page, category, parameterCommandAndMeanin
             }else{
                 column_4.appendChild( document.createTextNode(data.data[i][lang_response]) );
             }
-            div.appendChild(column_1);
-            div.appendChild(column_2);
-            div.appendChild(column_3);
-            div.appendChild(column_4);
-            div.classList.add("list-container");
+            row_1.appendChild(column_1);
+            row_1.appendChild(column_2);
+            row_1.appendChild(column_3);
+            row_1.appendChild(column_4);
+            row_1.classList.add("list-container");
+
+            if(data.data[i].subCategories.length > 0){
+                span_subCategory.appendChild( document.createTextNode(data.data[i].subCategories[0][lang_response]) );
+                span_subCategory.classList.add("list-container__row-2__subCategory");
+                row_2.classList.add("list-container__row-2");
+            }
+            row_2.appendChild( span_subCategory );
             
-            my_container.appendChild(div);
+            container_list.classList.add("container-list");
+            
+            container_list.appendChild(row_1);
+            container_list.appendChild(row_2);
+            my_container.appendChild(container_list);
         }
     }finally{
         // Disable spinner
@@ -266,6 +281,7 @@ const handleButtonsLanguage = () => {
     const en = document.getElementById("en");
     
     es.addEventListener("click", () => {
+
         let query = window.location.search.split("");
         const lang_index = window.location.search.indexOf("lang=");
         // Change query in window.history
@@ -277,8 +293,7 @@ const handleButtonsLanguage = () => {
             let newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + query.join("");
             window.history.pushState({path:newurl},'',newurl);
             getCommands("/es", page, category, getQueriesCommanMeaning(queryObject), true);
-            // Charge text of default language
-            handleLanguages("es");
+            handleToggleFiletrs("/es");
         }
     });
     en.addEventListener("click", () => {
@@ -293,9 +308,7 @@ const handleButtonsLanguage = () => {
             let newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + query.join("");
             window.history.pushState({path:newurl},'',newurl);
             getCommands("/en", page, category, getQueriesCommanMeaning(queryObject), true);
-
-            // Charge text of default language
-            handleLanguages("en");
+            handleToggleFiletrs("/en");
         }
     });
 }
@@ -328,9 +341,13 @@ const handleInputSearch = () => {
  * Handle toggles filters, create and handle elements
  * Besides, add btn apply
  */
-const handleToggleFiletrs = async() => {
+const handleToggleFiletrs = async(lang = "/en") => {
+    // Reset menu filter
+    const filters_base = document.getElementsByClassName("filters")[0];
+    filters_base.innerHTML = template_Menu_filter;
+
     const filters = document.getElementsByClassName("filters")[0];
-    const data = await Services.getFilters();
+    const data = await Services.getFilters(lang);
     const info = data.data;
 
     // Push filters of searching by commands and meaning
@@ -468,7 +485,7 @@ const handleToggleFiletrs = async() => {
     filters.appendChild(btn_apply_container);
 
     // Charge text of default language
-    handleLanguages("en");
+    handleLanguages(lang.split("").splice(1).join(""));
 }
 
 /**

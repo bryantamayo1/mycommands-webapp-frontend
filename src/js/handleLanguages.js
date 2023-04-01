@@ -1,10 +1,12 @@
 import dataJson from './data.json';
+import { handleCloseFilters } from './effects';
 
 /**
  * Change all words according to selected language
  * @param {string} lang 
  */
 export const handleLanguages = (lang = "en") => {
+    handleCloseFilters();
     const data = dataJson.content;
 
     // Change footer
