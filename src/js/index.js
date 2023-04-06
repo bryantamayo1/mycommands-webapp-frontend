@@ -1,5 +1,6 @@
 import '../styles/normalize.css';
 import '../styles/index.css';
+import '../styles/filter.css';
 import '../styles/pagination.css';
 import '../styles/footer.css';
 import '../styles/spinner.css';
@@ -13,7 +14,7 @@ import { closeModal, copyInClipboardModalCommand, copyInClipboardModalMeaning, o
 import { handleLanguages }  from './handleLanguages';
 import dataJson             from './data.json';
 import { handleErrors }     from './handleErrors';
-import { template_Menu_filter } from './menuFilter';
+import { createSubCategories, template_Menu_filter } from './menuFilter';
 
 // Global variables
 // Store state of each filters
@@ -351,7 +352,12 @@ const handleToggleFiletrs = async(lang = "/en") => {
     const data = await Services.getFilters(lang);
     const info = data.data;
 
-    // Push filters of searching by commands and meaning
+    /**
+     * Push filters of 'Search by: 
+     *      - Command && Meaning
+     *      - Command
+     *      - Meaning
+     */
     global_buffer_filters_queries.forEach( (item, i) => {
         const container_filters = document.getElementsByClassName("container-filters")[i];
         const span = document.createElement("span");
@@ -402,8 +408,9 @@ const handleToggleFiletrs = async(lang = "/en") => {
     const circle = document.getElementById("id-span-all");
     btn.addEventListener("click", event => handleBtnToggleCategories(event, 0, global_buffer_filters_queries.length));
 
-    // Buildind toggles
-    for(let i = 0; i < info.length; i++){       
+    // Buildind toggles with Categories
+    for(let i = 0; i < info.length; i++){  
+        const category = info[i];
         const span = document.createElement("span");
         span.classList.add("toggle__slider");
 
@@ -429,7 +436,12 @@ const handleToggleFiletrs = async(lang = "/en") => {
         }
         version.appendChild( document.createTextNode( aux_category ) );
         div.appendChild( version );
-        div.classList.add("toggle-container");
+
+        if(category.subCategories?.length > 0){
+            createSubCategories(div, category);
+        }else{
+            div.classList.add("toggle-container");
+        }
         div.classList.add("container-filters");
 
         filters.appendChild(div);

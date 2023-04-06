@@ -225,6 +225,12 @@ main{
     display: grid;
     grid-template-columns: 50px 1fr;
 }
+.toggle-container-subactegories{
+    align-items: center;
+    display: grid;
+    grid-template-columns: 50px 1fr;
+    grid-template-rows: auto auto;
+}
 .toggle{
     /* relation aspect 1.7  width / height*/
     background-color: #c4c4c4;
@@ -319,16 +325,6 @@ main{
     z-index: 999;
 }  
 
-/* Rounded sliders */
-.slider.round{
-    border-radius: 20px;
-    box-sizing: border-box;
-}
-  
-.slider.round:before{
-    border-radius: 50%;
-    box-sizing: border-box;
-}
 
 /* list */
 .my-container{

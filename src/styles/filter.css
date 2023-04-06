@@ -1,0 +1,53 @@
+.container-subcategory{
+    display: grid;
+    grid-template-columns: 30px 1fr;
+}
+.container-arrow{
+    height: 25px;
+}
+.arrow{
+    border-bottom: 2px solid #ce04a2;
+    border-left: 2px solid #ce04a2;
+    box-sizing: border-box;
+    height: 50%;
+}
+/* Pint border left with a whole line */
+.arrow-bottom{
+    border-left: 2px solid #ce04a2;
+    height: 50%;
+}
+.text-subcategory{
+    box-sizing: border-box;
+    padding: 0 10px;
+    margin: 0;
+}
+.contianer-toggle-and-subcategory{
+    display: grid;
+    grid-template-columns: 30px 1fr;
+    margin: 0 auto;
+    width: 90%;
+}
+.toggle-subcategory{
+    background-color: #c4c4c4;
+    border: none;
+    border-radius: 20px;
+    box-sizing: border-box;
+    cursor: pointer;
+    height: 20px;
+    padding: 0;
+    position: relative;
+    width: 35px;
+}
+.toggle__slider-category{
+    background-color: #FFF;
+    border-radius: 50%;
+    box-sizing: border-box;
+    display: block;
+    height: 13px;
+    left: 3px;
+    position: absolute;
+    transition: all 0.2s ease-in;
+    transform: translateY(-50%);
+    top: 50%;
+    width: 13px;
+}
