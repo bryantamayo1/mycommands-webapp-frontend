@@ -438,7 +438,7 @@ const handleToggleFiletrs = async(lang = "/en") => {
         div.appendChild( version );
 
         if(category.subCategories?.length > 0){
-            createSubCategories(div, category);
+            createSubCategories(div, category, lang, global_buffer_filters_categories);
         }else{
             div.classList.add("toggle-container");
         }
@@ -585,6 +585,7 @@ const handleBtnToggleQueries = (event, i, sizeFilters) => {
  * Handle btn Apply in menu filters and get commands
  */
 const handleBtnApply = (event) => {
+    console.log("global_buffer_filters_categories: ", global_buffer_filters_categories);
     const filter = global_buffer_filters_categories.find(item => item.active);
     const query = getQueries(window.location.search);
     const findFilterQuery = global_buffer_filters_queries.find(item => item.active);

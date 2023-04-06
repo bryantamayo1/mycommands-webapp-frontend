@@ -37,9 +37,12 @@ export const template_Menu_filter =
 /**
  * Building subCategories only whether the category has
  * subCategories
- * @param {HTMLElement } div 
+ * @param {HTMLElement} div 
+ * @param {object} category 
+ * @param {string} lang 
  */
-export const createSubCategories = (div, category) => {
+export const createSubCategories = (div, category, lang) => {
+    const newLang = lang.split("").splice(1).join("");
     category.subCategories?.forEach((element, index, buffer) => {
         const divEmpty = document.createElement("div");
     
@@ -53,18 +56,22 @@ export const createSubCategories = (div, category) => {
         const container_btn = document.createElement("button");
         const container_text_subcategory = document.createElement("p");
         const span_toggle = document.createElement("span");
+
+        // Set subCategory 'All' as active by default
+        element._id === "all"? element.active = true : element.active = false;
         
         div.classList.add("toggle-container-subactegories");
         
         // Add div empty
-        div.appendChild(divEmpty)
+        div.appendChild(divEmpty);
     
         // Building subCategories
         // 1ª Build arrow
         arrow_top.classList.add("arrow");
-        // Last element with arrow
-        if(index !== buffer.length -1){
+        // Last element with arrow, this is a special case!
+        if(index === buffer.length -1){
             arrow_bottom.classList.add("arrow-bottom");
+            arrow_top.classList.add("arrow-left");
         }
         container_arrow.classList.add("container-arrow");
         container_arrow.appendChild(arrow_top);
@@ -72,11 +79,12 @@ export const createSubCategories = (div, category) => {
     
         // 2º Build subCategory’s text
         container_text_subcategory.classList.add("text-subcategory");
-        container_text_subcategory.appendChild(document.createTextNode("XXXXXX"));
+        container_text_subcategory.appendChild(document.createTextNode(element[newLang]));
     
         // 3º Build button as toggle
         container_btn.classList.add("toggle-subcategory");
         container_btn.appendChild(span_toggle);
+        container_btn.addEventListener("click", event => handleBtnSubCategory(event))
         span_toggle.classList.add("toggle__slider-category");
         
         // 3º Build container toggle and subcategory
@@ -90,4 +98,8 @@ export const createSubCategories = (div, category) => {
     
         div.appendChild(container_subCategory);
     });
+}
+
+const handleBtnSubCategory = (event) => {
+
 }

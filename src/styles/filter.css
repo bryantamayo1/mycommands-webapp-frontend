@@ -2,23 +2,27 @@
     display: grid;
     grid-template-columns: 30px 1fr;
 }
+.container-subcategory:not(:last-child){
+    border-left: 2px solid #ce04a2;
+}
 .container-arrow{
     height: 25px;
 }
 .arrow{
     border-bottom: 2px solid #ce04a2;
-    border-left: 2px solid #ce04a2;
     box-sizing: border-box;
     height: 50%;
 }
 /* Pint border left with a whole line */
-.arrow-bottom{
+.arrow-left{
     border-left: 2px solid #ce04a2;
+}
+.arrow-bottom{
     height: 50%;
 }
 .text-subcategory{
     box-sizing: border-box;
-    padding: 0 10px;
+    padding: 0 10px 10px 10px;
     margin: 0;
 }
 .contianer-toggle-and-subcategory{
