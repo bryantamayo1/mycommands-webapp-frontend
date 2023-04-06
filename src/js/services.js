@@ -26,17 +26,17 @@ export class Services{
      * @param {boolean} defaultSearch search with page = 1, lang = "en" and category = "all"
      * @returns Promise
      */
-    static async getCommands(lang = "/en", page = 1, category = "all", commandAndMeaning, fromQueryUrl, defaultSearch, firstSearch){
+    static async getCommands(lang = "/en", page = 1, categoryAndSubCategoryToSearch = {category: "all"}, commandAndMeaning, fromQueryUrl, defaultSearch, firstSearch){
         // Unique case, only it’s executed when the web page is loaded the first time
         if(firstSearch){
             let newurl = window.location.protocol + "//" + window.location.host +
-            `?page=${page}&lang=${lang.slice(1, lang.length)}&category=${category}`;
+            `?page=${page}&lang=${lang.slice(1, lang.length)}&category=${categoryAndSubCategoryToSearch.category}`;
             window.history.replaceState({path:newurl},'',newurl);
 
         // Update query in window.history
         }else if (history.pushState && !fromQueryUrl && !defaultSearch) {
             let newurl = window.location.protocol + "//" + window.location.host +
-            `?page=${page}&lang=${lang.slice(1, lang.length)}&category=${category}${commandAndMeaning}`;
+            `?page=${page}&lang=${lang.slice(1, lang.length)}&category=${categoryAndSubCategoryToSearch.category}${commandAndMeaning}`;
             window.history.pushState({path:newurl},'',newurl);
         }
 
@@ -48,13 +48,13 @@ export class Services{
 
         if(history.pushState && defaultSearch){
             let newurl = window.location.protocol + "//" + window.location.host +
-            `?page=${page}&lang=${lang.slice(1, lang.length)}&category=${category}`;
+            `?page=${page}&lang=${lang.slice(1, lang.length)}&category=${categoryAndSubCategoryToSearch.category}`;
             window.history.pushState({path:newurl},'',newurl);
             query = "";
         }
 
 
-        return Api("/commands" + lang, `?page=${page}&category=${category}${query}` );
+        return Api("/commands" + lang, `?page=${page}&category=${categoryAndSubCategoryToSearch.category}${query}` );
     }
 
     /**

@@ -137,7 +137,8 @@ const createBtnPagination = (amount_pages, data, increase = 0) => {
  */
  const handleBtnPagination = (event, indexPage) => {
     const query = getQueries(window.location.search);
-    getCommands("/" + query.lang, indexPage, query.category);
+    const categoryAndSubCategoryToSearch = {category: query.category}
+    getCommands("/" + query.lang, indexPage, categoryAndSubCategoryToSearch);
 }
 
 /**

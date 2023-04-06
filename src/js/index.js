@@ -64,7 +64,8 @@ const goHome = () => {
     btn_house.addEventListener("click", () => {
         const input_value_direct = document.getElementsByClassName("search__input")[0];
         input_value_direct.value = "";
-        getCommands("/en", 1, "all", "",  false, true);
+        const categoryAndSubCategoryToSearch = {category: "all"}
+        getCommands("/en", 1, categoryAndSubCategoryToSearch, "",  false, true);
         resetFilters();
 
         // Charge text of default language
@@ -77,9 +78,11 @@ const getInitialQueries = () => {
     const {lang, page, category} = queryObject;
     // Validations
     if(lang && page && category){
-        getCommands("/"+lang, page, category, getQueriesCommanMeaning(queryObject), true);
+        const categoryAndSubCategoryToSearch = {category}
+        getCommands("/"+lang, page, categoryAndSubCategoryToSearch, getQueriesCommanMeaning(queryObject), true);
     }else{
-        getCommands("/en", 1, "all", "", false, false, true);
+        const categoryAndSubCategoryToSearch = {category: "all"}
+        getCommands("/en", 1, categoryAndSubCategoryToSearch, "", false, false, true);
     }
 }
 
@@ -294,7 +297,9 @@ const handleButtonsLanguage = () => {
             query.splice(lang_index + 6, 0, "s");
             let newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + query.join("");
             window.history.pushState({path:newurl},'',newurl);
-            getCommands("/es", page, category, getQueriesCommanMeaning(queryObject), true);
+
+            const categoryAndSubCategoryToSearch = {category}
+            getCommands("/es", page, categoryAndSubCategoryToSearch, getQueriesCommanMeaning(queryObject), true);
             handleToggleFiletrs("/es");
         }
     });
@@ -309,7 +314,9 @@ const handleButtonsLanguage = () => {
             query.splice(lang_index + 6, 0, "n");
             let newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + query.join("");
             window.history.pushState({path:newurl},'',newurl);
-            getCommands("/en", page, category, getQueriesCommanMeaning(queryObject), true);
+
+            const categoryAndSubCategoryToSearch = {category}
+            getCommands("/en", page, categoryAndSubCategoryToSearch, getQueriesCommanMeaning(queryObject), true);
             handleToggleFiletrs("/en");
         }
     });
@@ -328,14 +335,16 @@ const handleInputSearch = () => {
         // Get input's value'
         if(event.key === "Enter"){
             // Get commands
-            getCommands("/"+lang, 1, filter._id, input.value);
+            const categoryAndSubCategoryToSearch = {category: filter._id}
+            getCommands("/"+lang, 1, categoryAndSubCategoryToSearch, input.value);
         }
     });
     button.addEventListener("click", () => {
         const {lang} = getQueries(window.location.search);
         let filter = global_buffer_filters_categories.find(item => item.active === true);
         // Search active filter
-        getCommands("/"+lang, 1, filter._id, input.value);
+        const categoryAndSubCategoryToSearch = {category: filter._id}
+        getCommands("/"+lang, 1, categoryAndSubCategoryToSearch, input.value);
     });
 }
 
@@ -438,7 +447,7 @@ const handleToggleFiletrs = async(lang = "/en") => {
         div.appendChild( version );
 
         if(category.subCategories?.length > 0){
-            createSubCategories(div, category, lang, global_buffer_filters_categories);
+            createSubCategories(div, category, lang);
         }else{
             div.classList.add("toggle-container");
         }
@@ -515,6 +524,13 @@ const handleBtnToggleCategories = (event, i, sizePreviouslyFilters) => {
     if(i === filterActived){
         return;
     }else{
+        // Clean all properties father
+        global_buffer_filters_categories.forEach(j => {
+            j.subCategories?.forEach(k => {
+                k.father = false;
+            })
+        });
+
         // Clone only items that we need
         const all_togggles = document.querySelectorAll(".toggle");
         const btn_filter = [];
@@ -538,6 +554,11 @@ const handleBtnToggleCategories = (event, i, sizePreviouslyFilters) => {
         global_buffer_filters_categories[i].active = true;
         btn.classList.add("toggle-active");
         circle.classList.add("toggle__slider--move-to-right");
+
+        // Only assign father = true when the father has subCategories
+        global_buffer_filters_categories[i].subCategories?.forEach(subCategory => {
+            subCategory.father = true;
+        });
     }
 }
 
@@ -589,7 +610,8 @@ const handleBtnApply = (event) => {
     const filter = global_buffer_filters_categories.find(item => item.active);
     const query = getQueries(window.location.search);
     const findFilterQuery = global_buffer_filters_queries.find(item => item.active);
-    getCommands("/" + query.lang, 1, filter._id, findFilterQuery.category);
+    const categoryAndSubCategoryToSearch = {category: filter._id}
+    getCommands("/" + query.lang, 1, categoryAndSubCategoryToSearch, findFilterQuery.category);
     closeMenuFilter();
 }
 
@@ -597,7 +619,8 @@ const handleCHangesUrl = () => {
     window.onpopstate = function(){
         const queryObject = getQueries(window.location.search);
         const {page, lang, category} = queryObject;
-        getCommands("/"+lang, page, category, getQueriesCommanMeaning(queryObject), true);
+        const categoryAndSubCategoryToSearch = {category}
+        getCommands("/"+lang, page, categoryAndSubCategoryToSearch, getQueriesCommanMeaning(queryObject), true);
     }
 }
 

@@ -55,3 +55,7 @@
     top: 50%;
     width: 13px;
 }
+/* Move toggle */
+.toggle__slider-category--move-to-right{
+    left: 50%;
+}

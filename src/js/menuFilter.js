@@ -1,3 +1,5 @@
+import { colorsEnum } from "./utils";
+
 /**
  * It’s used to reset the filter’s content
  */
@@ -56,10 +58,10 @@ export const createSubCategories = (div, category, lang) => {
         const container_btn = document.createElement("button");
         const container_text_subcategory = document.createElement("p");
         const span_toggle = document.createElement("span");
-
-        // Set subCategory 'All' as active by default
-        element._id === "all"? element.active = true : element.active = false;
         
+        // Put indexes
+        element.index = index;
+
         div.classList.add("toggle-container-subactegories");
         
         // Add div empty
@@ -84,7 +86,7 @@ export const createSubCategories = (div, category, lang) => {
         // 3º Build button as toggle
         container_btn.classList.add("toggle-subcategory");
         container_btn.appendChild(span_toggle);
-        container_btn.addEventListener("click", event => handleBtnSubCategory(event))
+        container_btn.addEventListener("click", event => handleBtnSubCategory(event, category, index));
         span_toggle.classList.add("toggle__slider-category");
         
         // 3º Build container toggle and subcategory
@@ -92,14 +94,49 @@ export const createSubCategories = (div, category, lang) => {
         container_toggle_and_text.appendChild(container_btn);
         container_toggle_and_text.appendChild(container_text_subcategory);
     
+        container_subCategory.id = element._id;
         container_subCategory.classList.add("container-subcategory");
         container_subCategory.appendChild(container_arrow);
         container_subCategory.appendChild(container_toggle_and_text);
+
+        // Set subCategory 'All' as actived by default
+        if(element._id === "all"){
+            container_btn.style.backgroundImage = colorsEnum[element.color];
+            span_toggle.classList.add("toggle__slider-category--move-to-right");
+            element.active = true;
+        }else{
+            element.active = false;
+        } 
     
         div.appendChild(container_subCategory);
     });
 }
 
-const handleBtnSubCategory = (event) => {
+const handleBtnSubCategory = (event, category, index) => {
+    const {subCategories} = category;
+    const filterActived = subCategories.map(i => i.active).findIndex(item => item);
+    console.log("handleBtnSubCategory");
 
+    // 1º case. 
+    if(index === filterActived){
+        return;
+    }else{
+        // Get all btns
+        const all_togggles = document.querySelectorAll(".toggle-subcategory");
+        const circle = document.querySelectorAll(".toggle__slider-category");
+        const btn_selected = document.getElementsByClassName("toggle-subcategory")[index];
+
+        // Disable all toggles
+        all_togggles.forEach((btn, i) => {
+            btn.style.backgroundImage = "";
+            circle[i].classList.remove("toggle__slider-category--move-to-right");
+            subCategories[i].active = false;
+        });
+
+        // Only active btn is clicked
+        subCategories[index].active = true;
+        btn_selected.style.backgroundImage =  colorsEnum[subCategories[index].color];
+        circle[index].classList.add("toggle__slider-category--move-to-right");
+        console.log("subCategories: ", subCategories);
+    }
 }
