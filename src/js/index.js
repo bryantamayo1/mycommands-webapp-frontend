@@ -14,7 +14,7 @@ import { closeModal, copyInClipboardModalCommand, copyInClipboardModalMeaning, o
 import { handleLanguages }  from './handleLanguages';
 import dataJson             from './data.json';
 import { handleErrors }     from './handleErrors';
-import { createSubCategories, template_Menu_filter } from './menuFilter';
+import { activeOrDesactiveToggles, createSubCategories, template_Menu_filter } from './menuFilter';
 
 // Global variables
 // Store state of each filters
@@ -603,14 +603,19 @@ const handleBtnToggleQueries = (event, i, sizeFilters) => {
 }
 
 /**
- * Handle btn Apply in menu filters and get commands
+ * Handle click on btn Apply in menu filters and get commands
  */
 const handleBtnApply = (event) => {
     console.log("global_buffer_filters_categories: ", global_buffer_filters_categories);
     const filter = global_buffer_filters_categories.find(item => item.active);
+    const subCategories = filter.subCategories?.find(item => item.active);
+    let subCategory = "";
+    if(subCategories) subCategory = subCategories._id;
     const query = getQueries(window.location.search);
     const findFilterQuery = global_buffer_filters_queries.find(item => item.active);
-    const categoryAndSubCategoryToSearch = {category: filter._id}
+
+    // Create category and subCategory to search
+    const categoryAndSubCategoryToSearch = {category: filter._id, subCategory}
     getCommands("/" + query.lang, 1, categoryAndSubCategoryToSearch, findFilterQuery.category);
     closeMenuFilter();
 }
@@ -628,6 +633,7 @@ const handleCHangesUrl = () => {
  * Reset filters with default options
  */
 const resetFilters = () => {
+    // Reset queries
     global_buffer_filters_queries = global_buffer_filters_queries.map(( item, index) => {
         if(index === 0){
             return {...item, active: true}
@@ -635,7 +641,19 @@ const resetFilters = () => {
             return {...item, active: false}
         }
     });
+
+    /**
+     * Reset categories and subCategories. And put first item as actived by default
+     * inside categories and subCategories
+     */
     global_buffer_filters_categories = global_buffer_filters_categories.map(( item, index) => {
+        const subCategories = item.subCategories;
+        if(subCategories?.length > 0){
+            item.subCategories = subCategories.map((c, i) => {
+                if(i === 0) return {...c, active: true}
+                return {...c, active: false}
+            });
+        }
         if(index === 0){
             return {...item, active: true}
         }else{
@@ -664,6 +682,13 @@ const resetFilters = () => {
     
     span__toggle__slider.classList.add("toggle__slider--move-to-right");
     btn_span.classList.add("toggle__slider--move-to-right");
+
+    // Active toggle by default in subCategories
+    global_buffer_filters_categories.forEach(p => {
+        if(p.subCategories?.length > 0){
+            activeOrDesactiveToggles(p.subCategories, 0);
+        }
+    });
 }
 
 /**

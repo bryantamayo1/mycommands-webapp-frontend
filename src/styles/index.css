@@ -440,11 +440,6 @@ code{
 }
 
 /* responsive */
-@media(max-width: 1200px){
-    .filters{
-        width: 40% !important;
-    }
-}
 @media(max-width: 900px){
     .filters{
         width: 60% !important;
@@ -457,6 +452,9 @@ code{
     }
 }
 @media(max-width: 768px){
+    .container-filters{
+        width: 90%;
+    }
     .filters{
         width: 100% !important;
     }

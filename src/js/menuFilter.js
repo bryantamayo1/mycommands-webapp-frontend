@@ -115,28 +115,34 @@ export const createSubCategories = (div, category, lang) => {
 const handleBtnSubCategory = (event, category, index) => {
     const {subCategories} = category;
     const filterActived = subCategories.map(i => i.active).findIndex(item => item);
-    console.log("handleBtnSubCategory");
 
     // 1º case. 
     if(index === filterActived){
         return;
     }else{
-        // Get all btns
-        const all_togggles = document.querySelectorAll(".toggle-subcategory");
-        const circle = document.querySelectorAll(".toggle__slider-category");
-        const btn_selected = document.getElementsByClassName("toggle-subcategory")[index];
-
-        // Disable all toggles
-        all_togggles.forEach((btn, i) => {
-            btn.style.backgroundImage = "";
-            circle[i].classList.remove("toggle__slider-category--move-to-right");
-            subCategories[i].active = false;
-        });
-
-        // Only active btn is clicked
-        subCategories[index].active = true;
-        btn_selected.style.backgroundImage =  colorsEnum[subCategories[index].color];
-        circle[index].classList.add("toggle__slider-category--move-to-right");
-        console.log("subCategories: ", subCategories);
+        activeOrDesactiveToggles(subCategories, index);
     }
+}
+
+/**
+ * Handle toggles in subCategories by index
+ * @param {index} number
+ */
+export const activeOrDesactiveToggles = (subCategories, index) => {
+    // Get all btns
+    const all_togggles = document.querySelectorAll(".toggle-subcategory");
+    const circle = document.querySelectorAll(".toggle__slider-category");
+    const btn_selected = document.getElementsByClassName("toggle-subcategory")[index];
+
+    // Disable all toggles
+    all_togggles.forEach((btn, i) => {
+        btn.style.backgroundImage = "";
+        circle[i].classList.remove("toggle__slider-category--move-to-right");
+        subCategories[i].active = false;
+    });
+
+    // Only active btn is clicked
+    subCategories[index].active = true;
+    btn_selected.style.backgroundImage =  colorsEnum[subCategories[index].color];
+    circle[index].classList.add("toggle__slider-category--move-to-right");
 }
