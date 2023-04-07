@@ -1,5 +1,6 @@
 import '../styles/normalize.css';
 import '../styles/index.css';
+import '../styles/filter.css';
 import '../styles/pagination.css';
 import '../styles/footer.css';
 import '../styles/spinner.css';
@@ -7,16 +8,18 @@ import '../styles/modal.css';
 import '../styles/handleErros.css';
 import { Services }         from './services';
 import { closeMenuFilter, handleCloseFilters, handleFilters, handleFocusInputSearch } from './effects';
-import { getQueries, getQueriesCommanMeaning, parseQuery } from './utils';
+import { colorsEnum, getQueries, getQueriesCommanMeaning, parseQuery } from './utils';
 import { handlePagination } from './pagination';
 import { closeModal, copyInClipboardModalCommand, copyInClipboardModalMeaning, openModal } from './modal';
 import { handleLanguages }  from './handleLanguages';
 import dataJson             from './data.json';
 import { handleErrors }     from './handleErrors';
+import { activeOrDesactiveToggles, createSubCategories, template_Menu_filter } from './menuFilter';
 
 // Global variables
 // Store state of each filters
 let global_buffer_filters_categories = [{index: 0, active: false, _id: "all"}];
+
 // Get default query according to url of window.location.search
 const {command: queryCommand, meaning: queryMeaning} = getQueries(window.location.search);
 let global_buffer_filters_queries = [
@@ -34,6 +37,9 @@ if(queryCommand && queryMeaning){
     global_buffer_filters_queries[0].active = true;
 }
 
+/**
+ * Queries which is set in first time that web page is loaded
+ */
 let queryOfFirstChargePage = {};
 
 ////////////
@@ -46,10 +52,11 @@ let queryOfFirstChargePage = {};
 const componentDidMount = () => {
     document.addEventListener("DOMContentLoaded", () => {
         // Check category in query
-        const {category, command, meaning} = getQueries(window.location.search);
+        const {category, command, meaning, subcategory} = getQueries(window.location.search);
         if(category) queryOfFirstChargePage.category = category;
         if(command) queryOfFirstChargePage.command = command;
         if(meaning) queryOfFirstChargePage.meaning = meaning;
+        if(subcategory) queryOfFirstChargePage.subcategory = subcategory;
     }, {once: true});
 }
 
@@ -62,7 +69,8 @@ const goHome = () => {
     btn_house.addEventListener("click", () => {
         const input_value_direct = document.getElementsByClassName("search__input")[0];
         input_value_direct.value = "";
-        getCommands("/en", 1, "all", "",  false, true);
+        const categoryAndSubCategoryToSearch = {category: "all"}
+        getCommands("/en", 1, categoryAndSubCategoryToSearch, "",  false, true);
         resetFilters();
 
         // Charge text of default language
@@ -72,12 +80,17 @@ const goHome = () => {
 
 const getInitialQueries = () => {
     const queryObject = getQueries(window.location.search);
-    const {lang, page, category} = queryObject;
+    const {lang, page, category, subcategory} = queryObject;
+    let categoryAndSubCategoryToSearch = {category}
     // Validations
     if(lang && page && category){
-        getCommands("/"+lang, page, category, getQueriesCommanMeaning(queryObject), true);
+        if(subcategory){
+            categoryAndSubCategoryToSearch.subCategory = subcategory;
+        }
+        getCommands("/"+lang, page, categoryAndSubCategoryToSearch, getQueriesCommanMeaning(queryObject), true);
     }else{
-        getCommands("/en", 1, "all", "", false, false, true);
+        const categoryAndSubCategoryToSearch = {category: "all"}
+        getCommands("/en", 1, categoryAndSubCategoryToSearch, "", false, false, true);
     }
 }
 
@@ -96,7 +109,7 @@ const getInitialQueries = () => {
  */
 export const getCommands = async(lang, page, category, parameterCommandAndMeaning, fromQueryUrl, defaultSearch, firstSearch)  => {
     // Clean data
-    document.querySelectorAll(".list-container")
+    document.querySelectorAll(".container-list")
     .forEach(item => item.remove());
     // Clean pagination
     document.querySelectorAll(".btn-pagination")
@@ -172,13 +185,16 @@ export const getCommands = async(lang, page, category, parameterCommandAndMeanin
         // Show data in list
         const my_container = document.getElementsByClassName("my-container")[0];
         for(let i = 0; i< data.data.length; i++){
-            const div = document.createElement("div");
+            const container_list = document.createElement("div");
+            const row_1 = document.createElement("div");
+            const row_2 = document.createElement("div");
             const column_1 = document.createElement("button");
             const column_2 = document.createElement("button");
             const column_3 = document.createElement("p");
             const column_4 = document.createElement("p");
             const icon_copy = document.createElement("i");
             const icon_info = document.createElement("i");
+            const span_subCategory = document.createElement("span");
     
             icon_copy.classList.add("fa-solid");
             icon_copy.classList.add("fa-copy");
@@ -206,13 +222,25 @@ export const getCommands = async(lang, page, category, parameterCommandAndMeanin
             }else{
                 column_4.appendChild( document.createTextNode(data.data[i][lang_response]) );
             }
-            div.appendChild(column_1);
-            div.appendChild(column_2);
-            div.appendChild(column_3);
-            div.appendChild(column_4);
-            div.classList.add("list-container");
+            row_1.appendChild(column_1);
+            row_1.appendChild(column_2);
+            row_1.appendChild(column_3);
+            row_1.appendChild(column_4);
+            row_1.classList.add("list-container");
+
+            if(data.data[i].subCategories.length > 0){
+                span_subCategory.appendChild( document.createTextNode(data.data[i].subCategories[0][lang_response]) );
+                span_subCategory.classList.add("list-container__row-2__subCategory");
+                span_subCategory.style.backgroundImage  = colorsEnum[data.data[i].subCategories[0].color];
+                row_2.classList.add("list-container__row-2");
+            }
+            row_2.appendChild( span_subCategory );
             
-            my_container.appendChild(div);
+            container_list.classList.add("container-list");
+            
+            container_list.appendChild(row_1);
+            container_list.appendChild(row_2);
+            my_container.appendChild(container_list);
         }
     }finally{
         // Disable spinner
@@ -266,6 +294,7 @@ const handleButtonsLanguage = () => {
     const en = document.getElementById("en");
     
     es.addEventListener("click", () => {
+
         let query = window.location.search.split("");
         const lang_index = window.location.search.indexOf("lang=");
         // Change query in window.history
@@ -276,9 +305,16 @@ const handleButtonsLanguage = () => {
             query.splice(lang_index + 6, 0, "s");
             let newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + query.join("");
             window.history.pushState({path:newurl},'',newurl);
-            getCommands("/es", page, category, getQueriesCommanMeaning(queryObject), true);
-            // Charge text of default language
-            handleLanguages("es");
+
+            // Create category and subCategory to search
+            const filter = global_buffer_filters_categories.find(item => item.active);
+            const subCategories = filter.subCategories?.find(item => item.active);
+            let subCategory = "";
+            if(subCategories) subCategory = subCategories._id;
+            const categoryAndSubCategoryToSearch = {category, subCategory}
+
+            getCommands("/es", page, categoryAndSubCategoryToSearch, getQueriesCommanMeaning(queryObject), true);
+            handleToggleFiletrs("/es");
         }
     });
     en.addEventListener("click", () => {
@@ -292,10 +328,16 @@ const handleButtonsLanguage = () => {
             query.splice(lang_index + 6, 0, "n");
             let newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + query.join("");
             window.history.pushState({path:newurl},'',newurl);
-            getCommands("/en", page, category, getQueriesCommanMeaning(queryObject), true);
 
-            // Charge text of default language
-            handleLanguages("en");
+            // Create category and subCategory to search
+            const filter = global_buffer_filters_categories.find(item => item.active);
+            const subCategories = filter.subCategories?.find(item => item.active);
+            let subCategory = "";
+            if(subCategories) subCategory = subCategories._id;
+            const categoryAndSubCategoryToSearch = {category, subCategory}
+
+            getCommands("/en", page, categoryAndSubCategoryToSearch, getQueriesCommanMeaning(queryObject), true);
+            handleToggleFiletrs("/en");
         }
     });
 }
@@ -308,19 +350,31 @@ const handleInputSearch = () => {
     const input = document.getElementsByClassName("search__input")[0];
     
     input.addEventListener("keydown", async(event) => {
-        const {lang} = getQueries(window.location.search);
-        const filter = global_buffer_filters_categories.find(item => item.active === true);
         // Get input's value'
         if(event.key === "Enter"){
+            const {lang} = getQueries(window.location.search);
+            const filter = global_buffer_filters_categories.find(item => item.active);
+            const subCategories = filter.subCategories?.find(item => item.active);
+            let subCategory = "";
+            if(subCategories) subCategory = subCategories._id;
+
+            // Create category and subCategory to search
+            const categoryAndSubCategoryToSearch = {category: filter._id, subCategory}
             // Get commands
-            getCommands("/"+lang, 1, filter._id, input.value);
+            getCommands("/"+lang, 1, categoryAndSubCategoryToSearch, input.value);
         }
     });
     button.addEventListener("click", () => {
         const {lang} = getQueries(window.location.search);
-        let filter = global_buffer_filters_categories.find(item => item.active === true);
+        let filter = global_buffer_filters_categories.find(item => item.active);
+        const subCategories = filter.subCategories?.find(item => item.active);
+        let subCategory = "";
+        if(subCategories) subCategory = subCategories._id;
+
         // Search active filter
-        getCommands("/"+lang, 1, filter._id, input.value);
+        const categoryAndSubCategoryToSearch = {category: filter._id, subCategory}
+        // Get commands
+        getCommands("/"+lang, 1, categoryAndSubCategoryToSearch, input.value);
     });
 }
 
@@ -328,12 +382,21 @@ const handleInputSearch = () => {
  * Handle toggles filters, create and handle elements
  * Besides, add btn apply
  */
-const handleToggleFiletrs = async() => {
+const handleToggleFiletrs = async(lang = "/en") => {
+    // Reset menu filter
+    const filters_base = document.getElementsByClassName("filters")[0];
+    filters_base.innerHTML = template_Menu_filter;
+
     const filters = document.getElementsByClassName("filters")[0];
-    const data = await Services.getFilters();
+    const data = await Services.getFilters(lang);
     const info = data.data;
 
-    // Push filters of searching by commands and meaning
+    /**
+     * Push filters of 'Search by: 
+     *      - Command && Meaning
+     *      - Command
+     *      - Meaning
+     */
     global_buffer_filters_queries.forEach( (item, i) => {
         const container_filters = document.getElementsByClassName("container-filters")[i];
         const span = document.createElement("span");
@@ -384,8 +447,9 @@ const handleToggleFiletrs = async() => {
     const circle = document.getElementById("id-span-all");
     btn.addEventListener("click", event => handleBtnToggleCategories(event, 0, global_buffer_filters_queries.length));
 
-    // Buildind toggles
-    for(let i = 0; i < info.length; i++){       
+    // Buildind toggles with Categories
+    for(let i = 0; i < info.length; i++){  
+        const category = info[i];
         const span = document.createElement("span");
         span.classList.add("toggle__slider");
 
@@ -411,12 +475,16 @@ const handleToggleFiletrs = async() => {
         }
         version.appendChild( document.createTextNode( aux_category ) );
         div.appendChild( version );
-        div.classList.add("toggle-container");
+
+        if(category.subCategories?.length > 0){
+            createSubCategories(div, category, lang, queryOfFirstChargePage);
+        }else{
+            div.classList.add("toggle-container");
+        }
         div.classList.add("container-filters");
 
         filters.appendChild(div);
     }
-
     
     // Active btn and put style enabled according to category which is in query. 
     // Only it works first time in load page
@@ -451,6 +519,20 @@ const handleToggleFiletrs = async() => {
         btn.classList.add("toggle-active");
         circle.classList.add("toggle__slider--move-to-right");
     }
+
+    // Put subCategory like activ according to queryParam
+    const indexCategoryFound = global_buffer_filters_categories.map(i => i._id).findIndex(i => i === queryOfFirstChargePage.category);
+    if(global_buffer_filters_categories[indexCategoryFound]?.subCategories?.length > 0){
+        const subCategories_auxiliar = global_buffer_filters_categories[indexCategoryFound].subCategories;
+        subCategories_auxiliar.forEach(sub => {
+            if(sub._id === queryOfFirstChargePage.subcategory){
+                sub.active = true;
+            }else{
+                sub.active = false;
+            }
+        });
+    }
+
     // Create btn to apply filters
     const text_apply = document.createElement("p");
     text_apply.classList.add("text_apply");
@@ -468,7 +550,7 @@ const handleToggleFiletrs = async() => {
     filters.appendChild(btn_apply_container);
 
     // Charge text of default language
-    handleLanguages("en");
+    handleLanguages(lang.split("").splice(1).join(""));
 }
 
 /**
@@ -485,6 +567,13 @@ const handleBtnToggleCategories = (event, i, sizePreviouslyFilters) => {
     if(i === filterActived){
         return;
     }else{
+        // Clean all properties father
+        global_buffer_filters_categories.forEach(j => {
+            j.subCategories?.forEach(k => {
+                k.father = false;
+            })
+        });
+
         // Clone only items that we need
         const all_togggles = document.querySelectorAll(".toggle");
         const btn_filter = [];
@@ -508,6 +597,11 @@ const handleBtnToggleCategories = (event, i, sizePreviouslyFilters) => {
         global_buffer_filters_categories[i].active = true;
         btn.classList.add("toggle-active");
         circle.classList.add("toggle__slider--move-to-right");
+
+        // Only assign father = true when the father has subCategories
+        global_buffer_filters_categories[i].subCategories?.forEach(subCategory => {
+            subCategory.father = true;
+        });
     }
 }
 
@@ -552,21 +646,29 @@ const handleBtnToggleQueries = (event, i, sizeFilters) => {
 }
 
 /**
- * Handle btn Apply in menu filters and get commands
+ * Handle click on btn Apply in menu filters and get commands
  */
 const handleBtnApply = (event) => {
-    const filter = global_buffer_filters_categories.find(item => item.active);
     const query = getQueries(window.location.search);
     const findFilterQuery = global_buffer_filters_queries.find(item => item.active);
-    getCommands("/" + query.lang, 1, filter._id, findFilterQuery.category);
+    
+    const filter = global_buffer_filters_categories.find(item => item.active);
+    const subCategories = filter.subCategories?.find(item => item.active);
+    let subCategory = "";
+    if(subCategories) subCategory = subCategories._id;
+
+    // Create category and subCategory to search
+    const categoryAndSubCategoryToSearch = {category: filter._id, subCategory}
+    getCommands("/" + query.lang, 1, categoryAndSubCategoryToSearch, findFilterQuery.category);
     closeMenuFilter();
 }
 
-const handleCHangesUrl = () => {
+const handleChangesUrl = () => {
     window.onpopstate = function(){
         const queryObject = getQueries(window.location.search);
-        const {page, lang, category} = queryObject;
-        getCommands("/"+lang, page, category, getQueriesCommanMeaning(queryObject), true);
+        const {page, lang, category, subcategory} = queryObject;
+        const categoryAndSubCategoryToSearch = {category, subCategory: subcategory}
+        getCommands("/"+lang, page, categoryAndSubCategoryToSearch, getQueriesCommanMeaning(queryObject), true);
     }
 }
 
@@ -574,6 +676,7 @@ const handleCHangesUrl = () => {
  * Reset filters with default options
  */
 const resetFilters = () => {
+    // Reset queries
     global_buffer_filters_queries = global_buffer_filters_queries.map(( item, index) => {
         if(index === 0){
             return {...item, active: true}
@@ -581,7 +684,19 @@ const resetFilters = () => {
             return {...item, active: false}
         }
     });
+
+    /**
+     * Reset categories and subCategories. And put first item as actived by default
+     * inside categories and subCategories
+     */
     global_buffer_filters_categories = global_buffer_filters_categories.map(( item, index) => {
+        const subCategories = item.subCategories;
+        if(subCategories?.length > 0){
+            item.subCategories = subCategories.map((c, i) => {
+                if(i === 0) return {...c, active: true}
+                return {...c, active: false}
+            });
+        }
         if(index === 0){
             return {...item, active: true}
         }else{
@@ -610,6 +725,13 @@ const resetFilters = () => {
     
     span__toggle__slider.classList.add("toggle__slider--move-to-right");
     btn_span.classList.add("toggle__slider--move-to-right");
+
+    // Active toggle by default in subCategories
+    global_buffer_filters_categories.forEach(p => {
+        if(p.subCategories?.length > 0){
+            activeOrDesactiveToggles(p.subCategories, 0);
+        }
+    });
 }
 
 /**
@@ -624,7 +746,7 @@ function init(){
         handleButtonsLanguage();
         handleInputSearch();
         handleToggleFiletrs();
-        handleCHangesUrl();
+        handleChangesUrl();
         
         // Effects in style
         handleFocusInputSearch();

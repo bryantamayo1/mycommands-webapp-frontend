@@ -48,7 +48,7 @@ const createBtnPagination = (amount_pages, data, increase = 0) => {
     document.querySelectorAll(".btn-pagination")
     .forEach(item => item.remove());
     const pagination_container_aux = document.getElementsByClassName("pagination-container")[0];
-    if(!data.results){
+    if(!data.resultsForPage){
         pagination_container_aux.classList.add("not-visible");
         return;
     }else{
@@ -136,8 +136,10 @@ const createBtnPagination = (amount_pages, data, increase = 0) => {
  * @param {number} page
  */
  const handleBtnPagination = (event, indexPage) => {
-    const query = getQueries(window.location.search);
-    getCommands("/" + query.lang, indexPage, query.category);
+    const {category, subcategory} = getQueries(window.location.search);
+    // Create category and subCategory to search
+    const categoryAndSubCategoryToSearch = {category, subCategory: subcategory }
+    getCommands("/" + query.lang, indexPage, categoryAndSubCategoryToSearch);
 }
 
 /**

@@ -1,4 +1,4 @@
-import { getQueries }   from "./utils";
+import { colorsEnum, getQueries }   from "./utils";
 import dataJson         from './data.json';
 import moment           from 'moment';
 
@@ -14,6 +14,10 @@ export const openModal = (event, info, lang) => {
     const overlay__meaning = document.getElementsByClassName("overlay__meaning")[0];
     const overlay_date_key = document.getElementsByClassName("overlay_date_key")[0];
     const overlay_date_value = document.getElementsByClassName("overlay_date_value")[0];
+    
+    const span = document.createElement("span");
+    const sub_categories = document.getElementsByClassName("sub-categories")[0];
+
 
     // Reset command and meaning in modal
     overlay__command.innerHTML = "";
@@ -43,6 +47,17 @@ export const openModal = (event, info, lang) => {
         overlay_date_value.innerHTML = "--/--/----";
     }
 
+    // Show subCategpries
+    if(info.subCategories.length > 0){
+        span.appendChild( document.createTextNode(info.subCategories[0][lang] ));
+        span.classList.add("list-container__row-2__subCategory");
+        span.style.backgroundImage  = colorsEnum[info.subCategories[0].color];
+        sub_categories.appendChild(span);
+        sub_categories.style.margin = "0 15px";
+    }else{
+        sub_categories.style.margin = "0";
+    }
+
     // Show modal
     overlay.style.display = "flex";
 }
@@ -56,6 +71,8 @@ export const closeModal = (event) => {
     const btn_close_modal = document.getElementById("btn-close-modal");
     btn_close_modal.addEventListener("click", () => {
         const overlay = document.getElementsByClassName("overlay")[0];
+        const sub_categories = document.getElementsByClassName("sub-categories")[0];
+        sub_categories.innerHTML = "";
         overlay.style.display = "none";
     });
     
@@ -63,7 +80,9 @@ export const closeModal = (event) => {
     const overlay = document.getElementsByClassName("overlay")[0];
     overlay.addEventListener("click", (event_overlay) => {
         const overlay__modal = document.getElementsByClassName("overlay__modal")[0];
+        const sub_categories = document.getElementsByClassName("sub-categories")[0];
         if(!overlay__modal.contains(event_overlay.target)){
+            sub_categories.innerHTML = "";
             overlay.style.display = "none";
         }
     });
