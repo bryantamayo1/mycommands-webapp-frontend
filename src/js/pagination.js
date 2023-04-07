@@ -136,10 +136,10 @@ const createBtnPagination = (amount_pages, data, increase = 0) => {
  * @param {number} page
  */
  const handleBtnPagination = (event, indexPage) => {
-    const {category, subcategory} = getQueries(window.location.search);
+    const {lang, category, subcategory} = getQueries(window.location.search);
     // Create category and subCategory to search
     const categoryAndSubCategoryToSearch = {category, subCategory: subcategory }
-    getCommands("/" + query.lang, indexPage, categoryAndSubCategoryToSearch);
+    getCommands("/" + lang, indexPage, categoryAndSubCategoryToSearch);
 }
 
 /**
