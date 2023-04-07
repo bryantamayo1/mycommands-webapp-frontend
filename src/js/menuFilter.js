@@ -42,8 +42,9 @@ export const template_Menu_filter =
  * @param {HTMLElement} div 
  * @param {object} category 
  * @param {string} lang 
+ * @param {object} queryOfFirstChargePage
  */
-export const createSubCategories = (div, category, lang) => {
+export const createSubCategories = (div, category, lang, queryOfFirstChargePage) => {
     const newLang = lang.split("").splice(1).join("");
     category.subCategories?.forEach((element, index, buffer) => {
         const divEmpty = document.createElement("div");
@@ -89,7 +90,7 @@ export const createSubCategories = (div, category, lang) => {
         container_btn.addEventListener("click", event => handleBtnSubCategory(event, category, index));
         span_toggle.classList.add("toggle__slider-category");
         
-        // 3º Build container toggle and subcategory
+        // 4º Build container toggle and subcategory
         container_toggle_and_text.classList.add("contianer-toggle-and-subcategory");
         container_toggle_and_text.appendChild(container_btn);
         container_toggle_and_text.appendChild(container_text_subcategory);
@@ -100,10 +101,15 @@ export const createSubCategories = (div, category, lang) => {
         container_subCategory.appendChild(container_toggle_and_text);
 
         // Set subCategory 'All' as actived by default
-        if(element._id === "all"){
+        if(element._id === "all" && !queryOfFirstChargePage.subcategory){
             container_btn.style.backgroundImage = colorsEnum[element.color];
             span_toggle.classList.add("toggle__slider-category--move-to-right");
             element.active = true;
+        }else if(element._id === queryOfFirstChargePage.subcategory){
+            container_btn.style.backgroundImage = colorsEnum[element.color];
+            span_toggle.classList.add("toggle__slider-category--move-to-right");
+            element.active = true;
+
         }else{
             element.active = false;
         } 
