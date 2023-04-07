@@ -19,6 +19,7 @@ import { activeOrDesactiveToggles, createSubCategories, template_Menu_filter } f
 // Global variables
 // Store state of each filters
 let global_buffer_filters_categories = [{index: 0, active: false, _id: "all"}];
+
 // Get default query according to url of window.location.search
 const {command: queryCommand, meaning: queryMeaning} = getQueries(window.location.search);
 let global_buffer_filters_queries = [
@@ -36,6 +37,9 @@ if(queryCommand && queryMeaning){
     global_buffer_filters_queries[0].active = true;
 }
 
+/**
+ * Queries which is set in first time that web page is loaded
+ */
 let queryOfFirstChargePage = {};
 
 ////////////
@@ -48,10 +52,11 @@ let queryOfFirstChargePage = {};
 const componentDidMount = () => {
     document.addEventListener("DOMContentLoaded", () => {
         // Check category in query
-        const {category, command, meaning} = getQueries(window.location.search);
+        const {category, command, meaning, subcategory} = getQueries(window.location.search);
         if(category) queryOfFirstChargePage.category = category;
         if(command) queryOfFirstChargePage.command = command;
         if(meaning) queryOfFirstChargePage.meaning = meaning;
+        if(subcategory) queryOfFirstChargePage.subcategory = subcategory;
     }, {once: true});
 }
 
@@ -75,10 +80,13 @@ const goHome = () => {
 
 const getInitialQueries = () => {
     const queryObject = getQueries(window.location.search);
-    const {lang, page, category} = queryObject;
+    const {lang, page, category, subcategory} = queryObject;
+    let categoryAndSubCategoryToSearch = {category}
     // Validations
     if(lang && page && category){
-        const categoryAndSubCategoryToSearch = {category}
+        if(subcategory){
+            categoryAndSubCategoryToSearch.subCategory = subcategory;
+        }
         getCommands("/"+lang, page, categoryAndSubCategoryToSearch, getQueriesCommanMeaning(queryObject), true);
     }else{
         const categoryAndSubCategoryToSearch = {category: "all"}
@@ -298,7 +306,13 @@ const handleButtonsLanguage = () => {
             let newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + query.join("");
             window.history.pushState({path:newurl},'',newurl);
 
-            const categoryAndSubCategoryToSearch = {category}
+            // Create category and subCategory to search
+            const filter = global_buffer_filters_categories.find(item => item.active);
+            const subCategories = filter.subCategories?.find(item => item.active);
+            let subCategory = "";
+            if(subCategories) subCategory = subCategories._id;
+            const categoryAndSubCategoryToSearch = {category, subCategory}
+
             getCommands("/es", page, categoryAndSubCategoryToSearch, getQueriesCommanMeaning(queryObject), true);
             handleToggleFiletrs("/es");
         }
@@ -315,7 +329,13 @@ const handleButtonsLanguage = () => {
             let newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + query.join("");
             window.history.pushState({path:newurl},'',newurl);
 
-            const categoryAndSubCategoryToSearch = {category}
+            // Create category and subCategory to search
+            const filter = global_buffer_filters_categories.find(item => item.active);
+            const subCategories = filter.subCategories?.find(item => item.active);
+            let subCategory = "";
+            if(subCategories) subCategory = subCategories._id;
+            const categoryAndSubCategoryToSearch = {category, subCategory}
+
             getCommands("/en", page, categoryAndSubCategoryToSearch, getQueriesCommanMeaning(queryObject), true);
             handleToggleFiletrs("/en");
         }
@@ -330,20 +350,30 @@ const handleInputSearch = () => {
     const input = document.getElementsByClassName("search__input")[0];
     
     input.addEventListener("keydown", async(event) => {
-        const {lang} = getQueries(window.location.search);
-        const filter = global_buffer_filters_categories.find(item => item.active === true);
         // Get input's value'
         if(event.key === "Enter"){
+            const {lang} = getQueries(window.location.search);
+            const filter = global_buffer_filters_categories.find(item => item.active);
+            const subCategories = filter.subCategories?.find(item => item.active);
+            let subCategory = "";
+            if(subCategories) subCategory = subCategories._id;
+
+            // Create category and subCategory to search
+            const categoryAndSubCategoryToSearch = {category: filter._id, subCategory}
             // Get commands
-            const categoryAndSubCategoryToSearch = {category: filter._id}
             getCommands("/"+lang, 1, categoryAndSubCategoryToSearch, input.value);
         }
     });
     button.addEventListener("click", () => {
         const {lang} = getQueries(window.location.search);
-        let filter = global_buffer_filters_categories.find(item => item.active === true);
+        let filter = global_buffer_filters_categories.find(item => item.active);
+        const subCategories = filter.subCategories?.find(item => item.active);
+        let subCategory = "";
+        if(subCategories) subCategory = subCategories._id;
+
         // Search active filter
-        const categoryAndSubCategoryToSearch = {category: filter._id}
+        const categoryAndSubCategoryToSearch = {category: filter._id, subCategory}
+        // Get commands
         getCommands("/"+lang, 1, categoryAndSubCategoryToSearch, input.value);
     });
 }
@@ -455,7 +485,6 @@ const handleToggleFiletrs = async(lang = "/en") => {
 
         filters.appendChild(div);
     }
-
     
     // Active btn and put style enabled according to category which is in query. 
     // Only it works first time in load page
@@ -490,6 +519,20 @@ const handleToggleFiletrs = async(lang = "/en") => {
         btn.classList.add("toggle-active");
         circle.classList.add("toggle__slider--move-to-right");
     }
+
+    // Put subCategory like activ according to queryParam
+    const indexCategoryFound = global_buffer_filters_categories.map(i => i._id).findIndex(i => i === queryOfFirstChargePage.category);
+    if(global_buffer_filters_categories[indexCategoryFound]?.subCategories?.length > 0){
+        const subCategories_auxiliar = global_buffer_filters_categories[indexCategoryFound].subCategories;
+        subCategories_auxiliar.forEach(sub => {
+            if(sub._id === queryOfFirstChargePage.subcategory){
+                sub.active = true;
+            }else{
+                sub.active = false;
+            }
+        });
+    }
+
     // Create btn to apply filters
     const text_apply = document.createElement("p");
     text_apply.classList.add("text_apply");
@@ -607,12 +650,13 @@ const handleBtnToggleQueries = (event, i, sizeFilters) => {
  */
 const handleBtnApply = (event) => {
     console.log("global_buffer_filters_categories: ", global_buffer_filters_categories);
+    const query = getQueries(window.location.search);
+    const findFilterQuery = global_buffer_filters_queries.find(item => item.active);
+    
     const filter = global_buffer_filters_categories.find(item => item.active);
     const subCategories = filter.subCategories?.find(item => item.active);
     let subCategory = "";
     if(subCategories) subCategory = subCategories._id;
-    const query = getQueries(window.location.search);
-    const findFilterQuery = global_buffer_filters_queries.find(item => item.active);
 
     // Create category and subCategory to search
     const categoryAndSubCategoryToSearch = {category: filter._id, subCategory}
@@ -620,11 +664,11 @@ const handleBtnApply = (event) => {
     closeMenuFilter();
 }
 
-const handleCHangesUrl = () => {
+const handleChangesUrl = () => {
     window.onpopstate = function(){
         const queryObject = getQueries(window.location.search);
-        const {page, lang, category} = queryObject;
-        const categoryAndSubCategoryToSearch = {category}
+        const {page, lang, category, subcategory} = queryObject;
+        const categoryAndSubCategoryToSearch = {category, subCategory: subcategory}
         getCommands("/"+lang, page, categoryAndSubCategoryToSearch, getQueriesCommanMeaning(queryObject), true);
     }
 }
@@ -703,7 +747,7 @@ function init(){
         handleButtonsLanguage();
         handleInputSearch();
         handleToggleFiletrs();
-        handleCHangesUrl();
+        handleChangesUrl();
         
         // Effects in style
         handleFocusInputSearch();
