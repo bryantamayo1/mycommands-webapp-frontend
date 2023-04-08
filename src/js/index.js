@@ -50,7 +50,11 @@ let queryOfFirstChargePage = {};
  * Execute only one time like a React’s componentDidMount
  */
 const componentDidMount = () => {
-    document.addEventListener("DOMContentLoaded", () => {
+    document.addEventListener("DOMContentLoaded", async () => {
+        // Get info web page
+        await Services.getInfoWebPage();
+
+
         // Check category in query
         const {category, command, meaning, subcategory} = getQueries(window.location.search);
         if(category) queryOfFirstChargePage.category = category;

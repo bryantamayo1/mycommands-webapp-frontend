@@ -75,4 +75,11 @@ export class Services{
     static getFilters(lang = "/en"){
         return Api("/filters"+lang);
     }
+
+    /**
+     * Get info web page
+     */
+    static getInfoWebPage(){
+        return Api("/infopage");
+    }
 }
