@@ -50,5 +50,6 @@
     color: rgb(204, 204, 204);
 }
 .overlay__command,.overlay__meaning{
+    overflow-y: auto;
     white-space: break-spaces;
 }
