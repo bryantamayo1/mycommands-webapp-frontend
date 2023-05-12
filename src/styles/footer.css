@@ -9,6 +9,7 @@ footer{
     text-align: center;
 }
 footer > div{
+    align-items: center;
     display: flex;
     gap: 0 20px;
     justify-content: center;
@@ -27,4 +28,29 @@ footer > div a:focus{
     box-shadow:  0px 0px 15px 2px #ce04a2;
     color: #FFF;
     outline: 2px solid #ce04a2; 
+}
+.footer-github{
+    align-items: center;
+    background-color: #25232b;
+    border-radius: 5px;
+    box-sizing: border-box;
+    display: flex;
+    gap: 0 10px;
+    height: 32px;
+    justify-content: space-evenly;
+    padding: 5px 10px;
+}
+.footer-github a{
+    text-decoration: none;
+}
+.linkedln{
+    align-items: center;
+    background-color: #25232b;
+    border-radius: 5px;
+    box-sizing: border-box;
+    display: flex;
+    height: 32px;
+    justify-content: center;
+    padding: 5px 10px;
+    text-decoration: none;
 }
