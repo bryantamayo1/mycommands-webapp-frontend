@@ -46,4 +46,16 @@ export const handleLanguages = (lang = "en") => {
     copied.forEach(item => {
         item.innerHTML = data["copied"][lang];
     });
+
+    // Change version in footer
+    const version = document.getElementsByClassName("version-app")[0];
+    version.innerHTML = data["version"][lang];
+
+    // Version 0.0.1_1
+    const v_0_0_1_1 = document.getElementById("0.0.1_1");
+    v_0_0_1_1.innerHTML = data["0.0.1_1"][lang];
+
+    // Version 0.0.1_2
+    const v_0_0_1_2 = document.getElementById("0.0.1_2");
+    v_0_0_1_2.innerHTML = data["0.0.1_2"][lang];
 }
