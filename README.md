@@ -56,6 +56,7 @@ Web page with different kind of commands such as data bases, servers, S.O. and m
     │   │    ├──  index.js                  # main file js
     │   │    ├──  modal.js                  # handle modal openm close and show info inside
     │   │    ├──  pagination.js             # handle pagination
+    │   │    ├──  prism.js                  # handle styles of code to git, bash, react, ...
     │   │    ├──  services.js               # all services of web page: getCommands and getFilters
     │   │    └──  utils.js                  # utils such as parseQuery, getQueries, getQueriesCommanMeaning
     │   ├──  styles                         # only files css
@@ -64,6 +65,7 @@ Web page with different kind of commands such as data bases, servers, S.O. and m
     │   │    ├── index.css                  # main’s css
     │   │    ├── normalize.css              # css to normalize the styles of web page
     │   │    ├── pagination.css             # pagination’s css
+    │   │    ├── prism.css                  # prism’s css
     │   │    └── spinner.css                # spinner’s css
     │   └──  index.html                     # html file root
     ├── .env.development.local              # development global variables, e.g. API_URL
