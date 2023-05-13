@@ -430,15 +430,6 @@ main{
     color: #12A10D;
 }
 
-code{
-    font-family: 'Ubuntu Mono', monospace;
-    color: #FFF;
-}
-#info{
-    font-family: 'Ubuntu', sans-serif;
-    color: #FFF;
-}
-
 /* responsive */
 @media(max-width: 900px){
     .filters{

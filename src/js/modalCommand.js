@@ -1,4 +1,5 @@
 import { colorsEnum, getQueries }   from "./utils";
+import Prism            from './prism';
 import dataJson         from './data.json';
 import moment           from 'moment';
 
@@ -10,7 +11,8 @@ import moment           from 'moment';
  */
 export const openModal = (event, info, lang) => {
     const overlay = document.getElementsByClassName("overlay")[0];
-    const overlay__command = document.getElementsByClassName("overlay__command")[0];
+    const pre_modal = document.getElementById("pre-modal");
+    const overlay__command = document.getElementById("code-modal");
     const overlay__meaning = document.getElementsByClassName("overlay__meaning")[0];
     const overlay_date_key = document.getElementsByClassName("overlay_date_key")[0];
     const overlay_date_value = document.getElementsByClassName("overlay_date_value")[0];
@@ -35,6 +37,8 @@ export const openModal = (event, info, lang) => {
     }
 
     // Show command
+    pre_modal.classList.add(`language-${info.language}`);
+    overlay__command.classList.add(`language-${info.language}`);
     overlay__command.innerHTML = info.command;
     
     // Show updatedAt
@@ -57,6 +61,9 @@ export const openModal = (event, info, lang) => {
     }else{
         sub_categories.style.margin = "0";
     }
+
+    // Reset efects with Prism
+    Prism.highlightAll();
 
     // Show modal
     overlay.style.display = "flex";

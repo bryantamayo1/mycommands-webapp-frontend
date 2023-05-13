@@ -54,3 +54,9 @@ footer > div a:focus{
     padding: 5px 10px;
     text-decoration: none;
 }
+.version-app{
+    cursor: pointer;
+}
+.version-app:hover{
+    color: #FFF;
+}

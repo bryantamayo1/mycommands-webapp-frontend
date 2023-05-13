@@ -6,15 +6,19 @@ import '../styles/footer.css';
 import '../styles/spinner.css';
 import '../styles/modal.css';
 import '../styles/handleErros.css';
-import { Services }         from './services';
+import '../styles/prism.css';
+import '../styles/modalVersionApp.css';
+import Prism                    from '../js/prism';
+import { Services }             from './services';
 import { closeMenuFilter, handleCloseFilters, handleFilters, handleFocusInputSearch } from './effects';
 import { colorsEnum, getQueries, getQueriesCommanMeaning, parseQuery } from './utils';
-import { handlePagination } from './pagination';
-import { closeModal, copyInClipboardModalCommand, copyInClipboardModalMeaning, openModal } from './modal';
-import { handleLanguages }  from './handleLanguages';
-import dataJson             from './data.json';
-import { handleErrors }     from './handleErrors';
+import { handlePagination }     from './pagination';
+import { closeModal, copyInClipboardModalCommand, copyInClipboardModalMeaning, openModal } from './modalCommand';
+import { handleLanguages }      from './handleLanguages';
+import { handleErrors }         from './handleErrors';
 import { activeOrDesactiveToggles, createSubCategories, template_Menu_filter } from './menuFilter';
+import dataJson                 from './data.json';
+import { handleModalVersionApp } from './modalVersionApp';
 
 // Global variables
 // Store state of each filters
@@ -194,7 +198,8 @@ export const getCommands = async(lang, page, category, parameterCommandAndMeanin
             const row_2 = document.createElement("div");
             const column_1 = document.createElement("button");
             const column_2 = document.createElement("button");
-            const column_3 = document.createElement("p");
+            const column_3 = document.createElement("pre");
+            const column_3_code = document.createElement("code");
             const column_4 = document.createElement("p");
             const icon_copy = document.createElement("i");
             const icon_info = document.createElement("i");
@@ -212,9 +217,12 @@ export const getCommands = async(lang, page, category, parameterCommandAndMeanin
             column_2.appendChild(icon_info);
             column_2.addEventListener("click", event => openModal(event, data.data[i], data.lang));
             
-            column_3.classList.add("command-text");
-            column_3.appendChild( document.createTextNode(data.data[i].command) );
-    
+            // column_3.classList.add("command-text");
+            column_3.classList.add(`language-${data.data[i].language}`);
+            column_3_code.classList.add(`language-${data.data[i].language}`);
+            column_3_code.appendChild( document.createTextNode(data.data[i].command) );
+            column_3.appendChild(column_3_code);
+
             // Chage color in character hash #
             if(data.data[i][lang_response].charAt(0) === "#"){
                 const span = document.createElement("span");
@@ -246,6 +254,9 @@ export const getCommands = async(lang, page, category, parameterCommandAndMeanin
             container_list.appendChild(row_2);
             my_container.appendChild(container_list);
         }
+        
+        // Reset efects with Prism
+        Prism.highlightAll();
     }finally{
         // Disable spinner
         const spinner_container_not_Active = document.getElementsByClassName("spinner-container")[0];
@@ -759,6 +770,7 @@ function init(){
         closeModal();
         copyInClipboardModalCommand();
         copyInClipboardModalMeaning();
+        handleModalVersionApp();
     });
 }
 

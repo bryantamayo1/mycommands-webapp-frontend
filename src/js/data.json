@@ -39,6 +39,18 @@
         "updatedAt": {
             "en": "Last modification: ",
             "es": "Última modificación: "
+        },
+        "version": {
+            "en": "Version 0.0.1",
+            "es": "Versión 0.0.1"
+        },
+        "0.0.1_1": {
+            "en": "Added control of app’s vesion",
+            "es": "Añadido control de la versión de la aplicación"
+        },
+        "0.0.1_2": {
+            "en": "Added styles of code in each command",
+            "es": "Añadido estilos del código de cada comando"
         }
     }
 }
