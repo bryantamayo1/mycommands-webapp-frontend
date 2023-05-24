@@ -82,6 +82,7 @@ Web page with different kind of commands such as data bases, servers, S.O. and m
 - core-js
 - html-loader
 - moment
+
 **Dev**
 - @babel/cli
 - @babel/core

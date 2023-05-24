@@ -76,4 +76,9 @@ export const handleCloseFilters = () => {
       });
 }
 
+export const changeHeightOfTable = () => {
+    const main = document.getElementsByTagName("main")[0];
+    main.style.minHeight = 'calc( 100vh - 40px - 220px - 1px - 150px)';
+}
+
 
