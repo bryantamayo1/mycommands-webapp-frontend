@@ -1,10 +1,8 @@
 .login-container{
-    height: 100vh;
-    align-items: center;
-    display: flex;
-}
-.login-container__box{
-    background: chartreuse;
-    margin: 0 auto;
-    width: 50%;
+  align-items: center;
+  border: 1px solid red;
+  display: flex;
+  height: 50vh;
+  margin: 0 auto;
+  width: 50%;
 }
