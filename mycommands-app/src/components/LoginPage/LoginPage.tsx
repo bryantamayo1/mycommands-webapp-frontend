@@ -1,7 +1,7 @@
 import { TextField } from "@mui/material"
-import './Login.css';
+import './LoginPage.css';
 
-export const Login = () => {
+export const LoginPage = () => {
   return (
     <div className="login-container">
       <div className="login-container__box">

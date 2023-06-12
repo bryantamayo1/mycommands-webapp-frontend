@@ -1,11 +1,26 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { Login } from "../components/Login/Login";
+import { LoginPage } from "../components/LoginPage/LoginPage";
+import { ProtectedPage } from "./ProtectedPage";
+import { DashboardPage } from "../components/DashboardPage";
+import { ProtectedAnyRoute } from "./ProtectedAnyRoute";
+import { ProtectedRoute } from "./ProtectedRoute";
 
 export const AppRouter = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/login" element={<Login/>}/>
+
+        {/* Not logged */}
+        <Route path="/login" element={<ProtectedPage/>}/>
+        <Route path="/" element={<ProtectedAnyRoute/>}/>
+
+        {/* Logged */}
+        <Route element={<DashboardPage/>}>
+          <Route path="/dashboard" element={<ProtectedRoute><DashboardPage/></ProtectedRoute>}/>
+        </Route>
+
+        {/* Any route */}
+        <Route path="*" element={<ProtectedAnyRoute/>}/>
       </Routes>
     </BrowserRouter>
   );
