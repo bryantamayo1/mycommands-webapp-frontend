@@ -7,9 +7,9 @@ export const ProtectedPage = () => {
   ////////
   // Hooks
   ////////
-  // const {logged} = useContext(AuthContext);
+  const {logged} = useContext(AuthContext);
 
-  if(false){
+  if(logged){
     return <Navigate to="/dashboard"/>;
   }else{
     return <LoginPage/>
