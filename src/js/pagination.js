@@ -1,4 +1,4 @@
-import { getCommands } from ".";
+import { getCommands } from "./app";
 import { getQueries } from "./utils";
 
 // Global variables

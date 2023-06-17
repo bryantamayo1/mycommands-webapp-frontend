@@ -9,7 +9,7 @@ export const handleErrors = () => {
     
       // Close dialog with error
       const close_alert_error = document.getElementById("close-alert-error");
-      close_alert_error.addEventListener("click", () =>{
+      close_alert_error.addEventListener("click", () => {
         const errors = document.getElementById("errors");
         errors.style.display = "none";
       });
