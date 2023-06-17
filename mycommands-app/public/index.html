@@ -27,7 +27,26 @@
     <title>React App</title>
   </head>
   <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <script>
+      (function(){
+        if(!sessionStorage.length){
+					// Ask other tabs for session storage
+					localStorage.setItem("/¡'87UIYB_mycommands_8656f/", Date.now());
+				};
+
+        window.addEventListener('storage', function(event){
+          if(event.key == "/¡'87UIYB_mycommands_8656f/"){
+						localStorage.setItem('sessionStorage', JSON.stringify(sessionStorage));
+						localStorage.removeItem('sessionStorage');
+					}else if(event.key == 'sessionStorage' && !sessionStorage.length){
+						let data = JSON.parse(event.newValue);
+						for (key in data) {
+							sessionStorage.setItem(key, data[key]);
+						}
+					}
+        });
+      })();
+    </script>
     <div id="root"></div>
     <!--
       This HTML file is a template.

@@ -3,6 +3,7 @@ import { ProtectedPage } from "./ProtectedPage";
 import { DashboardPage } from "../components/DashboardPage";
 import { ProtectedAnyRoute } from "./ProtectedAnyRoute";
 import { ProtectedRoute } from "./ProtectedRoute";
+import { ContentPage } from "../components/ContentPage";
 
 export const AppRouter = () => {
   return (
@@ -14,12 +15,13 @@ export const AppRouter = () => {
         <Route path="/" element={<ProtectedAnyRoute/>}/>
 
         {/* Logged */}
-        <Route element={<DashboardPage/>}>
+        <Route element={<ContentPage/>}>
           <Route path="/dashboard" element={<ProtectedRoute><DashboardPage/></ProtectedRoute>}/>
         </Route>
 
         {/* Any route */}
         <Route path="*" element={<ProtectedAnyRoute/>}/>
+        
       </Routes>
     </BrowserRouter>
   );

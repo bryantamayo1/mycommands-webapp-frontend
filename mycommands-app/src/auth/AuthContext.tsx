@@ -4,6 +4,7 @@ import { loginInputs } from '../interfaces/Login';
 import { useState } from 'react';
 import { ServicesLogin } from '../services/ServicesLogin';
 import { SessionStorage } from '../utils/SessionStorage';
+import { LocalStorage } from '../utils/LocalStorage';
 
 type AuthState = {
   status: "checking" | "not-authenticated" | "authenticated" | "error",
@@ -20,6 +21,13 @@ const AuthStateInitial:AuthState = {
   status: "not-authenticated",
   logged: false
 };
+
+// Check authenticated user
+if(LocalStorage.getItem("user_authenticated_mycommands")
+&& SessionStorage.getItem("user")?.xen){
+  AuthStateInitial.status = "authenticated";
+  AuthStateInitial.logged = true;
+}
 
 export const AuthContext = createContext({} as AuthContextProps);
 
@@ -40,6 +48,7 @@ export const AuthProvider = ( {children}: GeneralProps ) => {
       const data = await ServicesLogin(values);
       SessionStorage.setItem("user", data.data);
       setAuthState(({ status: "authenticated", logged: true}));
+      LocalStorage.setItem("user_authenticated_mycommands", {active: true});
     }catch(error){
       // @ts-ignore
       if(error.status === "fail" || error.status === "error"){
@@ -48,6 +57,8 @@ export const AuthProvider = ( {children}: GeneralProps ) => {
       }else{
         setAuthState(({ status: "error", logged: false, errorMessage: "Ha habido un error, vuelvalo a intentar más tarde"}));
       }
+      throw error;
+      ;
     }
   }
 

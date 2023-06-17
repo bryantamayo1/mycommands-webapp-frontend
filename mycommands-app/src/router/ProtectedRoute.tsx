@@ -8,10 +8,9 @@ export const ProtectedRoute = ({ children }:GeneralProps) => {
   // Hooks
   ////////
   const {logged} = useContext(AuthContext);
-  if(!logged) {
-      return <Navigate to ="/login"/>
+
+  if(logged){
+    return <>{children}</>
   }
-  return (
-    <>{{children}}</>
-  )
+  return <Navigate to ="/login"/>
 }
