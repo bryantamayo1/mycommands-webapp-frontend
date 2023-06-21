@@ -1,11 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Lato');
 
 body{
-  font-family: 'Lato', sans-serif;
-}
-
-.app{
-  align-items: center;
   background-image: linear-gradient(
     130deg,
     hsl(226deg 86% 40%) 0%,
@@ -21,7 +16,10 @@ body{
     hsl(301deg 77% 43%) 93%,
     hsl(309deg 76% 43%) 100%
   );
-  display: flex;
-  justify-content: center;
   min-height: 100vh;
+  font-family: 'Lato', sans-serif;
+}
+.mc-container-page{
+  border: 1px solid red;
+  margin: 10px;
 }

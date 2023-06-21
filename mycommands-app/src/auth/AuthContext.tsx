@@ -63,7 +63,9 @@ export const AuthProvider = ( {children}: GeneralProps ) => {
   }
 
   const logout = () => {
-
+    SessionStorage.removeAll();
+    LocalStorage.removeItem("user_authenticated_mycommands");
+    setAuthState({ status: "not-authenticated", logged: false });
   }
 
   return (

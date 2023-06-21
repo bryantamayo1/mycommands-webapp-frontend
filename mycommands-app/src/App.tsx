@@ -4,11 +4,9 @@ import { AuthProvider } from "./auth/AuthContext";
 
 function App() {
   return (
-    <div className="app">
-      <AuthProvider>
-        <AppRouter/>
-      </AuthProvider>
-    </div>
+    <AuthProvider>
+      <AppRouter/>
+    </AuthProvider>
   );
 }
 

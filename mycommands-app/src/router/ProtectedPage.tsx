@@ -10,7 +10,7 @@ export const ProtectedPage = () => {
   const {logged} = useContext(AuthContext);
 
   if(logged){
-    return <Navigate to="/dashboard"/>;
+    return <Navigate to="/home"/>;
   }else{
     return <LoginPage/>
   }
