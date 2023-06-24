@@ -5,7 +5,7 @@
   height: 50px;
   margin: 0 auto;
   position: relative;
-  width: 20vw;
+  width: 30vw;
 }
 .menu-container::before{
   background-color: transparent;
@@ -22,16 +22,16 @@
 }
 .menu-container::after{
   background-color: transparent;
-  border-top-right-radius: 15px;
-  box-shadow: 0 -25px 0 0 #FFF;
+  border-bottom-left-radius: 15px;
+  box-shadow: 0 25px 0 0 #FFF;
   box-sizing: border-box;
   content: "";
   height: 50px;
-  /* It’s same width */
-  right: -30px; 
   position: absolute;
-  transform: scale(-1, 1);
+  right: -80px;
   top: 0;
+  transform: rotate(90deg);
+  transform-origin: left top;
   width: 30px;
 }
 ul{

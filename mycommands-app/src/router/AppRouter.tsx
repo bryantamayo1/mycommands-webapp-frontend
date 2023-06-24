@@ -4,8 +4,9 @@ import { HomePage } from "../components/HomePage";
 import { ProtectedAnyRoute } from "./ProtectedAnyRoute";
 import { ProtectedRoute } from "./ProtectedRoute";
 import { AppPage } from "../components/AppPage";
-import { CategoriesPage } from "../components/CategoriesPage";
+import { CategoriesPage } from "../components/CategoriesPage/CategoriesPage";
 import { UserPage } from "../components/UserPage";
+import { CommandsPage } from "../components/CommandsPage/CommandsPage";
 
 export const AppRouter = () => {
   return (
@@ -20,6 +21,7 @@ export const AppRouter = () => {
         <Route element={<AppPage/>}>
           <Route path="/home" element={<ProtectedRoute><HomePage/></ProtectedRoute>}/>
           <Route path="/categories" element={<ProtectedRoute><CategoriesPage/></ProtectedRoute>}/>
+          <Route path="/commands" element={<ProtectedRoute><CommandsPage/></ProtectedRoute>}/>
           <Route path="/user" element={<ProtectedRoute><UserPage/></ProtectedRoute>}/>
         </Route>
 

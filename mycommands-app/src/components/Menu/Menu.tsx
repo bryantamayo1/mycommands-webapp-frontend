@@ -13,7 +13,7 @@ import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
 import { AuthContext } from '../../auth/AuthContext';
 import { useEffect } from 'react';
-
+import CodeIcon from '@mui/icons-material/Code';
 
 const style = {
   width: '100%',
@@ -56,6 +56,19 @@ export const MenuMc = () => {
                 <GridViewIcon color={isActive? "primary": "inherit"}/>
                 <span className="menu-title">
                   Categories
+                </span>
+              </span>
+            )}
+          </NavLink>
+        </li>
+
+        <li>
+          <NavLink to="/commands">
+            {( {isActive} ) => (
+              <span className={isActive? "active-link-menu": "not-active-link-menu"}>
+                <CodeIcon color={isActive? "primary": "inherit"}/>
+                <span className="menu-title">
+                  Commands
                 </span>
               </span>
             )}
