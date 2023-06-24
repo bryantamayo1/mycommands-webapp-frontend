@@ -11,6 +11,6 @@ export const ProtectedAnyRoute = () => {
   if(!logged) {
     return <Navigate to ="/login"/>
   }else{
-    return <Navigate to ="/dashboard"/>
+    return <Navigate to ="/home"/>
   }
 }

@@ -1,0 +1,36 @@
+.categories-container {
+  background-color: rgba(255, 255, 255, 0.247);
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  box-sizing: border-box;
+  color: #FFF;
+  padding: 10px;
+}
+.mc-list{
+  align-items: center;
+  border-bottom: 1px solid rgb(14, 55, 190);
+  box-sizing: border-box;
+  display: grid;
+  gap: 0 20px;
+  grid-template-columns: auto 15% 15%;
+  margin-top: 20px;
+  padding-bottom: 5px;
+}
+.mc-btn{
+  width: 25px;
+}
+.mc-table{
+  border-collapse: collapse;
+  width: 100%;
+}
+.mc-table th, td{
+  box-sizing: border-box;
+  padding: 16px;
+}
+.mc-table tr{
+  box-sizing: border-box;
+  border-bottom: 1px solid rgb(14, 55, 190);
+}
+.mc-table--header{
+  font-weight: 600;
+  text-align: left;
+}

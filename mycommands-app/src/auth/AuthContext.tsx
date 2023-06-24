@@ -55,7 +55,7 @@ export const AuthProvider = ( {children}: GeneralProps ) => {
         // @ts-ignore
         setAuthState(({ status: "error", logged: false, errorMessage: error.message}));
       }else{
-        setAuthState(({ status: "error", logged: false, errorMessage: "Ha habido un error, vuelvalo a intentar más tarde"}));
+        setAuthState(({ status: "error", logged: false, errorMessage: "Ha habido un error, vuelva a intentarlo más tarde"}));
       }
       throw error;
       ;
@@ -63,7 +63,9 @@ export const AuthProvider = ( {children}: GeneralProps ) => {
   }
 
   const logout = () => {
-
+    SessionStorage.removeAll();
+    LocalStorage.removeItem("user_authenticated_mycommands");
+    setAuthState({ status: "not-authenticated", logged: false });
   }
 
   return (
