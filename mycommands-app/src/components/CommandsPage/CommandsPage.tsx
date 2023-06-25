@@ -13,23 +13,10 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Button from '@mui/material/Button';
 import SearchIcon from '@mui/icons-material/Search';
 import { ServicesCommands } from '../../services/ServicesCommands';
-import rehypePrism from "rehype-prism-plus";
-import rehypeRewrite from "rehype-rewrite";
-import Prism from "prismjs";
-import Editor from 'react-simple-code-editor';
-// import { highlight, languages } from 'prismjs/components/prism-core';
-// import 'prismjs/components/prism-clike';
-// import 'prismjs/components/prism-javascript';
-// import 'prismjs/themes/prism.css'; //Example style, you can use another
-// import "prismjs/components/prism-javascript"
-import { highlight, languages } from 'prismjs';
 
 import CodeMirror from '@uiw/react-codemirror';
-import { javascript } from '@codemirror/lang-javascript';
-
-import CodeEditor from '@uiw/react-textarea-code-editor';
-import { okaidia } from '@uiw/codemirror-theme-okaidia';
 import { loadLanguage } from '@uiw/codemirror-extensions-langs';
+import {xcodeDark} from '@uiw/codemirror-theme-xcode';
 
 type typeStateInitial = {
   categories: InterfaceGetFilters,
@@ -167,58 +154,17 @@ export const CommandsPage = () => {
 
       {/* Commands */}
       <div className='mc-container-box'>
-        <Editor
-          value={code}
-          onValueChange={code => setCode(code)}
-          highlight={code => highlight(code, languages.js, "js")}
-          padding={10}
-          style={{
-            fontFamily: '"Fira code", "Fira Mono", monospace',
-            fontSize: 12,
-            color: '#FFF'
-          }}
-        />
+        code
       </div>
-
-      <CodeEditor
-        value={code}
-        language="js"
-        placeholder="Please enter JS code."
-        data-color-mode="dark"
-        onChange={(evn) => setCode(evn.target.value)}
-        padding={15}
-        style={{
-          fontSize: 12,
-          backgroundColor: "#2d2d2d",
-          fontFamily: 'ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace',
-        }}
-
-      />
       ---------------------------------------------
       <CodeMirror
         value="console.log('hello world!');"
         height="200px"
         // @ts-ignore
         extensions={[loadLanguage("css")]}
-        theme={okaidia}
+        theme={xcodeDark}
         onChange={onChange}
       />
-      ////////////////////////////////////////////////
-      <Code code={htmlCode} language="html" />
     </div>
   )
-}
-
-export function Code({ code, language }: any) {
-  useEffect(() => {
-    Prism.highlightAll();
-  }, []);
-  return (
-    <div className="Code">
-      <h2> Code Syntax Block {language}</h2>
-      <pre>
-        <code className={`language-${language}`}>{code}</code>
-      </pre>
-    </div>
-  );
 }
