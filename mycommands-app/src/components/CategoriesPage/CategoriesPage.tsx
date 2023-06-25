@@ -34,7 +34,6 @@ export const CategoriesPage = () => {
   const getCategories = async () => {
     const resp = await ServicesCategories.getCategories();
     setState(prevState => ({ ...prevState, categories: resp }));
-    console.log("resp: ", resp)
   }
 
   const handleOpenModal = () => {
@@ -59,7 +58,7 @@ export const CategoriesPage = () => {
 
   return (
     <div className='mc-container-page'>
-      <div className='categories-container'>
+      <div className='mc-container-box'>
         <Button variant="contained" color="secondary" size="small" onClick={handleOpenModal}>
           <AddIcon fontSize="small"/>
         </Button>

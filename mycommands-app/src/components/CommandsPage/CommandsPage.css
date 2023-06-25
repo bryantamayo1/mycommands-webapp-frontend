@@ -1,0 +1,15 @@
+.MuiInputLabel-root.Mui-focused{
+    color: #9c27b0 !important;
+} 
+.MuiSelect-outlined{
+  outline: #9c27b0;
+}
+.Mui-focused .MuiOutlinedInput-notchedOutline{
+  border-color: #9c27b0 !important;
+}
+.mc-label{
+  color: #000;
+}
+.mc-prismjs-textarea{
+  background-color: #2d2d2d;
+}

@@ -34,7 +34,7 @@
   transform-origin: left top;
   width: 30px;
 }
-ul{
+.menu-container ul{
   align-items: center;
   box-sizing: border-box;
   display: flex;
@@ -45,10 +45,10 @@ ul{
   margin: 0;
   padding: 0;
 }
-ul li {
+.menu-container ul li {
   cursor: pointer;
 }
-ul li a{
+.menu-container ul li a{
   align-items: center;
   color: black;
   display: flex;

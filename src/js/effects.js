@@ -18,6 +18,14 @@ let global_open_menu_filters = false;
         // search__container.style.boxShadow  = "0px 0px 10px 2px rgb(66, 50, 216)";
         // search__container.style.outline = "1px solid blue";
     });
+    input.addEventListener("mouseover", () => {
+        search__container.style.boxShadow  = "0px 0px 15px 1px #ce04a2";
+        search__container.style.outline = "2px solid #ce04a2";
+    });
+    input.addEventListener("mouseleave", () => {
+        search__container.style.boxShadow  = "";
+        search__container.style.outline = "";
+    });
     input.addEventListener("blur", () => {
         search__container.style.boxShadow  = "";
         search__container.style.outline = "";

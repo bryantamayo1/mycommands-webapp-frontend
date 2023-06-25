@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@codemirror/lang-javascript": "^6.1.9",
+    "@codemirror/lang-less": "^6.0.1",
     "@emotion/react": "^11.11.0",
     "@emotion/styled": "^11.11.0",
     "@fontsource/roboto": "^5.0.1",
@@ -16,14 +18,24 @@
     "@types/node": "^16.18.32",
     "@types/react": "^18.2.7",
     "@types/react-dom": "^18.2.4",
+    "@uiw/codemirror-extensions-langs": "^4.21.5",
+    "@uiw/codemirror-theme-okaidia": "^4.21.5",
+    "@uiw/react-codemirror": "4.21.5",
+    "@uiw/react-textarea-code-editor": "2.1.7",
+    "babel-plugin-prismjs": "^2.1.0",
     "crypto-js": "4.1.1",
     "formik": "2.4.2",
+    "install": "^0.13.0",
     "moment": "2.29.4",
     "normalize.css": "8.0.1",
+    "npm": "^9.7.2",
+    "prismjs": "^1.29.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "6.11.2",
     "react-scripts": "5.0.1",
+    "react-simple-code-editor": "^0.13.1",
+    "rehype-rewrite": "^3.0.6",
     "styled-components": "^5.3.10",
     "typescript": "^4.9.5",
     "web-vitals": "^2.1.4",
@@ -54,6 +66,8 @@
     ]
   },
   "devDependencies": {
-    "@types/crypto-js": "4.1.1"
+    "@types/crypto-js": "4.1.1",
+    "@types/prismjs": "1.26.0",
+    "@types/react-codemirror": "1.0.8"
   }
 }
