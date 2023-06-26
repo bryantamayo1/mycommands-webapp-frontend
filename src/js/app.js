@@ -16,6 +16,7 @@ import { handlePagination }     from './pagination';
 import { handleLanguages }      from './handleLanguages';
 import { activeOrDesactiveToggles, createSubCategories, template_Menu_filter } from './menuFilter';
 import dataJson                 from './data.json';
+import { openModal } from './modalCommand';
 
 // Global variables
 // Store state of each filters
@@ -80,6 +81,16 @@ export const goHome = () => {
 
         // Charge text of default language
         handleLanguages("en");
+    });
+}
+
+/**
+ * Go app
+ */
+export const goApp = () => {
+    const btn_user = document.getElementById("btn-user");
+    btn_user.addEventListener("click", () => {
+        window.open(process.env.API_APP_URL, '_blank');
     });
 }
 

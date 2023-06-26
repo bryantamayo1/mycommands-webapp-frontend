@@ -2,7 +2,7 @@ import { handleCloseFilters, handleFilters, handleFocusInputSearch } from './eff
 import { closeModal, copyInClipboardModalCommand, copyInClipboardModalMeaning } from './modalCommand';
 import { handleErrors }         from './handleErrors';
 import { handleCloseModalVersionApp, handleModalVersionApp } from './modalVersionApp';
-import { componentDidMount, getInitialQueries, goHome, handleButtonsLanguage, handleChangesUrl, handleInputSearch, handleToggleFiletrs } from './app';
+import { componentDidMount, getInitialQueries, goApp, goHome, handleButtonsLanguage, handleChangesUrl, handleInputSearch, handleToggleFiletrs } from './app';
 
 /**
  * First function in executing
@@ -12,6 +12,7 @@ function init(){
     handleErrors();
     document.addEventListener("DOMContentLoaded", () => {
         goHome();
+        goApp();
         getInitialQueries();
         handleButtonsLanguage();
         handleInputSearch();

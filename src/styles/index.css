@@ -29,6 +29,10 @@ header img{
     color: #FFF;
     cursor: pointer;
 }
+#btn-user{
+    color: #FFF;
+    cursor: pointer;
+}
 .btn-lang{
     align-items: center;
     border-color: transparent;
