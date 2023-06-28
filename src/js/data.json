@@ -42,7 +42,7 @@
         },
         "createdAt": {
             "en": "Created at: ",
-            "es": "Creado: "
+            "es": "Creado en: "
         },
         "version": {
             "en": "Version 0.0.1",
