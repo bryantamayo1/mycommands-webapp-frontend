@@ -40,6 +40,10 @@
             "en": "Last modification: ",
             "es": "Última modificación: "
         },
+        "createdAt": {
+            "en": "Created at: ",
+            "es": "Creado en: "
+        },
         "version": {
             "en": "Version 0.0.1",
             "es": "Versión 0.0.1"

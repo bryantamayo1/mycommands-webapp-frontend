@@ -42,11 +42,14 @@
     border-top: 2px solid hsl(313, 96%, 41%);  
     box-sizing: border-box;
 } */
-.overlay__date{
+.overlay__extra-info{
+    display: flex;
+    justify-content: flex-start;
+    gap: 0 20px;
     font-size: 11px;
     padding: 10px 30px;
 }
-.overlay_date_key{
+.overlay__extra-info--key-1, .overlay__extra-info--key-2{
     color: rgb(204, 204, 204);
 }
 .overlay__command,.overlay__meaning{

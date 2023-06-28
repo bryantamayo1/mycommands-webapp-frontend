@@ -12,14 +12,18 @@ import moment           from 'moment';
 export const openModal = (event, info, lang) => {
     const overlay = document.getElementsByClassName("overlay")[0];
     const pre_modal = document.getElementById("pre-modal");
+
     const overlay__command = document.getElementById("code-modal");
     const overlay__meaning = document.getElementsByClassName("overlay__meaning")[0];
-    const overlay_date_key = document.getElementsByClassName("overlay_date_key")[0];
-    const overlay_date_value = document.getElementsByClassName("overlay_date_value")[0];
+
+    const key_1 = document.getElementsByClassName("overlay__extra-info--key-1")[0];
+    const value_1 = document.getElementsByClassName("overlay__extra-info--value-1")[0];
+
+    const key_2 = document.getElementsByClassName("overlay__extra-info--key-2")[0];
+    const value_2 = document.getElementsByClassName("overlay__extra-info--value-2")[0];
     
     const span = document.createElement("span");
     const sub_categories = document.getElementsByClassName("sub-categories")[0];
-
 
     // Reset command and meaning in modal
     overlay__command.innerHTML = "";
@@ -44,11 +48,21 @@ export const openModal = (event, info, lang) => {
     // Show updatedAt
     const info_updatedAt = moment(info.updatedAt || "");
     if(info_updatedAt.isValid()){
-        overlay_date_key.innerHTML = dataJson.content["updatedAt"][lang];
-        overlay_date_value.innerHTML = info_updatedAt.format("DD-MM-YYYY");
+        key_1.innerHTML = dataJson.content["updatedAt"][lang];
+        value_1.innerHTML = info_updatedAt.format("DD-MM-YYYY");
     }else{
-        overlay_date_key.innerHTML = dataJson.content["updatedAt"][lang];
-        overlay_date_value.innerHTML = "--/--/----";
+        key_1.innerHTML = dataJson.content["updatedAt"][lang];
+        value_1.innerHTML = "--/--/----";
+    }
+
+    // Show createdAt
+    const info_createdAt = moment(info.createdAt || "");
+    if(info_createdAt.isValid()){
+        key_2.innerHTML = dataJson.content["createdAt"][lang];
+        value_2.innerHTML = info_createdAt.format("DD-MM-YYYY");
+    }else{
+        key_2.innerHTML = dataJson.content["createdAt"][lang];
+        value_2.innerHTML = "--/--/----";
     }
 
     // Show subCategpries
