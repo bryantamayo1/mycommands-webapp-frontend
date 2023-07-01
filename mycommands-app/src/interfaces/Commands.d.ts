@@ -10,9 +10,16 @@ export interface InterfaceCommands {
     data:           Datum[];
 }
 
+export interface SubCategory {
+    _id:   string;
+    en:    string;
+    color: string;
+    found: boolean;
+}
+
 export interface Datum {
     command:       string;
-    subCategories: any[];
+    subCategories: SubCategory[];
     language:      Language;
     updatedAt:     string;
     en:            string;

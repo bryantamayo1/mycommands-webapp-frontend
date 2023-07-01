@@ -5,10 +5,14 @@ import { CategoryData } from "../interfaces/Categories";
  * @param {object} CategoryData
  * @returns string
  */
-export const parseVersion = ({category, version}: CategoryData) => {
-    if(category.indexOf("[") !== -1 && category.indexOf("]") !== -1){
-        return category
+export const parseVersion = ({category, version}: CategoryData): string => {
+    if(version){
+        if(category.indexOf("[") !== -1 && category.indexOf("]") !== -1){
+            return category
+        }else{
+            return category + " " + version
+        }
     }else{
-        return category + " " + version
+        return category;
     }
 }

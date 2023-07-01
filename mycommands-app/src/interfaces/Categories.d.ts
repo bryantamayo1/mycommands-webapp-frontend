@@ -10,8 +10,8 @@ export interface CategoryData {
     category:       string;
     subCategories?: SubCategory[];
     version:        string;
-    createdAt:        string;
-    updatedAt:        string;
+    createdAt:      string;
+    updatedAt:      string;
     results:        number;
     _id:            string;
 }
@@ -20,4 +20,9 @@ export interface SubCategory {
     en:    string;
     color: string;
     _id:   string;
+}
+
+export interface InterfaceCreateCategory {
+    category: string,
+    version: string
 }

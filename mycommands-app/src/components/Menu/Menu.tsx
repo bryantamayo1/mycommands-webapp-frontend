@@ -14,6 +14,7 @@ import Divider from '@mui/material/Divider';
 import { AuthContext } from '../../auth/AuthContext';
 import { useEffect } from 'react';
 import CodeIcon from '@mui/icons-material/Code';
+import MenuIcon from '@mui/icons-material/Menu';
 
 const style = {
   width: '100%',
@@ -25,6 +26,7 @@ export const MenuMc = () => {
   ////////
   // Hooks
   ////////
+  const [openMenu, setOpenMenu] = useState(false);
   const {logout} = useContext(AuthContext);
   let location = useLocation();
   
@@ -32,12 +34,20 @@ export const MenuMc = () => {
   ////////////
   // Functions
   ////////////
+  const handleMenuItems  = () => {
+    setOpenMenu( prevState => !prevState);
+  }
 
   return (
     <nav className="menu-container">
-      <ul>
+      <input type='checkbox' id="btn-hamburger"/>
+      <label htmlFor="btn-hamburger" className='btn-hamburger__label'>
+        <MenuIcon fontSize="large" onClick={handleMenuItems}/>
+      </label>
+
+      <ul style={{ left: openMenu? 0 : "-100%"}}>
         <li>
-          <NavLink to="/home">
+          <NavLink to="/home" onClick={handleMenuItems}>
             {( {isActive} ) => (
               <span className={isActive? "active-link-menu": "not-active-link-menu"}>
                 <HomeIcon color={isActive? "primary": "inherit"}/>
@@ -50,7 +60,7 @@ export const MenuMc = () => {
         </li>
 
         <li>
-          <NavLink to="/categories">
+          <NavLink to="/categories" onClick={handleMenuItems}>
             {( {isActive} ) => (
               <span className={isActive? "active-link-menu": "not-active-link-menu"}>
                 <GridViewIcon color={isActive? "primary": "inherit"}/>
@@ -63,7 +73,7 @@ export const MenuMc = () => {
         </li>
 
         <li>
-          <NavLink to="/commands">
+          <NavLink to="/commands" onClick={handleMenuItems}>
             {( {isActive} ) => (
               <span className={isActive? "active-link-menu": "not-active-link-menu"}>
                 <CodeIcon color={isActive? "primary": "inherit"}/>
@@ -88,14 +98,14 @@ export const MenuMc = () => {
             <List sx={style} component="nav" aria-label="mailbox folders">
               <ListItem button>
                 <ListItemText primary={
-                  <NavLink to="/user">
+                  <NavLink to="/user" onClick={handleMenuItems}>
                     Settings
                   </NavLink>
                 }/>
               </ListItem>
               <Divider />
               <ListItem button onClick={logout}>
-                <ListItemText primary="Sign out" style={{ color: "red" }}/>
+                <ListItemText primary="Sign out" style={{ color: "red", textAlign: "center" }}/>
               </ListItem>
             </List>
           </div>

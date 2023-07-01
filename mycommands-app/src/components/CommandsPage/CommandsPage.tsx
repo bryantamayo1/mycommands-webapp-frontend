@@ -17,9 +17,14 @@ import { ServicesCommands } from '../../services/ServicesCommands';
 import CodeMirror from '@uiw/react-codemirror';
 import { loadLanguage } from '@uiw/codemirror-extensions-langs';
 import {xcodeDark} from '@uiw/codemirror-theme-xcode';
+import Editor from '@monaco-editor/react';
+import { InterfaceCommands } from '../../interfaces/Commands';
+
 
 type typeStateInitial = {
   categories: InterfaceGetFilters,
+  commands: InterfaceCommands,
+  selectedSearchCommand: string,
   selectedCategory: string,
   checkCommandAndMenaning: boolean,
   checkCommands: boolean,
@@ -28,12 +33,13 @@ type typeStateInitial = {
 
 const StateInitial:typeStateInitial = {
   categories: {} as InterfaceGetFilters,
+  commands: {} as InterfaceCommands,
+  selectedSearchCommand: '',
   selectedCategory: "",
   checkCommandAndMenaning: true,
   checkCommands: false,
   checkMeaning: false
 }
-
 
 export const CommandsPage = () => {
   ////////
@@ -43,25 +49,48 @@ export const CommandsPage = () => {
 
   useEffect(() => {
     getCategories();
-    getCommands();
+
+    getCommands({
+      page: 1,
+      category: 'all'
+    });
   }, []);
 
+  ////////////
+  // Functions
+  ////////////
   const getCategories = async () => {
     const resp = await ServicesCategories.getCategories();
-    setState(prevState => ({ ...prevState, categories: resp }));
+    setState(prevState => ({ ...prevState, categories: resp, selectedCategory: "all" }));
   }
 
-  const getCommands = async () => {
-    const resp = await ServicesCommands.getCommands();
-    console.log(resp)
+  const getCommands = async (query: any) => {
+    const resp = await ServicesCommands.getCommands(query);
+    setState(prevState => ({ ...prevState, commands: resp }));
   }
 
   const handleChangeSelect = (event: SelectChangeEvent) => {
     setState(prevState => ({ ...prevState, selectedCategory: event.target.value }));
   }
-
+;
+  /**
+   * Always one checkBox is actived at least
+   * @param param0 
+   */
   const handleChangeCheckbox = ( {target}: ChangeEvent<HTMLInputElement>) => {
-    setState(prevState => ({ ...prevState, [target.name]: target.checked }));
+    if(state.checkCommandAndMenaning && target.name === "checkCommandAndMenaning") return;
+
+    if(state.checkCommands && target.name === "checkCommands") return;
+    
+    if(state.checkMeaning && target.name === "checkMeaning") return;
+
+    if(target.name === "checkCommandAndMenaning"){
+      setState(prevState => ({ ...prevState, [target.name]: target.checked, checkCommands: false, checkMeaning: false }));
+    }else if(target.name === "checkCommands"){
+      setState(prevState => ({ ...prevState, [target.name]: target.checked, checkCommandAndMenaning: false, checkMeaning: false }));
+    }else if(target.name === "checkMeaning"){
+      setState(prevState => ({ ...prevState, [target.name]: target.checked, checkCommandAndMenaning: false, checkCommands: false }));
+    }
   }
 
   const [code, setCode] = useState(
@@ -72,24 +101,43 @@ export const CommandsPage = () => {
     console.log('value:', value);
   }, []);
 
-  const htmlCode = `
-    <div>
-      <h1> PrismJS Tutorial </h1>
-      <p>
-      Prism is a lightweight, extensible syntax highlighter, built with modern web standards in mind.
-      </p>
-    </div>
-`;
+  const handleSearchCommand = ({ target }: ChangeEvent<HTMLInputElement>) => {
+    setState(prevState => ({ ...prevState, selectedSearchCommand: target.value }));
+  }
+
+  const searchCommands = () => {
+    // Prepare query
+    const {selectedSearchCommand, selectedCategory, 
+    checkCommandAndMenaning, checkCommands, checkMeaning} = state;
+    const query: any = {}
+
+    if(checkCommandAndMenaning){
+      query.command = selectedSearchCommand;
+      query.meaning = selectedSearchCommand;
+    }else if (checkCommands){
+      query.command = selectedSearchCommand;
+    }else if (checkMeaning){
+      query.meaning = selectedSearchCommand;
+    }
+
+    getCommands({
+      page: 1,
+      category: selectedCategory? selectedCategory : "all",
+      ...query
+    });
+  }
 
   return (
     <div className='mc-container-page'>
       {/* Filters */}
       <div className='mc-container-box'>
-        <TextField id="outlined-basic" size='small' label="Outlined" color="secondary"
-          variant="outlined"
+        
+        <TextField id="search-command" size='small' label="Search" color="secondary"
+          variant="outlined" style={{ width: 300 }}
+          onChange={handleSearchCommand}
         />
         
-        <FormControl size="small">
+        <FormControl size="small" style={{ width: 300 }}>
           <InputLabel
             id="select-categories"
           >
@@ -121,6 +169,7 @@ export const CommandsPage = () => {
             />
           }
         />
+
         <FormControlLabel
           className='mc-label'
           label="Command"
@@ -134,6 +183,7 @@ export const CommandsPage = () => {
             />
           }
         />
+
         <FormControlLabel
           className='mc-label'
           label="Meaning"
@@ -147,14 +197,30 @@ export const CommandsPage = () => {
             />
           }
         />
-        <Button variant="contained" color="secondary" size="small">
+
+        <Button variant="contained" color="secondary" size="small" style={{ minWidth: 50 }}
+          onClick={searchCommands}
+        >
           <SearchIcon fontSize="small"/>
         </Button>
       </div>
 
       {/* Commands */}
-      <div className='mc-container-box'>
-        code
+      <div className='mc-container-box mc-container-commands'>
+        {state.commands.data?.map(item => (
+          <div className='mc-container-row'>
+            <div className="mc-container-commands__command">
+              <Editor height="200px" defaultLanguage={item.language} defaultValue={item.command}
+                theme="vs-dark"
+              />
+            </div>
+
+            <div className="mc-container-commands__meaning">
+              {item.en}
+            </div>
+
+          </div>
+        ))}
       </div>
       ---------------------------------------------
       <CodeMirror
@@ -164,6 +230,11 @@ export const CommandsPage = () => {
         extensions={[loadLanguage("css")]}
         theme={xcodeDark}
         onChange={onChange}
+      />
+
+      -----------------------
+      <Editor height="90vh" defaultLanguage="javascript" defaultValue="// some comment"
+        theme="vs-dark"
       />
     </div>
   )

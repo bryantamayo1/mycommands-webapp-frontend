@@ -6,9 +6,30 @@ export abstract class Api {
         const resp = await fetch(process.env.REACT_APP_API_URL + path, 
             {
                 headers: {
+                    'Accept': 'application/json',
                     xen: "Bearer " + user.xen,
                 },
                 method: "GET"
+            });
+        if(resp.ok){
+            return await resp.json();
+        }else{
+            throw await resp.json();
+        }
+    }
+
+    static async post<T>(path: string, body: any): Promise<T>{
+        const user = SessionStorage.getItem("user");
+        const resp = await fetch(
+            process.env.REACT_APP_API_URL! + process.env.REACT_APP_PATH_ADMIN + path, 
+            {
+                headers: {
+                    'Accept': 'application/json',
+                    xen: "Bearer " + user.xen,
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(body),
+                method: "POST"
             });
         if(resp.ok){
             return await resp.json();

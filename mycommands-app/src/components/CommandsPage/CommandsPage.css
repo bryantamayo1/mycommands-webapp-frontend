@@ -1,10 +1,15 @@
-.MuiInputLabel-root.Mui-focused{
+.mc-container-box{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px 20px;
+}
+.mc-container-box .MuiInputLabel-root.Mui-focused{
     color: #9c27b0 !important;
 } 
-.MuiSelect-outlined{
+.mc-container-box .MuiSelect-outlined{
   outline: #9c27b0;
 }
-.Mui-focused .MuiOutlinedInput-notchedOutline{
+.mc-container-box .Mui-focused .MuiOutlinedInput-notchedOutline{
   border-color: #9c27b0 !important;
 }
 .mc-label{
@@ -12,4 +17,15 @@
 }
 .mc-prismjs-textarea{
   background-color: #2d2d2d;
+}
+
+/* Commands */
+.mc-container-row{
+  display: grid !important;
+  grid-template-columns: 40% auto;
+  margin-bottom: 20px;
+}
+.mc-container-commands{
+  display: block;
+  margin-top: 20px;
 }
