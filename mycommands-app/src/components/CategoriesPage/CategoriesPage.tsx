@@ -13,16 +13,29 @@ import { useFormik } from 'formik';
 import * as Yup         from 'yup';
 import { TextField } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import Tooltip from '@mui/material/Tooltip';
+import { SessionStorage } from '../../utils/SessionStorage';
+import { Alert } from '../common/Alert';
+
+type typeCreateOrEditCategory = {
+  category: string,
+  version: string,
+  _id: string
+}
 
 type typeStateInitial = {
   categories: InterfaceGetFilters,
-  openModal: boolean
+  openModalCreateOrEdit: boolean,
+  selectedCategory: typeCreateOrEditCategory
+  createOrEdit: boolean,   // false = create, true = edit
+  openModalDelete: boolean
 }
 
 const StateInitial:typeStateInitial = {
   categories: {} as InterfaceGetFilters,
-  openModal: false
+  openModalCreateOrEdit: false,
+  selectedCategory: {} as typeCreateOrEditCategory,
+  createOrEdit: false,
+  openModalDelete: false,
 }
 
 export const CategoriesPage = () => {
@@ -42,11 +55,16 @@ export const CategoriesPage = () => {
       version: Yup.string().required('Version is required').max(100, "100 characters is maximum")
     }),
     onSubmit: async values => {
-      try{
+      // Edit
+      if(state.createOrEdit){
+        await ServicesCategories.editCategory(state.selectedCategory._id, values);
+        getCategories();
+        handleCloseModalCreateOrEdit();
+      // Create
+      }else{
         await ServicesCategories.createCategory(values);
         getCategories();
-        handleCloseModal();
-      }catch(error){
+        handleCloseModalCreateOrEdit();
       }
     }
   });
@@ -64,13 +82,52 @@ export const CategoriesPage = () => {
     setState(prevState => ({ ...prevState, categories: resp }));
   }
 
-  const handleOpenModal = () => {
-    setState(prevState => ({ ...prevState, openModal: true }));
+  const handleOpenModalCreateOrEdit = (category?: typeCreateOrEditCategory) => {
+    // Edit
+    if(category){
+      formik.setFieldValue("category", category.category);
+      formik.setFieldValue("version", category.version);
+      setState(prevState => ({
+        ...prevState,
+        openModalCreateOrEdit: true,
+        selectedCategory: category,
+        createOrEdit: true
+      }));
+
+    // Close
+    }else{
+      formik.setFieldValue("category", "");
+      formik.setFieldValue("version", "");
+      setState(prevState => ({
+        ...prevState,
+        openModalCreateOrEdit: true,
+        selectedCategory: {} as typeCreateOrEditCategory,
+        createOrEdit: false
+      }));
+    }
   }
 
-  const handleCloseModal = () => {
-    setState(prevState => ({ ...prevState, openModal: false }));
+  const handleCloseModalCreateOrEdit = () => {
+    setState(prevState => ({ ...prevState, openModalCreateOrEdit: false }));
     formik.resetForm();
+  }
+
+  const handleCloseModalDelete = () => {
+    setState(prevState => ({ ...prevState, openModalDelete: false }));
+  }
+
+  const handleOpenModalDelete = (category: typeCreateOrEditCategory) => {
+    setState(prevState => ({
+      ...prevState,
+      openModalDelete: true,
+      selectedCategory: category,
+    }));
+  }
+
+  const deleteCategory =  async (id: string) => {
+    await ServicesCategories.deleteCategory(id);
+    getCategories();
+    handleCloseModalDelete();
   }
 
   const style = {
@@ -88,7 +145,7 @@ export const CategoriesPage = () => {
   return (
     <div className='mc-container-page'>
       <div className='mc-container-box'>
-        <Button variant="contained" color="secondary" size="small" onClick={handleOpenModal}>
+        <Button variant="contained" color="secondary" size="small" onClick={() => handleOpenModalCreateOrEdit()}>
           <AddIcon fontSize="small"/>
         </Button>
 
@@ -103,7 +160,7 @@ export const CategoriesPage = () => {
           </tr>
 
           {/* Body */}
-          {state.categories.data?.map( ({ category, version, createdAt, updatedAt, results }) => (
+          {state.categories.data?.map( ({ category, version, createdAt, updatedAt, results, _id }) => (
             <tr>
               <td>{category}</td>
               <td>{version}</td>
@@ -111,14 +168,18 @@ export const CategoriesPage = () => {
               <td>{moment(updatedAt).format("YYYY-MM-DD")}</td>
               <td>{results}</td>
               <td>
-                <Tooltip title="Action not authorizated">
-                  <Button variant="contained" color='secondary' size="small" className='mc-btn'>
-                    <EditIcon fontSize="small"/>
-                  </Button>
-                </Tooltip>
+                <Button variant="contained" color='secondary' size="small" className='mc-btn'
+                  disabled={SessionStorage.getItem("user").role === "GUEST"}
+                  onClick={() => handleOpenModalCreateOrEdit({category, version, _id: _id })}
+                >
+                  <EditIcon fontSize="small"/>
+                </Button>
               </td>
               <td>
-                <Button variant="contained" color='secondary' size="small" className='mc-btn'>
+                <Button variant="contained" color='secondary' size="small" className='mc-btn'
+                  disabled={SessionStorage.getItem("user").role === "GUEST"}
+                  onClick={() => handleOpenModalDelete({category, version, _id: _id })}
+                >
                   <DeleteIcon fontSize="small"/>
                 </Button>
               </td>
@@ -129,20 +190,22 @@ export const CategoriesPage = () => {
 
       {/* Modal: create category */}
       <Modal
-        open={state.openModal}
-        onClose={handleCloseModal}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
+        open={state.openModalCreateOrEdit}
+        onClose={handleCloseModalCreateOrEdit}
+        aria-labelledby="modal-modal-title-edit-and-create"
+        aria-describedby="modal-modal-description-edit-and-create"
       >
        <Box sx={style}>
           {/* Btn close modal */}
           <div className='mc-modal-create-category-close'>
-            <Button color="inherit" style={{ minWidth: 20 }} onClick={handleCloseModal}>
+            <Button color="inherit" style={{ minWidth: 20 }} onClick={handleCloseModalCreateOrEdit}>
               <CloseIcon/>
             </Button>
           </div>
           <form onSubmit={formik.handleSubmit}>
-            <p className="mc-modal-create-category-title">Create category</p>
+            <p className="mc-modal-create-category-title">
+              {state.createOrEdit? `Edit category ${state.selectedCategory.category}` : "Create category"}
+            </p>
 
             <div className='mc-modal-create-category-divider'>
               <TextField id="category" fullWidth label="Category" variant="standard"
@@ -167,12 +230,47 @@ export const CategoriesPage = () => {
             <div className='mc-modal-create-category-btn-submit'>
               <Button variant="contained" color="secondary"
                 type="submit">
-                Create
+                {state.createOrEdit? "Edit": "Create"}
               </Button>
             </div>
 
           </form>
        </Box>
+      </Modal>
+
+      {/* Modal: delete category */}
+      <Modal
+        open={state.openModalDelete}
+        onClose={handleCloseModalDelete}
+        aria-labelledby="modal-modal-title-delete"
+        aria-describedby="modal-modal-description-delete"
+      >
+        <Box sx={style}>
+          {/* Btn close modal */}
+          <div className='mc-modal-create-category-close'>
+            <Button color="inherit" style={{ minWidth: 20 }} onClick={handleCloseModalDelete}>
+              <CloseIcon/>
+            </Button>
+
+            <p className="mc-modal-create-category-title" style={{ textAlign: "start" }}>
+              Delete category {state.selectedCategory.category}
+            </p>
+
+            <Alert severity="error">
+              <div style={{ textAlign: "start" }}>
+                It is going to delete all commands with subcategorues associared to this category!
+              </div>
+            </Alert>
+
+            <div className='mc-modal-create-category-btn-submit'>
+              <Button variant="contained" color="secondary"
+                onClick={() => deleteCategory(state.selectedCategory._id)}
+              >
+                Delete
+              </Button>
+            </div>
+          </div>
+        </Box>
       </Modal>
     </div>
   )

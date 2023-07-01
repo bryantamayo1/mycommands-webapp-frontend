@@ -9,4 +9,12 @@ export abstract class ServicesCategories{
     static createCategory(body: any){
         return Api.post<InterfaceCreateCategory>("/filters", body);
     }
+
+    static editCategory(id: string, body: any){
+        return Api.patch<InterfaceCreateCategory>("/filters/" + id, body);
+    }
+
+    static deleteCategory(id: string){
+        return Api.delete<InterfaceCreateCategory>("/filters/" + id);
+    }
 }
