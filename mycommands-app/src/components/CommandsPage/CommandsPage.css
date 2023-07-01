@@ -20,12 +20,27 @@
 }
 
 /* Commands */
-.mc-container-row{
-  display: grid !important;
-  grid-template-columns: 40% auto;
-  margin-bottom: 20px;
-}
 .mc-container-commands{
   display: block;
   margin-top: 20px;
+}
+.mc-container-row{
+  display: grid !important;
+  gap: 0 20px;
+  grid-template-columns: 50% auto;
+  margin-bottom: 20px;
+}
+.mc-container-commands__command{
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+  display: grid;
+  grid-template-columns: 60px auto;
+}
+.mc-container-commands__options{
+  align-items: center;
+  background-image: linear-gradient(62deg,#353538,#2e2e30 33%);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 10px 0;
+  padding-top: 10px;
 }

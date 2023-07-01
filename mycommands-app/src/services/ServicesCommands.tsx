@@ -20,4 +20,9 @@ export abstract class ServicesCommands{
         }
         return Api.get<InterfaceCommands>(path);
     }
+
+    static editCommand(pathCategory: string, pathCommand: string, body: any){
+        const path = "/commands" + "/" + pathCategory + "/" + pathCommand;
+        return Api.patch(path, body);
+    }
 }

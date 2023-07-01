@@ -161,7 +161,7 @@ export const CategoriesPage = () => {
 
           {/* Body */}
           {state.categories.data?.map( ({ category, version, createdAt, updatedAt, results, _id }) => (
-            <tr>
+            <tr key={_id}>
               <td>{category}</td>
               <td>{version}</td>
               <td>{moment(createdAt).format("YYYY-MM-DD")}</td>

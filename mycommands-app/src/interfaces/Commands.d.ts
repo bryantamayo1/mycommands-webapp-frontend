@@ -7,7 +7,7 @@ export interface InterfaceCommands {
     page:           number;
     limitPage:      number;
     lang:           string;
-    data:           Datum[];
+    data:           CommandData[];
 }
 
 export interface SubCategory {
@@ -17,12 +17,20 @@ export interface SubCategory {
     found: boolean;
 }
 
-export interface Datum {
+export interface CommandData {
     command:       string;
     subCategories: SubCategory[];
     language:      Language;
     updatedAt:     string;
     en:            string;
+    _id:           string;
+    active?:       boolean,
+    categoryFather: CategoryFather
+}
+
+export interface CategoryFather {
+    category:      string;
+    version:       string;
     _id:           string;
 }
 

@@ -146,11 +146,11 @@
     width: 100%;
     z-index: 99;
   }
+  .menu-container ul li{
+    margin: 20px 0;
+  }
   #btn-hamburger:checked ~ ul{
     left: 0;
-  }
-  .menu-container ul li{
-    margin: 0px 0;
   }
   .mc-menu-children{
     width: 100%;

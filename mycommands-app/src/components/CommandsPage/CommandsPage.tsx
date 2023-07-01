@@ -18,8 +18,13 @@ import CodeMirror from '@uiw/react-codemirror';
 import { loadLanguage } from '@uiw/codemirror-extensions-langs';
 import {xcodeDark} from '@uiw/codemirror-theme-xcode';
 import Editor from '@monaco-editor/react';
-import { InterfaceCommands } from '../../interfaces/Commands';
-
+import { CommandData, InterfaceCommands } from '../../interfaces/Commands';
+import EditIcon from '@mui/icons-material/Edit';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import CloseIcon from '@mui/icons-material/Close';
+import SaveIcon from '@mui/icons-material/Save';
+import CodeIcon from '@mui/icons-material/Code';
+import "../common/prism.css";
 
 type typeStateInitial = {
   categories: InterfaceGetFilters,
@@ -28,7 +33,10 @@ type typeStateInitial = {
   selectedCategory: string,
   checkCommandAndMenaning: boolean,
   checkCommands: boolean,
-  checkMeaning: boolean
+  checkMeaning: boolean,
+
+  // List of commands
+  selectedCommand: CommandData
 }
 
 const StateInitial:typeStateInitial = {
@@ -38,7 +46,10 @@ const StateInitial:typeStateInitial = {
   selectedCategory: "",
   checkCommandAndMenaning: true,
   checkCommands: false,
-  checkMeaning: false
+  checkMeaning: false,
+
+  // List of commands
+  selectedCommand: {} as CommandData
 }
 
 export const CommandsPage = () => {
@@ -66,6 +77,12 @@ export const CommandsPage = () => {
 
   const getCommands = async (query: any) => {
     const resp = await ServicesCommands.getCommands(query);
+
+    // Fill with property active
+    resp.data.map(item => {
+      item.active = false;
+    });
+    console.log(resp)
     setState(prevState => ({ ...prevState, commands: resp }));
   }
 
@@ -92,10 +109,6 @@ export const CommandsPage = () => {
       setState(prevState => ({ ...prevState, [target.name]: target.checked, checkCommandAndMenaning: false, checkCommands: false }));
     }
   }
-
-  const [code, setCode] = useState(
-    `function add(a, b) {\n  return a + b;\n}`
-  );
 
   const onChange = useCallback((value: any, viewUpdate: any) => {
     console.log('value:', value);
@@ -125,6 +138,37 @@ export const CommandsPage = () => {
       category: selectedCategory? selectedCategory : "all",
       ...query
     });
+  }
+
+  ///////////
+  // Commands
+  ///////////
+  const enableEditCommand = (clickedItem: CommandData) => {
+    const newData = structuredClone(state.commands);
+    newData.data.forEach( (item: CommandData) => {
+      if(item._id === clickedItem._id){
+        item.active = true;
+      }
+    });
+    setState(prevState => ({ ...prevState, commands: newData }));
+
+  }
+
+  const closeEditCommand  = (clickedItem: CommandData) => {
+    const newData = structuredClone(state.commands);
+    newData.data.forEach( (item: CommandData) => {
+      if(item._id === clickedItem._id){
+        item.active = false;
+      }
+    });
+    setState(prevState => ({ ...prevState, commands: newData }));
+  }
+
+  const handleEditCommand = async (clickedItem: CommandData) => {
+    const found = state.commands.data.find(item => item._id === clickedItem._id);
+    // @ts-ignore
+    await ServicesCommands.editCommand(found.categoryFather._id, found?._id, found);
+    searchCommands();
   }
 
   return (
@@ -205,35 +249,91 @@ export const CommandsPage = () => {
         </Button>
       </div>
 
-      {/* Commands */}
-      <div className='mc-container-box mc-container-commands'>
+      {/* List of commands */}
+      <div className='mc-container-commands'>
         {state.commands.data?.map(item => (
-          <div className='mc-container-row'>
+          <div className='mc-container-row' key={item._id}>
             <div className="mc-container-commands__command">
-              <Editor height="200px" defaultLanguage={item.language} defaultValue={item.command}
-                theme="vs-dark"
+              <div className='mc-container-commands__options'>
+                
+                <Button variant="contained" color='secondary' size='small' style={{ minWidth: 40, width: 40 }}>
+                  <ContentCopyIcon fontSize="small"/>
+                </Button>
+
+                <Button variant="contained" color='secondary' size='small' style={{ minWidth: 40, width: 40 }}>
+                  <CodeIcon fontSize="small"/>
+                </Button>
+
+                {!item.active?
+                    <Button variant="contained" color='secondary' size='small'
+                      style={{ minWidth: 40, width: 40 }}
+                      onClick={() => enableEditCommand(item)}
+                    >
+                      <EditIcon fontSize="small"/>
+                    </Button>
+                  :
+                  <>
+                    <Button variant="contained" color='success' size='small'
+                      style={{ minWidth: 40, width: 40 }}
+                      onClick={() => handleEditCommand(item)}
+                    >
+                      <SaveIcon fontSize="small"/>
+                    </Button>
+
+                    <Button variant="contained" color='secondary' size='small'
+                      style={{ minWidth: 40, width: 40 }}
+                      onClick={() => closeEditCommand(item)}
+                    >
+                      <CloseIcon fontSize="small"/>
+                    </Button>
+                  </>  
+              }
+
+              </div>
+              <CodeMirror
+                value={item.command}
+                height="200px"
+                maxHeight='200px'
+                // @ts-ignore
+                extensions={[loadLanguage("sql")]}
+                theme={xcodeDark}
+                onChange={onChange}
+                editable={false}
               />
             </div>
 
             <div className="mc-container-commands__meaning">
-              {item.en}
+              <CodeMirror
+                value={item.en}
+                height="200px"
+                maxHeight='200px'
+                // @ts-ignore
+                extensions={[loadLanguage("sql")]}
+                theme={xcodeDark}
+                onChange={onChange}
+                editable={false}
+              />
             </div>
 
           </div>
         ))}
       </div>
+
+      <Editor height="200px" defaultLanguage={"javascript"} defaultValue="console.log(123)"
+          theme="vs-dark"
+      />
       ---------------------------------------------
       <CodeMirror
         value="console.log('hello world!');"
         height="200px"
         // @ts-ignore
-        extensions={[loadLanguage("css")]}
+        extensions={[loadLanguage("sql")]}
         theme={xcodeDark}
         onChange={onChange}
       />
 
       -----------------------
-      <Editor height="90vh" defaultLanguage="javascript" defaultValue="// some comment"
+      <Editor height="50vh" defaultLanguage="javascript" defaultValue="// some comment\nconst a = 1"
         theme="vs-dark"
       />
     </div>
