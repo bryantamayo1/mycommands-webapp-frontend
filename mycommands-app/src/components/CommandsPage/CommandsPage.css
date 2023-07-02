@@ -44,3 +44,10 @@
   gap: 10px 0;
   padding-top: 10px;
 }
+.mc-modal-create-command-field{
+  margin-top: 20px;
+}
+.mc-modal-create-command-btn-submit {
+  margin-top: 20px;
+  text-align: center;
+}

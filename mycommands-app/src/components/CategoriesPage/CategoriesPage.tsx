@@ -85,8 +85,13 @@ export const CategoriesPage = () => {
   const handleOpenModalCreateOrEdit = (category?: typeCreateOrEditCategory) => {
     // Edit
     if(category){
+      formik.resetForm();
       formik.setFieldValue("category", category.category);
       formik.setFieldValue("version", category.version);
+      setTimeout(() => {
+        formik.setErrors({});
+      }, 100);
+
       setState(prevState => ({
         ...prevState,
         openModalCreateOrEdit: true,
@@ -94,10 +99,9 @@ export const CategoriesPage = () => {
         createOrEdit: true
       }));
 
-    // Close
+    // Create
     }else{
-      formik.setFieldValue("category", "");
-      formik.setFieldValue("version", "");
+      formik.resetForm();
       setState(prevState => ({
         ...prevState,
         openModalCreateOrEdit: true,
@@ -108,8 +112,8 @@ export const CategoriesPage = () => {
   }
 
   const handleCloseModalCreateOrEdit = () => {
-    setState(prevState => ({ ...prevState, openModalCreateOrEdit: false }));
     formik.resetForm();
+    setState(prevState => ({ ...prevState, openModalCreateOrEdit: false }));
   }
 
   const handleCloseModalDelete = () => {
@@ -145,7 +149,10 @@ export const CategoriesPage = () => {
   return (
     <div className='mc-container-page'>
       <div className='mc-container-box'>
-        <Button variant="contained" color="secondary" size="small" onClick={() => handleOpenModalCreateOrEdit()}>
+        <Button variant="contained" color="secondary" size="small"
+          onClick={() => handleOpenModalCreateOrEdit()}
+          disabled={SessionStorage.getItem("user").role === "GUEST"}
+        >
           <AddIcon fontSize="small"/>
         </Button>
 
@@ -167,6 +174,7 @@ export const CategoriesPage = () => {
               <td>{moment(createdAt).format("YYYY-MM-DD")}</td>
               <td>{moment(updatedAt).format("YYYY-MM-DD")}</td>
               <td>{results}</td>
+
               <td>
                 <Button variant="contained" color='secondary' size="small" className='mc-btn'
                   disabled={SessionStorage.getItem("user").role === "GUEST"}
@@ -175,6 +183,7 @@ export const CategoriesPage = () => {
                   <EditIcon fontSize="small"/>
                 </Button>
               </td>
+
               <td>
                 <Button variant="contained" color='secondary' size="small" className='mc-btn'
                   disabled={SessionStorage.getItem("user").role === "GUEST"}
@@ -183,12 +192,13 @@ export const CategoriesPage = () => {
                   <DeleteIcon fontSize="small"/>
                 </Button>
               </td>
+
             </tr>
           ))}
         </table>
       </div>
 
-      {/* Modal: create category */}
+      {/* Modal: create or edit category */}
       <Modal
         open={state.openModalCreateOrEdit}
         onClose={handleCloseModalCreateOrEdit}
@@ -197,7 +207,7 @@ export const CategoriesPage = () => {
       >
        <Box sx={style}>
           {/* Btn close modal */}
-          <div className='mc-modal-create-category-close'>
+          <div className='mc-modal-btn-close '>
             <Button color="inherit" style={{ minWidth: 20 }} onClick={handleCloseModalCreateOrEdit}>
               <CloseIcon/>
             </Button>
@@ -213,7 +223,7 @@ export const CategoriesPage = () => {
                 onChange={formik.handleChange} value={formik.values.category}
                 helperText={formik.errors.category}
                 // @ts-ignore
-                error={formik.touched.category && formik.errors.category }
+                error={ formik.touched.category && formik.errors.category }
               />
             </div>
 
@@ -223,7 +233,7 @@ export const CategoriesPage = () => {
                 onChange={formik.handleChange} value={formik.values.version}
                 helperText={formik.errors.version}
                 // @ts-ignore
-                error={formik.touched.category && formik.errors.category }
+                error={ formik.touched.version && formik.errors.version }
               />
             </div>
 
@@ -247,7 +257,7 @@ export const CategoriesPage = () => {
       >
         <Box sx={style}>
           {/* Btn close modal */}
-          <div className='mc-modal-create-category-close'>
+          <div className='mc-modal-btn-close '>
             <Button color="inherit" style={{ minWidth: 20 }} onClick={handleCloseModalDelete}>
               <CloseIcon/>
             </Button>

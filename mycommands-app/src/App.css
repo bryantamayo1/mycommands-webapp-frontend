@@ -29,3 +29,6 @@ body{
   color: #FFF;
   padding: 15px;
 }
+.mc-modal-btn-close {
+  text-align: end;
+}

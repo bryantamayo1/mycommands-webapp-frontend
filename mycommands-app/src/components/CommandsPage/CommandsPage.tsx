@@ -24,7 +24,10 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import CloseIcon from '@mui/icons-material/Close';
 import SaveIcon from '@mui/icons-material/Save';
 import CodeIcon from '@mui/icons-material/Code';
+
 import "../common/prism.css";
+import { SessionStorage } from '../../utils/SessionStorage';
+import { ModalCreateCommand } from './ModalCreateCommand';
 
 type typeStateInitial = {
   categories: InterfaceGetFilters,
@@ -248,6 +251,8 @@ export const CommandsPage = () => {
           <SearchIcon fontSize="small"/>
         </Button>
       </div>
+
+      <ModalCreateCommand/>
 
       {/* List of commands */}
       <div className='mc-container-commands'>
