@@ -139,7 +139,10 @@ export const CategoriesPage = () => {
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: 400,
+    width: {
+      xs: 200,
+      sm: 400
+    },
     bgcolor: 'background.paper',
     border: '2px solid #000',
     boxShadow: 24,
@@ -148,7 +151,7 @@ export const CategoriesPage = () => {
 
   return (
     <div className='mc-container-page'>
-      <div className='mc-container-box'>
+      <div className='mc-container-box mc-container-categories'>
         <Button variant="contained" color="secondary" size="small"
           onClick={() => handleOpenModalCreateOrEdit()}
           disabled={SessionStorage.getItem("user").role === "GUEST"}
@@ -156,46 +159,52 @@ export const CategoriesPage = () => {
           <AddIcon fontSize="small"/>
         </Button>
 
-        <table className='mc-table'>
-          {/* Header */}
-          <tr className='mc-table--header'>
-            <th>Category</th>
-            <th>Version</th>
-            <th>Created At</th>
-            <th>Updated At</th>
-            <th>Commands</th>
-          </tr>
+        <div className='mc-categories-totals'>
+          Total commands: {state.categories.totalCommands}
+        </div>
 
-          {/* Body */}
-          {state.categories.data?.map( ({ category, version, createdAt, updatedAt, results, _id }) => (
-            <tr key={_id}>
-              <td>{category}</td>
-              <td>{version}</td>
-              <td>{moment(createdAt).format("YYYY-MM-DD")}</td>
-              <td>{moment(updatedAt).format("YYYY-MM-DD")}</td>
-              <td>{results}</td>
-
-              <td>
-                <Button variant="contained" color='secondary' size="small" className='mc-btn'
-                  disabled={SessionStorage.getItem("user").role === "GUEST"}
-                  onClick={() => handleOpenModalCreateOrEdit({category, version, _id: _id })}
-                >
-                  <EditIcon fontSize="small"/>
-                </Button>
-              </td>
-
-              <td>
-                <Button variant="contained" color='secondary' size="small" className='mc-btn'
-                  disabled={SessionStorage.getItem("user").role === "GUEST"}
-                  onClick={() => handleOpenModalDelete({category, version, _id: _id })}
-                >
-                  <DeleteIcon fontSize="small"/>
-                </Button>
-              </td>
-
+        <div className='mc-table-categories'>
+          <table className='mc-table'>
+            {/* Header */}
+            <tr className='mc-table--header'>
+              <th>Category</th>
+              <th>Version</th>
+              <th>Created At</th>
+              <th>Updated At</th>
+              <th>Commands</th>
             </tr>
-          ))}
-        </table>
+
+            {/* Body */}
+            {state.categories.data?.map( ({ category, version, createdAt, updatedAt, results, _id }) => (
+              <tr key={_id}>
+                <td>{category}</td>
+                <td>{version}</td>
+                <td>{moment(createdAt).format("YYYY-MM-DD")}</td>
+                <td>{moment(updatedAt).format("YYYY-MM-DD")}</td>
+                <td>{results}</td>
+
+                <td>
+                  <Button variant="contained" color='secondary' size="small" className='mc-btn'
+                    disabled={SessionStorage.getItem("user").role === "GUEST"}
+                    onClick={() => handleOpenModalCreateOrEdit({category, version, _id: _id })}
+                  >
+                    <EditIcon fontSize="small"/>
+                  </Button>
+                </td>
+
+                <td>
+                  <Button variant="contained" color='secondary' size="small" className='mc-btn'
+                    disabled={SessionStorage.getItem("user").role === "GUEST"}
+                    onClick={() => handleOpenModalDelete({category, version, _id: _id })}
+                  >
+                    <DeleteIcon fontSize="small"/>
+                  </Button>
+                </td>
+
+              </tr>
+            ))}
+          </table>
+        </div>
       </div>
 
       {/* Modal: create or edit category */}

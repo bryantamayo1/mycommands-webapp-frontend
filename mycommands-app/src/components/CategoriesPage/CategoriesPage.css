@@ -49,3 +49,18 @@
   margin-top: 20px;
   text-align: center;
 }
+.mc-categories-totals{
+  font-weight: bold;
+  margin: 20px 0 0 0;
+}
+.mc-container-categories{
+  display: block !important;
+}
+
+/* Responsive */
+@media(max-width: 1024px){
+  .mc-table-categories{
+    overflow-x: auto;
+    width: 100%;
+  }
+}

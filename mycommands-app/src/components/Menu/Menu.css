@@ -130,7 +130,6 @@
   }
   .menu-container{
     border-radius: 0;
-    min-width: 100vw;
     width: 100%;
   }
   .menu-container::before, .menu-container::after{
