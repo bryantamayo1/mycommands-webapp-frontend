@@ -25,4 +25,9 @@ export abstract class ServicesCommands{
         const path = "/commands" + "/" + pathCategory + "/" + pathCommand;
         return Api.patch(path, body);
     }
+
+    static createCommand(pathCategory: string, body: any){
+        const path = "/commands" + "/" + pathCategory;
+        return Api.post(path, body);
+    }
 }

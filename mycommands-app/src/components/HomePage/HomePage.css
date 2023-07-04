@@ -1,0 +1,26 @@
+.mc-d-container-dashboard{
+  height: calc(100vh - 50px - 300px);
+}
+.mc-h-table{
+  border-collapse: collapse;
+  background-color: rgba(255, 255, 255, 0.247);
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  box-sizing: border-box;
+  color: #FFF;
+  margin: 0 auto;
+  padding: 15px;
+}
+.mc-h-table th, td {
+  padding: 16px;
+}
+.mc-h-table tr {
+  box-sizing: border-box;
+  border-bottom: 1px solid rgb(32, 64, 167);
+}
+
+/* Responsive */
+@media(max-width: 600px){
+  .mc-d-container-dashboard{
+    height: calc(100vh - 50px - 300px - 200px);
+  }
+}

@@ -252,72 +252,87 @@ export const CommandsPage = () => {
         </Button>
       </div>
 
-      <ModalCreateCommand/>
+      <ModalCreateCommand getCommands={searchCommands}/>
 
       {/* List of commands */}
       <div className='mc-container-commands'>
         {state.commands.data?.map(item => (
           <div className='mc-container-row' key={item._id}>
-            <div className="mc-container-commands__command">
-              <div className='mc-container-commands__options'>
-                
-                <Button variant="contained" color='secondary' size='small' style={{ minWidth: 40, width: 40 }}>
-                  <ContentCopyIcon fontSize="small"/>
-                </Button>
 
-                <Button variant="contained" color='secondary' size='small' style={{ minWidth: 40, width: 40 }}>
-                  <CodeIcon fontSize="small"/>
-                </Button>
+            {/* Options */}
+            <div className='mc-container-commands__options mc-code-style'>
+              
+              <Button variant="contained" color='secondary' size='small' style={{ minWidth: 40, width: 40 }}>
+                <ContentCopyIcon fontSize="small"/>
+              </Button>
 
-                {!item.active?
-                    <Button variant="contained" color='secondary' size='small'
-                      style={{ minWidth: 40, width: 40 }}
-                      onClick={() => enableEditCommand(item)}
-                    >
-                      <EditIcon fontSize="small"/>
-                    </Button>
-                  :
-                  <>
-                    <Button variant="contained" color='success' size='small'
-                      style={{ minWidth: 40, width: 40 }}
-                      onClick={() => handleEditCommand(item)}
-                    >
-                      <SaveIcon fontSize="small"/>
-                    </Button>
+              <Button variant="contained" color='secondary' size='small' style={{ minWidth: 40, width: 40 }}>
+                <CodeIcon fontSize="small"/>
+              </Button>
 
-                    <Button variant="contained" color='secondary' size='small'
-                      style={{ minWidth: 40, width: 40 }}
-                      onClick={() => closeEditCommand(item)}
-                    >
-                      <CloseIcon fontSize="small"/>
-                    </Button>
-                  </>  
-              }
+              {!item.active?
+                  <Button variant="contained" color='secondary' size='small'
+                    style={{ minWidth: 40, width: 40 }}
+                    onClick={() => enableEditCommand(item)}
+                  >
+                    <EditIcon fontSize="small"/>
+                  </Button>
+                :
+                <>
+                  <Button variant="contained" color='success' size='small'
+                    style={{ minWidth: 40, width: 40 }}
+                    onClick={() => handleEditCommand(item)}
+                  >
+                    <SaveIcon fontSize="small"/>
+                  </Button>
 
-              </div>
+                  <Button variant="contained" color='secondary' size='small'
+                    style={{ minWidth: 40, width: 40 }}
+                    onClick={() => closeEditCommand(item)}
+                  >
+                    <CloseIcon fontSize="small"/>
+                  </Button>
+                </>  
+            }
+            </div>
+              
+            {/* Code */}
+            <div>
               <CodeMirror
                 value={item.command}
-                height="200px"
-                maxHeight='200px'
+                height="150px"
+                maxHeight='150px'
                 // @ts-ignore
                 extensions={[loadLanguage("sql")]}
                 theme={xcodeDark}
                 onChange={onChange}
                 editable={false}
+                className='mc-container-commands__command mc-code-style'
               />
-            </div>
-
-            <div className="mc-container-commands__meaning">
-              <CodeMirror
-                value={item.en}
-                height="200px"
-                maxHeight='200px'
-                // @ts-ignore
-                extensions={[loadLanguage("sql")]}
-                theme={xcodeDark}
-                onChange={onChange}
-                editable={false}
-              />
+              <div className='mc-container-commands__meanings'>
+                <CodeMirror
+                  value={item.command}
+                  height="150px"
+                  maxHeight='150px'
+                  // @ts-ignore
+                  extensions={[loadLanguage("sql")]}
+                  theme={xcodeDark}
+                  onChange={onChange}
+                  editable={false}
+                  className='mc-code-style'
+                />
+                <CodeMirror
+                  value={item.en}
+                  height="150px"
+                  maxHeight='150px'
+                  // @ts-ignore
+                  extensions={[loadLanguage("sql")]}
+                  theme={xcodeDark}
+                  onChange={onChange}
+                  editable={false}
+                  className='mc-code-style'
+                />
+              </div>
             </div>
 
           </div>

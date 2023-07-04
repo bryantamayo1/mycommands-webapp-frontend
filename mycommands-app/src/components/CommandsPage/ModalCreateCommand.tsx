@@ -17,11 +17,16 @@ import { parseVersion } from '../../utils/ParseData';
 import TextField from '@mui/material/TextField';
 import { constLanguages } from '../../utils/Constants';
 import Editor from '@monaco-editor/react';
+import './ModalCreateCommand.css';
+import { ServicesCommands } from '../../services/ServicesCommands';
 
+type PropsModalCreateCommand = {
+  getCommands: () => void
+}
 
 type typeStateInitial = {
   openModalCreate: boolean,
-  categories: InterfaceGetFilters
+  categories: InterfaceGetFilters,
 }
 
 const StateInitial: typeStateInitial = {
@@ -29,7 +34,7 @@ const StateInitial: typeStateInitial = {
   categories: {} as InterfaceGetFilters,
 }
 
-export const ModalCreateCommand = () => {
+export const ModalCreateCommand = ({ getCommands }: PropsModalCreateCommand) => {
   ////////
   // Hooks
   ////////
@@ -54,17 +59,25 @@ export const ModalCreateCommand = () => {
     initialValues: {
       id_category: '',
       language: '',
-      en: '',
-      es: '',
+      command: '',
+      en: '#',
+      es: '#',
     },
     validationSchema: Yup.object({
       id_category: Yup.string().required('Category is required'),
       language: Yup.string().required('Language is required'),
+      command: Yup.string().required('Command is required').max(500, "500 characters is maximum"),
       en: Yup.string().required('Command is required').max(500, "500 characters is maximum"),
       es: Yup.string().required('Command is required').max(500, "500 characters is maximum"),
     }),
     onSubmit: async values => {
+      const newValues = structuredClone(values);
+      // @ts-ignore
+      delete newValues.id_category;
+      await ServicesCommands.createCommand(values.id_category, newValues);
       console.log(values)
+      handleCloseModalCreate();
+      getCommands();
     }
   });
   
@@ -74,6 +87,19 @@ export const ModalCreateCommand = () => {
 
   const handleCloseModalCreate = () => {
     setState( prevstate => ({...prevstate, openModalCreate: !prevstate.openModalCreate}));
+  }
+
+  const handleEditorChangeEn = (value: any, event: any) => {
+    formik.setFieldValue("en", value);
+    setState( prevstate => ({ ...prevstate, en: value }));
+  }
+
+  const handleEditorChangeEs = (value: any, event: any) => {
+    formik.setFieldValue("es", value);
+  }
+
+  const handleEditorChangeCommand = (value: any, event: any) => {
+    formik.setFieldValue("command", value);
   }
 
   const style = {
@@ -164,17 +190,34 @@ export const ModalCreateCommand = () => {
               </TextField>
             </div>
 
-
-            {/* Command in language en */}
-            Command in english
-            <Editor height="50vh" defaultLanguage="javascript" defaultValue="// some comment\nconst a = 1"
+            {/* Command */}
+            <div className='mc-label-modal-creete-command'>
+              Command
+            </div>
+            <Editor height="30vh" defaultLanguage="powershell"
               theme="vs-dark"
+              value={formik.values.command}
+              onChange={handleEditorChangeCommand}
+            />
+
+            {/* Meaning in language en */}
+            <div className='mc-label-modal-creete-command'>
+              Meaning in english
+            </div>
+            <Editor height="30vh" defaultLanguage="powershell" defaultValue="#"
+              theme="vs-dark"
+              value={formik.values.en}
+              onChange={handleEditorChangeEn}
             />
             
-            {/* Command in language es */}
-            Command in spanish
-            <Editor height="50vh" defaultLanguage="powershell" defaultValue="// some comment\nconst a = 1"
+            {/* Meaning in language es */}
+            <div className='mc-label-modal-creete-command'>
+              Meaning in spanish
+            </div>
+            <Editor height="30vh" defaultLanguage="powershell" defaultValue="#"
               theme="vs-dark"
+              value={formik.values.es}
+              onChange={handleEditorChangeEs}
             />
 
             <div className='mc-modal-create-command-btn-submit'>
