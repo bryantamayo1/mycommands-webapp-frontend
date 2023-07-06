@@ -5,7 +5,7 @@ export abstract class ServicesCommands{
     static getCommands(query: any){
         
         let path =
-        "/commands/en?page=" + query.page + 
+        "/commands?page=" + query.page + 
         "&category=" + query.category;
 
         if(query.subcategory) path += "&subcategory=" + query.subcategory;

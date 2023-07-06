@@ -48,48 +48,70 @@ export const HomePage = () => {
   }
 
    const generateRandomColors = () => {
-    return "#" + Math.floor(Math.random()*16777215).toString(16);
+    let letters = '0123456789ABCDEF';
+    let color = '#';
+    for (var i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+  }
+
+  const calculateSizeDonut = () => {
+    if(innerWidth > 1200){
+      return 250;
+    }else if(innerWidth >600 && innerWidth <= 1200){
+      return 200;
+    }
   }
 
   return (
     <div className='mc-container-page'>
       <div className='mc-d-container-dashboard'>
-        <ResponsiveContainer width="100%" height="100%">
-          <PieChart width={800} height={800}>
-            <Pie
-              dataKey="value"
-              data={state.categories}
-              cx="50%"
-              cy="50%"
-              outerRadius={innerWidth > 600? 200: 100}
-              label
-            >
-              {state.categories.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={entry.color} />
-              ))}
-            </Pie>
-          </PieChart>
-        </ResponsiveContainer>
-      </div>
+        <div className='mc-d-container-dashboard--donut'>
 
-      {/* List */}
-      <table className='mc-h-table'>
-        <tr className='mc-table--header'>
-          <th>Category</th>
-          <th>Quantity</th>
-        </tr>
-          
-        <tr>
-          <td>{state.resp.data?.length > 0 && state.resp.data[0].category}</td>
-          <td style={{ textAlign: "end" }}>{state.resp.data?.length > 0 && state.resp.data[0].results}</td>
-        </tr>
-        {state.categories.map(item => (
-          <tr>
-            <td>{item.name}</td>
-            <td style={{ textAlign: "end" }}>{item.value}</td>
+          <ResponsiveContainer width="100%" height="100%">
+            <PieChart width={800} height={800}>
+              <Pie
+                dataKey="value"
+                data={state.categories}
+                cx="50%"
+                cy="50%"
+                outerRadius={calculateSizeDonut()}
+                label
+              >
+                {state.categories.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={entry.color} />
+                ))}
+              </Pie>
+              <Tooltip/>
+            </PieChart>
+          </ResponsiveContainer>
+        </div>
+
+        {/* List */}
+        <table className='mc-h-table'>
+          <tr className='mc-table--header'>
+            <th></th>
+            <th>Category</th>
+            <th>Quantity</th>
           </tr>
-        ))}
-      </table>
+            
+          <tr>
+            <th></th>
+            <td>{state.resp.data?.length > 0 && state.resp.data[0].category}</td>
+            <td style={{ textAlign: "end" }}>{state.resp.data?.length > 0 && state.resp.data[0].results}</td>
+          </tr>
+          {state.categories.map(item => (
+            <tr>
+              <td>
+                <div className='mc-square' style={{ backgroundColor: item.color }}></div>
+              </td>
+              <td>{item.name}</td>
+              <td style={{ textAlign: "end" }}>{item.value}</td>
+            </tr>
+          ))}
+        </table>
+      </div>
     </div>
   )
 }

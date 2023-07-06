@@ -32,6 +32,7 @@ import { ModalCreateCommand } from './ModalCreateCommand';
 type typeStateInitial = {
   categories: InterfaceGetFilters,
   commands: InterfaceCommands,
+  commandsBackup: InterfaceCommands,
   selectedSearchCommand: string,
   selectedCategory: string,
   checkCommandAndMenaning: boolean,
@@ -45,6 +46,7 @@ type typeStateInitial = {
 const StateInitial:typeStateInitial = {
   categories: {} as InterfaceGetFilters,
   commands: {} as InterfaceCommands,
+  commandsBackup: {} as InterfaceCommands,
   selectedSearchCommand: '',
   selectedCategory: "",
   checkCommandAndMenaning: true,
@@ -86,7 +88,7 @@ export const CommandsPage = () => {
       item.active = false;
     });
     console.log(resp)
-    setState(prevState => ({ ...prevState, commands: resp }));
+    setState(prevState => ({ ...prevState, commands: resp, commandsBackup: resp }));
   }
 
   const handleChangeSelect = (event: SelectChangeEvent) => {
@@ -113,9 +115,24 @@ export const CommandsPage = () => {
     }
   }
 
-  const onChange = useCallback((value: any, viewUpdate: any) => {
-    console.log('value:', value);
-  }, []);
+  /**
+   * Update command in property command of StateInitial
+   * @param {string} property It can be command, es or en
+   */
+  const onChangeCommand = (value: any, viewUpdate: any, selectedItem: CommandData, property: string) => {
+    const updatedCommands = state.commands.data.map(item => {
+      if(selectedItem._id === item._id){
+        // @ts-ignore
+        item[property] = value;
+      }
+      return item;
+    });
+    const newCommands = {
+      ...state.commands,
+      data:updatedCommands
+    }
+    setState(prevState => ({ ...prevState, commands: newCommands }));
+  };
 
   const handleSearchCommand = ({ target }: ChangeEvent<HTMLInputElement>) => {
     setState(prevState => ({ ...prevState, selectedSearchCommand: target.value }));
@@ -169,8 +186,9 @@ export const CommandsPage = () => {
 
   const handleEditCommand = async (clickedItem: CommandData) => {
     const found = state.commands.data.find(item => item._id === clickedItem._id);
+
     // @ts-ignore
-    await ServicesCommands.editCommand(found.categoryFather._id, found?._id, found);
+    await ServicesCommands.editCommand(found.categoryFather._id, found?._id, clickedItem);
     searchCommands();
   }
 
@@ -305,22 +323,11 @@ export const CommandsPage = () => {
                 // @ts-ignore
                 extensions={[loadLanguage("sql")]}
                 theme={xcodeDark}
-                onChange={onChange}
-                editable={false}
+                onChange={(value, viewUpdate) => onChangeCommand(value, viewUpdate, item, "command")}
+                editable={item.active}
                 className='mc-container-commands__command mc-code-style'
               />
               <div className='mc-container-commands__meanings'>
-                <CodeMirror
-                  value={item.command}
-                  height="150px"
-                  maxHeight='150px'
-                  // @ts-ignore
-                  extensions={[loadLanguage("sql")]}
-                  theme={xcodeDark}
-                  onChange={onChange}
-                  editable={false}
-                  className='mc-code-style'
-                />
                 <CodeMirror
                   value={item.en}
                   height="150px"
@@ -328,8 +335,19 @@ export const CommandsPage = () => {
                   // @ts-ignore
                   extensions={[loadLanguage("sql")]}
                   theme={xcodeDark}
-                  onChange={onChange}
-                  editable={false}
+                  onChange={(value, viewUpdate) => onChangeCommand(value, viewUpdate, item, "en")}
+                  editable={item.active}
+                  className='mc-code-style'
+                />
+                <CodeMirror
+                  value={item.es}
+                  height="150px"
+                  maxHeight='150px'
+                  // @ts-ignore
+                  extensions={[loadLanguage("sql")]}
+                  theme={xcodeDark}
+                  onChange={(value, viewUpdate) => onChangeCommand(value, viewUpdate, item, "es")}
+                  editable={item.active}
                   className='mc-code-style'
                 />
               </div>
@@ -338,23 +356,11 @@ export const CommandsPage = () => {
           </div>
         ))}
       </div>
-
-      <Editor height="200px" defaultLanguage={"javascript"} defaultValue="console.log(123)"
-          theme="vs-dark"
-      />
-      ---------------------------------------------
-      <CodeMirror
-        value="console.log('hello world!');"
-        height="200px"
-        // @ts-ignore
-        extensions={[loadLanguage("sql")]}
-        theme={xcodeDark}
-        onChange={onChange}
-      />
-
-      -----------------------
-      <Editor height="50vh" defaultLanguage="javascript" defaultValue="// some comment\nconst a = 1"
+      <Editor
+        height="10vh"
         theme="vs-dark"
+        defaultLanguage="javascript"
+        defaultValue="// some comment"
       />
     </div>
   )

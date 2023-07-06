@@ -23,6 +23,7 @@ export interface CommandData {
     language:      Language;
     updatedAt:     string;
     en:            string;
+    es:            string;
     _id:           string;
     active?:       boolean,
     categoryFather: CategoryFather

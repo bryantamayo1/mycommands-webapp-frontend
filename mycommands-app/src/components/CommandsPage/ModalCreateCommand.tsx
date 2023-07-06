@@ -67,8 +67,8 @@ export const ModalCreateCommand = ({ getCommands }: PropsModalCreateCommand) => 
       id_category: Yup.string().required('Category is required'),
       language: Yup.string().required('Language is required'),
       command: Yup.string().required('Command is required').max(500, "500 characters is maximum"),
-      en: Yup.string().required('Command is required').max(500, "500 characters is maximum"),
-      es: Yup.string().required('Command is required').max(500, "500 characters is maximum"),
+      en: Yup.string().required('Meaning english is required').max(500, "500 characters is maximum"),
+      es: Yup.string().required('Meaning spanish is required').max(500, "500 characters is maximum"),
     }),
     onSubmit: async values => {
       const newValues = structuredClone(values);
@@ -199,6 +199,9 @@ export const ModalCreateCommand = ({ getCommands }: PropsModalCreateCommand) => 
               value={formik.values.command}
               onChange={handleEditorChangeCommand}
             />
+            {formik.touched.command && formik.errors.command && (
+              <div className='error-formik-msg'>{formik.errors.command}</div>
+            )}
 
             {/* Meaning in language en */}
             <div className='mc-label-modal-creete-command'>
@@ -209,6 +212,9 @@ export const ModalCreateCommand = ({ getCommands }: PropsModalCreateCommand) => 
               value={formik.values.en}
               onChange={handleEditorChangeEn}
             />
+            {formik.touched.en && formik.errors.en && (
+              <div className='error-formik-msg'>{formik.errors.en}</div>
+            )}
             
             {/* Meaning in language es */}
             <div className='mc-label-modal-creete-command'>
@@ -219,6 +225,9 @@ export const ModalCreateCommand = ({ getCommands }: PropsModalCreateCommand) => 
               value={formik.values.es}
               onChange={handleEditorChangeEs}
             />
+            {formik.touched.es && formik.errors.es && (
+              <div className='error-formik-msg'>{formik.errors.es}</div>
+            )}
 
             <div className='mc-modal-create-command-btn-submit'>
               <Button variant="contained" color="secondary"
