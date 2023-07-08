@@ -24,20 +24,22 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import CloseIcon from '@mui/icons-material/Close';
 import SaveIcon from '@mui/icons-material/Save';
 import CodeIcon from '@mui/icons-material/Code';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
-import "../common/prism.css";
 import { SessionStorage } from '../../utils/SessionStorage';
 import { ModalCreateCommand } from './ModalCreateCommand';
+import { ModalConfirmDelete } from '../common/ModalConfirmDelete';
 
 type typeStateInitial = {
   categories: InterfaceGetFilters,
   commands: InterfaceCommands,
   commandsBackup: InterfaceCommands,
-  selectedSearchCommand: string,
-  selectedCategory: string,
+  selectedSearchCommandFilter: string,
+  selectedCategoryFilter: string,
   checkCommandAndMenaning: boolean,
   checkCommands: boolean,
   checkMeaning: boolean,
+  openModalDelete: boolean
 
   // List of commands
   selectedCommand: CommandData
@@ -47,11 +49,12 @@ const StateInitial:typeStateInitial = {
   categories: {} as InterfaceGetFilters,
   commands: {} as InterfaceCommands,
   commandsBackup: {} as InterfaceCommands,
-  selectedSearchCommand: '',
-  selectedCategory: "",
+  selectedSearchCommandFilter: '',
+  selectedCategoryFilter: "",
   checkCommandAndMenaning: true,
   checkCommands: false,
   checkMeaning: false,
+  openModalDelete: false,
 
   // List of commands
   selectedCommand: {} as CommandData
@@ -77,7 +80,7 @@ export const CommandsPage = () => {
   ////////////
   const getCategories = async () => {
     const resp = await ServicesCategories.getCategories();
-    setState(prevState => ({ ...prevState, categories: resp, selectedCategory: "all" }));
+    setState(prevState => ({ ...prevState, categories: resp, selectedCategoryFilter: "all" }));
   }
 
   const getCommands = async (query: any) => {
@@ -87,12 +90,12 @@ export const CommandsPage = () => {
     resp.data.map(item => {
       item.active = false;
     });
-    console.log(resp)
+    console.log("resp: ", resp)
     setState(prevState => ({ ...prevState, commands: resp, commandsBackup: resp }));
   }
 
   const handleChangeSelect = (event: SelectChangeEvent) => {
-    setState(prevState => ({ ...prevState, selectedCategory: event.target.value }));
+    setState(prevState => ({ ...prevState, selectedCategoryFilter: event.target.value }));
   }
 ;
   /**
@@ -135,27 +138,27 @@ export const CommandsPage = () => {
   };
 
   const handleSearchCommand = ({ target }: ChangeEvent<HTMLInputElement>) => {
-    setState(prevState => ({ ...prevState, selectedSearchCommand: target.value }));
+    setState(prevState => ({ ...prevState, selectedSearchCommandFilter: target.value }));
   }
 
   const searchCommands = () => {
     // Prepare query
-    const {selectedSearchCommand, selectedCategory, 
+    const {selectedSearchCommandFilter, selectedCategoryFilter, 
     checkCommandAndMenaning, checkCommands, checkMeaning} = state;
     const query: any = {}
 
     if(checkCommandAndMenaning){
-      query.command = selectedSearchCommand;
-      query.meaning = selectedSearchCommand;
+      query.command = selectedSearchCommandFilter;
+      query.meaning = selectedSearchCommandFilter;
     }else if (checkCommands){
-      query.command = selectedSearchCommand;
+      query.command = selectedSearchCommandFilter;
     }else if (checkMeaning){
-      query.meaning = selectedSearchCommand;
+      query.meaning = selectedSearchCommandFilter;
     }
 
     getCommands({
       page: 1,
-      category: selectedCategory? selectedCategory : "all",
+      category: selectedCategoryFilter? selectedCategoryFilter : "all",
       ...query
     });
   }
@@ -164,24 +167,18 @@ export const CommandsPage = () => {
   // Commands
   ///////////
   const enableEditCommand = (clickedItem: CommandData) => {
-    const newData = structuredClone(state.commands);
-    newData.data.forEach( (item: CommandData) => {
-      if(item._id === clickedItem._id){
-        item.active = true;
-      }
-    });
-    setState(prevState => ({ ...prevState, commands: newData }));
-
+    
+    // const newData = structuredClone(state.commands);
+    // newData.data.forEach( (item: CommandData) => {
+    //   if(item._id === clickedItem._id){
+    //     item.active = true;
+    //   }
+    // });
+    // setState(prevState => ({ ...prevState, commands: newData }));
   }
 
-  const closeEditCommand  = (clickedItem: CommandData) => {
-    const newData = structuredClone(state.commands);
-    newData.data.forEach( (item: CommandData) => {
-      if(item._id === clickedItem._id){
-        item.active = false;
-      }
-    });
-    setState(prevState => ({ ...prevState, commands: newData }));
+  const openConfirmDeleteCommand  = (clickedItem: CommandData) => {
+    setState(prevState => ({ ...prevState, selectedCommand: clickedItem, openModalDelete: true }));
   }
 
   const handleEditCommand = async (clickedItem: CommandData) => {
@@ -190,6 +187,19 @@ export const CommandsPage = () => {
     // @ts-ignore
     await ServicesCommands.editCommand(found.categoryFather._id, found?._id, clickedItem);
     searchCommands();
+  }
+
+  ///////////////////////
+  // Modal delete command
+  ///////////////////////
+  const handleCloseModalDelete = () => {
+    setState(prevState => ({ ...prevState, openModalDelete: false }));
+  }
+
+  const deleteCommand =  async () => {
+    await ServicesCommands.deleteCommand(state.selectedCommand.categoryFather._id, state.selectedCommand._id);
+    searchCommands();
+    handleCloseModalDelete();
   }
 
   return (
@@ -211,7 +221,7 @@ export const CommandsPage = () => {
           <Select
             labelId="select-categories"
             id="demo-simple-select"
-            value={state.selectedCategory}
+            value={state.selectedCategoryFilter}
             label="Categories"
             onChange={handleChangeSelect}
           >
@@ -288,30 +298,19 @@ export const CommandsPage = () => {
                 <CodeIcon fontSize="small"/>
               </Button>
 
-              {!item.active?
-                  <Button variant="contained" color='secondary' size='small'
-                    style={{ minWidth: 40, width: 40 }}
-                    onClick={() => enableEditCommand(item)}
-                  >
-                    <EditIcon fontSize="small"/>
-                  </Button>
-                :
-                <>
-                  <Button variant="contained" color='success' size='small'
-                    style={{ minWidth: 40, width: 40 }}
-                    onClick={() => handleEditCommand(item)}
-                  >
-                    <SaveIcon fontSize="small"/>
-                  </Button>
+              <Button variant="contained" color='secondary' size='small'
+                style={{ minWidth: 40, width: 40 }}
+                onClick={() => enableEditCommand(item)}
+              >
+                <EditIcon fontSize="small"/>
+              </Button>
 
-                  <Button variant="contained" color='secondary' size='small'
-                    style={{ minWidth: 40, width: 40 }}
-                    onClick={() => closeEditCommand(item)}
-                  >
-                    <CloseIcon fontSize="small"/>
-                  </Button>
-                </>  
-            }
+              <Button variant="contained" color='secondary' size='small'
+                style={{ minWidth: 40, width: 40 }}
+                onClick={() => openConfirmDeleteCommand(item)}
+              >
+                <DeleteForeverIcon fontSize="small"/>
+              </Button>
             </div>
               
             {/* Code */}
@@ -327,6 +326,14 @@ export const CommandsPage = () => {
                 editable={item.active}
                 className='mc-container-commands__command mc-code-style'
               />
+               {/* <Editor
+                value={item.command}
+                height="150px"
+                theme="vs-dark"
+                defaultLanguage="javascript"
+                defaultValue="// some comment"
+                onChange={(value, viewUpdate) => onChangeCommand(value, viewUpdate, item, "command")}
+              /> */}
               <div className='mc-container-commands__meanings'>
                 <CodeMirror
                   value={item.en}
@@ -339,6 +346,14 @@ export const CommandsPage = () => {
                   editable={item.active}
                   className='mc-code-style'
                 />
+                {/* <Editor
+                  value={item.en}
+                  height="150px"
+                  theme="vs-dark"
+                  defaultLanguage="javascript"
+                  defaultValue="// some comment"
+                  onChange={(value, viewUpdate) => onChangeCommand(value, viewUpdate, item, "en", item.active!)}
+                /> */}
                 <CodeMirror
                   value={item.es}
                   height="150px"
@@ -350,6 +365,14 @@ export const CommandsPage = () => {
                   editable={item.active}
                   className='mc-code-style'
                 />
+                {/* <Editor
+                  value={item.es}
+                  height="150px"
+                  theme="vs-dark"
+                  defaultLanguage="javascript"
+                  defaultValue="// some comment"
+                  onChange={(value, viewUpdate) => onChangeCommand(value, viewUpdate, item, "es", item.active!)}
+                /> */}
               </div>
             </div>
 
@@ -357,10 +380,22 @@ export const CommandsPage = () => {
         ))}
       </div>
       <Editor
+        value=''
         height="10vh"
         theme="vs-dark"
         defaultLanguage="javascript"
         defaultValue="// some comment"
+      />
+
+      {/* Modal: delete command */}
+      <ModalConfirmDelete
+          open={state.openModalDelete}
+          onClose={handleCloseModalDelete}
+          ariaLabelledby="modal-modal-title-delete"
+          ariaDescribedby="modal-modal-description-delete"
+          title={`Delete command`}
+          message="Are you sure you want to delete this command"
+          deleteItem={deleteCommand}
       />
     </div>
   )

@@ -15,6 +15,7 @@ import { TextField } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { SessionStorage } from '../../utils/SessionStorage';
 import { Alert } from '../common/Alert';
+import { ModalConfirmDelete } from '../common/ModalConfirmDelete';
 
 type typeCreateOrEditCategory = {
   category: string,
@@ -128,8 +129,8 @@ export const CategoriesPage = () => {
     }));
   }
 
-  const deleteCategory =  async (id: string) => {
-    await ServicesCategories.deleteCategory(id);
+  const deleteCategory =  async () => {
+    await ServicesCategories.deleteCategory(state.selectedCategory._id);
     getCategories();
     handleCloseModalDelete();
   }
@@ -159,8 +160,13 @@ export const CategoriesPage = () => {
           <AddIcon fontSize="small"/>
         </Button>
 
-        <div className='mc-categories-totals'>
-          Total commands: {state.categories.totalCommands}
+        <div className='mc-categories-info'>
+          <div>
+            Total categories: {state.categories.results}
+          </div>
+          <div>
+            Total commands: {state.categories.totalCommands}
+          </div>
         </div>
 
         <div className='mc-table-categories'>
@@ -258,39 +264,15 @@ export const CategoriesPage = () => {
       </Modal>
 
       {/* Modal: delete category */}
-      <Modal
-        open={state.openModalDelete}
-        onClose={handleCloseModalDelete}
-        aria-labelledby="modal-modal-title-delete"
-        aria-describedby="modal-modal-description-delete"
-      >
-        <Box sx={style}>
-          {/* Btn close modal */}
-          <div className='mc-modal-btn-close '>
-            <Button color="inherit" style={{ minWidth: 20 }} onClick={handleCloseModalDelete}>
-              <CloseIcon/>
-            </Button>
-
-            <p className="mc-modal-create-category-title" style={{ textAlign: "start" }}>
-              Delete category {state.selectedCategory.category}
-            </p>
-
-            <Alert severity="error">
-              <div style={{ textAlign: "start" }}>
-                It is going to delete all commands with subcategorues associared to this category!
-              </div>
-            </Alert>
-
-            <div className='mc-modal-create-category-btn-submit'>
-              <Button variant="contained" color="secondary"
-                onClick={() => deleteCategory(state.selectedCategory._id)}
-              >
-                Delete
-              </Button>
-            </div>
-          </div>
-        </Box>
-      </Modal>
+      <ModalConfirmDelete
+          open={state.openModalDelete}
+          onClose={handleCloseModalDelete}
+          ariaLabelledby="modal-modal-title-delete"
+          ariaDescribedby="modal-modal-description-delete"
+          title={`Delete category ${state.selectedCategory.category}`}
+          message="It is going to delete all commands with subcategorues associared to this category!"
+          deleteItem={deleteCategory}
+      />
     </div>
   )
 }
