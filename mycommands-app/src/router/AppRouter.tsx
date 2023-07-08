@@ -5,7 +5,7 @@ import { ProtectedAnyRoute } from "./ProtectedAnyRoute";
 import { ProtectedRoute } from "./ProtectedRoute";
 import { AppPage } from "../components/AppPage";
 import { CategoriesPage } from "../components/CategoriesPage/CategoriesPage";
-import { UserPage } from "../components/UserPage";
+import { UserPage } from "../components/UserPage/UserPage";
 import { CommandsPage } from "../components/CommandsPage/CommandsPage";
 
 export const AppRouter = () => {
