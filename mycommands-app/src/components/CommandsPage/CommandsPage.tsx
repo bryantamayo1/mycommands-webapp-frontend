@@ -29,6 +29,7 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { SessionStorage } from '../../utils/SessionStorage';
 import { ModalCreateCommand } from './ModalCreateCommand';
 import { ModalConfirmDelete } from '../common/ModalConfirmDelete';
+import { ModalEditCommand } from './ModalEditCommand';
 
 type typeStateInitial = {
   categories: InterfaceGetFilters,
@@ -181,14 +182,6 @@ export const CommandsPage = () => {
     setState(prevState => ({ ...prevState, selectedCommand: clickedItem, openModalDelete: true }));
   }
 
-  const handleEditCommand = async (clickedItem: CommandData) => {
-    const found = state.commands.data.find(item => item._id === clickedItem._id);
-
-    // @ts-ignore
-    await ServicesCommands.editCommand(found.categoryFather._id, found?._id, clickedItem);
-    searchCommands();
-  }
-
   const copyText = (clickedItem: CommandData, property: string) => {
     // @ts-ignore
     navigator.clipboard.writeText(clickedItem[property]);
@@ -302,13 +295,8 @@ export const CommandsPage = () => {
               <Button variant="contained" color='secondary' size='small' style={{ minWidth: 40, width: 40 }}>
                 <CodeIcon fontSize="small"/>
               </Button> */}
+              <ModalEditCommand getCommands={searchCommands} item={item}/>
 
-              <Button variant="contained" color='secondary' size='small'
-                style={{ minWidth: 40, width: 40 }}
-                onClick={() => enableEditCommand(item)}
-              >
-                <EditIcon fontSize="small"/>
-              </Button>
 
               <Button variant="contained" color='secondary' size='small'
                 style={{ minWidth: 40, width: 40 }}
@@ -413,13 +401,13 @@ export const CommandsPage = () => {
           </div>
         ))}
       </div>
-      <Editor
+      {/* <Editor
         value=''
         height="10vh"
         theme="vs-dark"
         defaultLanguage="javascript"
         defaultValue="// some comment"
-      />
+      /> */}
 
       {/* Modal: delete command */}
       <ModalConfirmDelete

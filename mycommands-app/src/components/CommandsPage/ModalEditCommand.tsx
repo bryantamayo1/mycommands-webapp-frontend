@@ -17,41 +17,61 @@ import { parseVersion } from '../../utils/ParseData';
 import TextField from '@mui/material/TextField';
 import { constLanguages } from '../../utils/Constants';
 import Editor from '@monaco-editor/react';
-import './ModalCreateCommand.css';
+import './ModalEditCommand.css';
 import { ServicesCommands } from '../../services/ServicesCommands';
+import EditIcon from '@mui/icons-material/Edit';
+import { CommandData } from '../../interfaces/Commands';
 
 type PropsModalCreateCommand = {
-  getCommands: () => void
+  getCommands: () => void,
+  item: CommandData
+}
+
+type categoryFather = {
+  _id: string,
+  version: string,
+  category: string
 }
 
 type typeStateInitial = {
-  openModalCreate: boolean,
-  categories: InterfaceGetFilters,
+  openModalEdit: boolean,
+  categories: categoryFather[],
 }
 
 const StateInitial: typeStateInitial = {
-  openModalCreate: false,
-  categories: {} as InterfaceGetFilters,
+  openModalEdit: false,
+  categories: [],
 }
 
-export const ModalCreateCommand = ({ getCommands }: PropsModalCreateCommand) => {
+export const ModalEditCommand = ({ getCommands, item }: PropsModalCreateCommand) => {
   ////////
   // Hooks
   ////////
   const [state, setState] = useState(StateInitial);
 
   useEffect(() => {
-    getCategories();
-  }, []);
+    console.log(item)
+    setState(prevState => ({
+      ...prevState, 
+      categories: [
+        {
+          _id: item.categoryFather._id,
+          version: item.categoryFather.version,
+          category: item.categoryFather.category
+        }
+      ]
+    }));
 
-  ////////////
-  // Functions
-  ////////////
-  const getCategories = async () => {
-    const resp = await ServicesCategories.getCategories();
-    resp.data.shift();
-    setState(prevState => ({ ...prevState, categories: resp,}));
-  }
+    formik.setFieldValue("id_category", item.categoryFather._id);
+    formik.setFieldValue("language", item.language);
+    formik.setFieldValue("command", item.command);
+    formik.setFieldValue("en", item.en);
+    formik.setFieldValue("es", item.es);
+
+    setTimeout(() => {
+      formik.setErrors({});
+    }, 100);
+  }, []);
 
   // Define form with formik
   const formik = useFormik({
@@ -73,19 +93,21 @@ export const ModalCreateCommand = ({ getCommands }: PropsModalCreateCommand) => 
       const newValues = structuredClone(values);
       // @ts-ignore
       delete newValues.id_category;
-      await ServicesCommands.createCommand(values.id_category, newValues);
-      console.log(values)
-      handleCloseModalCreate();
+      await ServicesCommands.editCommand(item.categoryFather._id, item._id, newValues);
+      handleCloseModalEdit();
       getCommands();
     }
   });
   
+  ////////////
+  // Functions
+  ////////////
   const handleOpenModal = () => {
-    setState( prevstate => ({...prevstate, openModalCreate: !prevstate.openModalCreate}));
+    setState( prevstate => ({...prevstate, openModalEdit: !prevstate.openModalEdit}));
   }
 
-  const handleCloseModalCreate = () => {
-    setState( prevstate => ({...prevstate, openModalCreate: !prevstate.openModalCreate}));
+  const handleCloseModalEdit = () => {
+    setState( prevstate => ({...prevstate, openModalEdit: !prevstate.openModalEdit}));
   }
 
   const handleEditorChangeEn = (value: any, event: any) => {
@@ -117,32 +139,32 @@ export const ModalCreateCommand = ({ getCommands }: PropsModalCreateCommand) => 
 
   return (
     <>
-      <Button variant="contained" color="secondary" size="small"
+      <Button variant="contained" color='secondary' size='small'
         onClick={() => handleOpenModal()}
-        style={{ marginTop: 15 }}
+        style={{ minWidth: 40, width: 40 }}
         disabled={SessionStorage.getItem("user").role === "GUEST"}
       >
-        <AddIcon fontSize="small"/>
+        <EditIcon fontSize="small"/>
       </Button>
 
-      {/* Modal: create Category */}
+      {/* Modal: edit Category */}
       <Modal
-        open={state.openModalCreate}
-        onClose={handleCloseModalCreate}
+        open={state.openModalEdit}
+        onClose={handleCloseModalEdit}
         aria-labelledby="modal-modal-title-delete"
         aria-describedby="modal-modal-description-delete"
       >
         <Box sx={style}>
           {/* Btn close modal */}
           <div className='mc-modal-btn-close '>
-            <Button color="inherit" style={{ minWidth: 20 }} onClick={handleCloseModalCreate}>
+            <Button color="inherit" style={{ minWidth: 20 }} onClick={handleCloseModalEdit}>
               <CloseIcon/>
             </Button>
           </div>
 
           <form onSubmit={formik.handleSubmit}>
             <p className="mc-modal-create-category-title">
-              Create command
+              Edit command
             </p>
 
             {/* Select category */}
@@ -158,8 +180,9 @@ export const ModalCreateCommand = ({ getCommands }: PropsModalCreateCommand) => 
                 helperText={formik.errors.id_category}
                 onChange={formik.handleChange}
                 style={{ width: "100%" }}
+                disabled
                 >
-                {state.categories.data?.map( item => (
+                {state.categories?.map( item => (
                   <MenuItem key={item._id} value={item._id}>
                     {parseVersion(item)}
                   </MenuItem>
@@ -231,7 +254,7 @@ export const ModalCreateCommand = ({ getCommands }: PropsModalCreateCommand) => 
             <div className='mc-modal-create-command-btn-submit'>
               <Button variant="contained" color="secondary"
                 type="submit">
-                Create
+                Edit
               </Button>
             </div>
 

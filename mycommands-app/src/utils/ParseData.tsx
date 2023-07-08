@@ -5,7 +5,7 @@ import { CategoryData } from "../interfaces/Categories";
  * @param {object} CategoryData
  * @returns string
  */
-export const parseVersion = ({category, version}: CategoryData): string => {
+export const parseVersion = ({category, version}: any): string => {
     if(version){
         if(category.indexOf("[") !== -1 && category.indexOf("]") !== -1){
             return category
