@@ -44,8 +44,8 @@
 }
 .mc-container-commands__meanings{
   display: grid;
-  gap: 0 10px;
-  grid-template-columns: 50% auto;
+  grid-template-columns: 50% 50%;
+  max-width: 90vw;
 }
 .mc-modal-create-command-field{
   margin-top: 20px;
@@ -56,4 +56,21 @@
 }
 .mc-code-style{
   box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+}
+.mc-container-command{
+  position: relative;
+}
+.mc-container-command > span{
+  bottom: 0;
+  left: 0;
+  position: absolute;
+  transform: scale(0.6) translate(-25%, 50%);
+  z-index: 9;
+}
+.mc-container-command > span:hover{
+  bottom: 0;
+  left: 0;
+  position: absolute;
+  transform: scale(1);
+  z-index: 9;
 }

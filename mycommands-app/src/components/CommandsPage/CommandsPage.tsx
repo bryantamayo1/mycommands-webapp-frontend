@@ -189,6 +189,11 @@ export const CommandsPage = () => {
     searchCommands();
   }
 
+  const copyText = (clickedItem: CommandData, property: string) => {
+    // @ts-ignore
+    navigator.clipboard.writeText(clickedItem[property]);
+  }
+
   ///////////////////////
   // Modal delete command
   ///////////////////////
@@ -226,7 +231,7 @@ export const CommandsPage = () => {
             onChange={handleChangeSelect}
           >
             {state.categories.data?.map( category => (
-              <MenuItem value={category._id}>{parseVersion(category)}</MenuItem>
+              <MenuItem key={category._id} value={category._id}>{parseVersion(category)}</MenuItem>
             ))}
           </Select>
         </FormControl>
@@ -290,13 +295,13 @@ export const CommandsPage = () => {
             {/* Options */}
             <div className='mc-container-commands__options mc-code-style'>
               
-              <Button variant="contained" color='secondary' size='small' style={{ minWidth: 40, width: 40 }}>
+              {/* <Button variant="contained" color='secondary' size='small' style={{ minWidth: 40, width: 40 }}>
                 <ContentCopyIcon fontSize="small"/>
               </Button>
 
               <Button variant="contained" color='secondary' size='small' style={{ minWidth: 40, width: 40 }}>
                 <CodeIcon fontSize="small"/>
-              </Button>
+              </Button> */}
 
               <Button variant="contained" color='secondary' size='small'
                 style={{ minWidth: 40, width: 40 }}
@@ -314,18 +319,28 @@ export const CommandsPage = () => {
             </div>
               
             {/* Code */}
-            <div>
-              <CodeMirror
-                value={item.command}
-                height="150px"
-                maxHeight='150px'
-                // @ts-ignore
-                extensions={[loadLanguage("sql")]}
-                theme={xcodeDark}
-                onChange={(value, viewUpdate) => onChangeCommand(value, viewUpdate, item, "command")}
-                editable={item.active}
-                className='mc-container-commands__command mc-code-style'
-              />
+            <div style={{ maxWidth: "90vw" }}>
+              <div className='mc-container-command'>
+                <span>
+                  <Button variant="contained" color='secondary' size='small' style={{ minWidth: 40, width: 40 }}
+                      onClick={() => copyText(item, "command")}
+                  >
+                    <ContentCopyIcon fontSize="small"/>
+                  </Button>
+                </span>
+                <CodeMirror
+                  value={item.command}
+                  height="150px"
+                  maxHeight='150px'
+
+                  // @ts-ignore
+                  extensions={[loadLanguage("sql")]}
+                  theme={xcodeDark}
+                  onChange={(value, viewUpdate) => onChangeCommand(value, viewUpdate, item, "command")}
+                  editable={item.active}
+                  className='mc-container-commands__command mc-code-style'
+                />
+              </div>
                {/* <Editor
                 value={item.command}
                 height="150px"
@@ -335,17 +350,27 @@ export const CommandsPage = () => {
                 onChange={(value, viewUpdate) => onChangeCommand(value, viewUpdate, item, "command")}
               /> */}
               <div className='mc-container-commands__meanings'>
-                <CodeMirror
-                  value={item.en}
-                  height="150px"
-                  maxHeight='150px'
-                  // @ts-ignore
-                  extensions={[loadLanguage("sql")]}
-                  theme={xcodeDark}
-                  onChange={(value, viewUpdate) => onChangeCommand(value, viewUpdate, item, "en")}
-                  editable={item.active}
-                  className='mc-code-style'
-                />
+                <div className='mc-container-command'>
+                  <span>
+                    <Button variant="contained" color='secondary' size='small' style={{ minWidth: 40, width: 40 }}
+                      onClick={() => copyText(item, "en")}
+                    >
+                      <ContentCopyIcon fontSize="small"/>
+                    </Button>
+                  </span>
+                  <CodeMirror
+                    value={item.en}
+                    height="150px"
+                    maxHeight='150px'
+
+                    // @ts-ignore
+                    extensions={[loadLanguage("sql")]}
+                    theme={xcodeDark}
+                    onChange={(value, viewUpdate) => onChangeCommand(value, viewUpdate, item, "en")}
+                    editable={item.active}
+                    className='mc-code-style'
+                  />
+                </div>
                 {/* <Editor
                   value={item.en}
                   height="150px"
@@ -354,17 +379,26 @@ export const CommandsPage = () => {
                   defaultValue="// some comment"
                   onChange={(value, viewUpdate) => onChangeCommand(value, viewUpdate, item, "en", item.active!)}
                 /> */}
-                <CodeMirror
-                  value={item.es}
-                  height="150px"
-                  maxHeight='150px'
-                  // @ts-ignore
-                  extensions={[loadLanguage("sql")]}
-                  theme={xcodeDark}
-                  onChange={(value, viewUpdate) => onChangeCommand(value, viewUpdate, item, "es")}
-                  editable={item.active}
-                  className='mc-code-style'
-                />
+                <div className='mc-container-command'>
+                  <span>
+                    <Button variant="contained" color='secondary' size='small' style={{ minWidth: 40, width: 40 }}
+                      onClick={() => copyText(item, "es")}
+                    >
+                      <ContentCopyIcon fontSize="small"/>
+                    </Button>
+                  </span>
+                  <CodeMirror
+                    value={item.es}
+                    height="150px"
+                    maxHeight='150px'
+                    // @ts-ignore
+                    extensions={[loadLanguage("sql")]}
+                    theme={xcodeDark}
+                    onChange={(value, viewUpdate) => onChangeCommand(value, viewUpdate, item, "es")}
+                    editable={item.active}
+                    className='mc-code-style'
+                  />
+                </div>
                 {/* <Editor
                   value={item.es}
                   height="150px"

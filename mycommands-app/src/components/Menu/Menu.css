@@ -95,6 +95,7 @@
 .mc-menu-children{
   display: none;
   position: absolute;
+  z-index: 9999;
 }
 .mc-menu:hover .mc-menu-children{
   display: block;
