@@ -24,7 +24,7 @@ export const AppRouter = () => {
           <Route path="/commands" element={<ProtectedRoute><CommandsPage/></ProtectedRoute>}/>
           <Route path="/user" element={<ProtectedRoute><UserPage/></ProtectedRoute>}/>
         </Route>
-
+        
         {/* Any route */}
         <Route path="*" element={<ProtectedAnyRoute/>}/>
         

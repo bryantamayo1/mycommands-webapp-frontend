@@ -13,7 +13,6 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Button from '@mui/material/Button';
 import SearchIcon from '@mui/icons-material/Search';
 import { ServicesCommands } from '../../services/ServicesCommands';
-
 import CodeMirror from '@uiw/react-codemirror';
 import { loadLanguage } from '@uiw/codemirror-extensions-langs';
 import {xcodeDark} from '@uiw/codemirror-theme-xcode';
@@ -26,6 +25,9 @@ import { ModalCreateCommand } from './ModalCreateCommand';
 import { ModalConfirmDelete } from '../common/ModalConfirmDelete';
 import { ModalEditCommand } from './ModalEditCommand';
 import { createPagination } from '../../utils/Constants';
+import { toast } from 'react-toastify';
+import { Spinner } from '../common/Spinner/Spinner';
+
 
 // Types
 type typePagination = {
@@ -48,7 +50,9 @@ type typeStateInitial = {
   activedPage: number
 
   // List of commands
-  selectedCommand: CommandData
+  selectedCommand: CommandData,
+
+  activeSpinner: boolean
 }
 
 const StateInitial:typeStateInitial = {
@@ -66,7 +70,9 @@ const StateInitial:typeStateInitial = {
   activedPage: 1,
 
   // List of commands
-  selectedCommand: {} as CommandData
+  selectedCommand: {} as CommandData,
+
+  activeSpinner: false
 }
 
 export const CommandsPage = () => { 
@@ -103,6 +109,8 @@ export const CommandsPage = () => {
    * Get commands and calculate pagination 
    */
   const getCommands = async (query: any) => {
+    // Active spinner
+    setState(prevState => ({ ...prevState, activeSpinner: true }));
     // 1* Get commands
     const resp = await ServicesCommands.getCommands(query);
 
@@ -121,7 +129,7 @@ export const CommandsPage = () => {
       } 
       return i;
     });
-    setState(prevState => ({ ...prevState, commands: resp, pagination, activedPage: resp.page }));
+    setState(prevState => ({ ...prevState, commands: resp, pagination, activedPage: resp.page, activeSpinner: false }));
   }
 
   const createPagination = () => {
@@ -222,6 +230,11 @@ export const CommandsPage = () => {
 
   const deleteCommand =  async () => {
     await ServicesCommands.deleteCommand(state.selectedCommand.categoryFather._id, state.selectedCommand._id);
+    // Active toastify
+    toast.success("Deleted command sucessfully", {
+      position: toast.POSITION.BOTTOM_LEFT
+    });
+
     searchCommands();
     handleCloseModalDelete();
   }
@@ -316,7 +329,7 @@ export const CommandsPage = () => {
           }
         />
 
-        <Button variant="contained" color="secondary" size="small" style={{ minWidth: 50 }}
+        <Button variant="contained" color="secondary" style={{ minWidth: 50 }}
           onClick={() => searchCommands()}
         >
           <SearchIcon fontSize="small"/>
@@ -325,138 +338,140 @@ export const CommandsPage = () => {
 
       <ModalCreateCommand getCommands={searchCommands}/>
 
-      {/* List of commands */}
-      <div className='mc-container-commands'>
-        {/* Info of results */}
-        <p className='mc-container-commands__info-results'>
-          {state.commands.total} commands
-        </p>
+      <Spinner active={state.activeSpinner} big>
+        {/* List of commands */}
+        <div className='mc-container-commands'>
+          {/* Info of results */}
+          <p className='mc-container-commands__info-results'>
+            {state.commands.total} commands
+          </p>
 
-        {state.commands.data?.map(item => (
-          <div className='mc-container-row' key={item._id}>
+          {state.commands.data?.map(item => (
+            <div className='mc-container-row' key={item._id}>
 
-            {/* Options */}
-            <div className='mc-container-commands__options mc-code-style'>
-              
-              {/* <Button variant="contained" color='secondary' size='small' style={{ minWidth: 40, width: 40 }}>
-                <ContentCopyIcon fontSize="small"/>
-              </Button>
+              {/* Options */}
+              <div className='mc-container-commands__options mc-code-style'>
+                
+                {/* <Button variant="contained" color='secondary' size='small' style={{ minWidth: 40, width: 40 }}>
+                  <ContentCopyIcon fontSize="small"/>
+                </Button>
 
-              <Button variant="contained" color='secondary' size='small' style={{ minWidth: 40, width: 40 }}>
-                <CodeIcon fontSize="small"/>
-              </Button> */}
-              <ModalEditCommand getCommands={searchCommands} item={item}/>
+                <Button variant="contained" color='secondary' size='small' style={{ minWidth: 40, width: 40 }}>
+                  <CodeIcon fontSize="small"/>
+                </Button> */}
+                <ModalEditCommand getCommands={searchCommands} item={item}/>
 
 
-              <Button variant="contained" color='secondary' size='small'
-                style={{ minWidth: 40, width: 40 }}
-                disabled={SessionStorage.getItem("user").role === "GUEST"}
+                <Button variant="contained" color='secondary' size='small'
+                  style={{ minWidth: 40, width: 40 }}
+                  disabled={SessionStorage.getItem("user").role === "GUEST"}
 
-                onClick={() => openConfirmDeleteCommand(item)}
-              >
-                <DeleteForeverIcon fontSize="small"/>
-              </Button>
-            </div>
-              
-            {/* Code */}
-            <div style={{ maxWidth: "90vw" }}>
-              <div className='mc-container-command'>
-                <span>
-                  <Button variant="contained" color='secondary' size='small' style={{ minWidth: 40, width: 40 }}
-                      onClick={() => copyText(item, "command")}
-                  >
-                    <ContentCopyIcon fontSize="small"/>
-                  </Button>
-                </span>
-                <CodeMirror
-                  value={item.command}
-                  height="150px"
-                  maxHeight='150px'
-
-                  // @ts-ignore
-                  extensions={[loadLanguage("sql")]}
-                  theme={xcodeDark}
-                  onChange={(value, viewUpdate) => onChangeCommand(value, viewUpdate, item, "command")}
-                  editable={item.active}
-                  className='mc-container-commands__command mc-code-style'
-                />
+                  onClick={() => openConfirmDeleteCommand(item)}
+                >
+                  <DeleteForeverIcon fontSize="small"/>
+                </Button>
               </div>
-              <div className='mc-container-commands__meanings'>
+                
+              {/* Code */}
+              <div style={{ maxWidth: "90vw" }}>
                 <div className='mc-container-command'>
                   <span>
                     <Button variant="contained" color='secondary' size='small' style={{ minWidth: 40, width: 40 }}
-                      onClick={() => copyText(item, "en")}
+                        onClick={() => copyText(item, "command")}
                     >
                       <ContentCopyIcon fontSize="small"/>
                     </Button>
                   </span>
                   <CodeMirror
-                    value={item.en}
+                    value={item.command}
                     height="150px"
                     maxHeight='150px'
 
                     // @ts-ignore
                     extensions={[loadLanguage("sql")]}
                     theme={xcodeDark}
-                    onChange={(value, viewUpdate) => onChangeCommand(value, viewUpdate, item, "en")}
+                    onChange={(value, viewUpdate) => onChangeCommand(value, viewUpdate, item, "command")}
                     editable={item.active}
-                    className='mc-code-style'
+                    className='mc-container-commands__command mc-code-style'
                   />
                 </div>
-                <div className='mc-container-command'>
-                  <span>
-                    <Button variant="contained" color='secondary' size='small' style={{ minWidth: 40, width: 40 }}
-                      onClick={() => copyText(item, "es")}
-                    >
-                      <ContentCopyIcon fontSize="small"/>
-                    </Button>
-                  </span>
-                  <CodeMirror
-                    value={item.es}
-                    height="150px"
-                    maxHeight='150px'
-                    // @ts-ignore
-                    extensions={[loadLanguage("sql")]}
-                    theme={xcodeDark}
-                    onChange={(value, viewUpdate) => onChangeCommand(value, viewUpdate, item, "es")}
-                    editable={item.active}
-                    className='mc-code-style'
-                  />
+                <div className='mc-container-commands__meanings'>
+                  <div className='mc-container-command'>
+                    <span>
+                      <Button variant="contained" color='secondary' size='small' style={{ minWidth: 40, width: 40 }}
+                        onClick={() => copyText(item, "en")}
+                      >
+                        <ContentCopyIcon fontSize="small"/>
+                      </Button>
+                    </span>
+                    <CodeMirror
+                      value={item.en}
+                      height="150px"
+                      maxHeight='150px'
+
+                      // @ts-ignore
+                      extensions={[loadLanguage("sql")]}
+                      theme={xcodeDark}
+                      onChange={(value, viewUpdate) => onChangeCommand(value, viewUpdate, item, "en")}
+                      editable={item.active}
+                      className='mc-code-style'
+                    />
+                  </div>
+                  <div className='mc-container-command'>
+                    <span>
+                      <Button variant="contained" color='secondary' size='small' style={{ minWidth: 40, width: 40 }}
+                        onClick={() => copyText(item, "es")}
+                      >
+                        <ContentCopyIcon fontSize="small"/>
+                      </Button>
+                    </span>
+                    <CodeMirror
+                      value={item.es}
+                      height="150px"
+                      maxHeight='150px'
+                      // @ts-ignore
+                      extensions={[loadLanguage("sql")]}
+                      theme={xcodeDark}
+                      onChange={(value, viewUpdate) => onChangeCommand(value, viewUpdate, item, "es")}
+                      editable={item.active}
+                      className='mc-code-style'
+                    />
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        ))}
-
-        {/* Pagination */}
-        <div className='mc-container-pagination'>
-          {state.pagination[0]?.index !== 0 && (
-            <button
-              onClick={() => handleBtnMorePages(-1)}
-            >
-              {"<"}
-            </button>
-          )}
-          
-          {state.pagination.map(item => (
-            <button
-              className={item.active? "mc-container-pagination__selected" : ""}
-              onClick={() => handleBtnPagination(item)}
-              key={item.index.toString()}
-            >
-              {item.index + 1}
-            </button>
           ))}
-          
-          {state.pagination[state.pagination.length - 1]?.index + 1 !== state.commands.pages && (
-            <button
-              onClick={() => handleBtnMorePages(1)}
-            >
-              {">"}
-            </button>
-          )}
+
+          {/* Pagination */}
+          <div className='mc-container-pagination'>
+            {state.pagination[0]?.index !== 0 && (
+              <button
+                onClick={() => handleBtnMorePages(-1)}
+              >
+                {"<"}
+              </button>
+            )}
+            
+            {state.pagination.map(item => (
+              <button
+                className={item.active? "mc-container-pagination__selected" : ""}
+                onClick={() => handleBtnPagination(item)}
+                key={item.index.toString()}
+              >
+                {item.index + 1}
+              </button>
+            ))}
+            
+            {state.pagination[state.pagination.length - 1]?.index + 1 !== state.commands.pages && (
+              <button
+                onClick={() => handleBtnMorePages(1)}
+              >
+                {">"}
+              </button>
+            )}
+          </div>
         </div>
-      </div>
+      </Spinner>
 
       {/* Modal: delete command */}
       <ModalConfirmDelete

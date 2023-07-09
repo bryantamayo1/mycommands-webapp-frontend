@@ -7,11 +7,6 @@ import Box from '@mui/material/Box';
 import CloseIcon from '@mui/icons-material/Close';
 import { useFormik } from 'formik';
 import * as Yup         from 'yup';
-import { ServicesCategories } from '../../services/ServicesCategories';
-import { InterfaceGetFilters } from '../../interfaces/Categories';
-import InputLabel from '@mui/material/InputLabel';
-import FormControl from '@mui/material/FormControl';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import { parseVersion } from '../../utils/ParseData';
 import TextField from '@mui/material/TextField';
@@ -21,6 +16,7 @@ import './ModalEditCommand.css';
 import { ServicesCommands } from '../../services/ServicesCommands';
 import EditIcon from '@mui/icons-material/Edit';
 import { CommandData } from '../../interfaces/Commands';
+import { toast } from 'react-toastify';
 
 type PropsModalCreateCommand = {
   getCommands: () => void,
@@ -93,6 +89,10 @@ export const ModalEditCommand = ({ getCommands, item }: PropsModalCreateCommand)
       // @ts-ignore
       delete newValues.id_category;
       await ServicesCommands.editCommand(item.categoryFather._id, item._id, newValues);
+      // Active toastify
+      toast.success("Edited command sucessfully", {
+        position: toast.POSITION.BOTTOM_LEFT
+      });
       handleCloseModalEdit();
       getCommands();
     }

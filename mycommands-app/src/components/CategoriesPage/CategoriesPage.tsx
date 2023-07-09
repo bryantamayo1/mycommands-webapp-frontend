@@ -14,8 +14,9 @@ import * as Yup         from 'yup';
 import { TextField } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { SessionStorage } from '../../utils/SessionStorage';
-import { Alert } from '../common/Alert';
 import { ModalConfirmDelete } from '../common/ModalConfirmDelete';
+import { toast } from 'react-toastify';
+import { Spinner } from '../common/Spinner/Spinner';
 
 type typeCreateOrEditCategory = {
   category: string,
@@ -28,7 +29,8 @@ type typeStateInitial = {
   openModalCreateOrEdit: boolean,
   selectedCategory: typeCreateOrEditCategory
   createOrEdit: boolean,   // false = create, true = edit
-  openModalDelete: boolean
+  openModalDelete: boolean,
+  activeSpinner: boolean
 }
 
 const StateInitial:typeStateInitial = {
@@ -37,6 +39,7 @@ const StateInitial:typeStateInitial = {
   selectedCategory: {} as typeCreateOrEditCategory,
   createOrEdit: false,
   openModalDelete: false,
+  activeSpinner: false
 }
 
 export const CategoriesPage = () => {
@@ -59,11 +62,22 @@ export const CategoriesPage = () => {
       // Edit
       if(state.createOrEdit){
         await ServicesCategories.editCategory(state.selectedCategory._id, values);
+        
+        // Active toastify
+        toast.success("Edited category sucessfully", {
+          position: toast.POSITION.BOTTOM_LEFT
+        });
+
         getCategories();
         handleCloseModalCreateOrEdit();
       // Create
       }else{
         await ServicesCategories.createCategory(values);
+
+        // Active toastify
+        toast.success("Created category sucessfully", {
+          position: toast.POSITION.BOTTOM_LEFT
+        });
         getCategories();
         handleCloseModalCreateOrEdit();
       }
@@ -78,9 +92,11 @@ export const CategoriesPage = () => {
   // Functions
   ////////////
   const getCategories = async () => {
+    // Active spinner
+    setState(prevState => ({ ...prevState, activeSpinner: true }));
     const resp = await ServicesCategories.getCategories();
     resp.data.shift();
-    setState(prevState => ({ ...prevState, categories: resp }));
+    setState(prevState => ({ ...prevState, categories: resp, activeSpinner: false }));
   }
 
   const handleOpenModalCreateOrEdit = (category?: typeCreateOrEditCategory) => {
@@ -131,6 +147,10 @@ export const CategoriesPage = () => {
 
   const deleteCategory =  async () => {
     await ServicesCategories.deleteCategory(state.selectedCategory._id);
+    // Active toastify
+    toast.success("Deleted category sucessfully", {
+      position: toast.POSITION.BOTTOM_LEFT
+    });
     getCategories();
     handleCloseModalDelete();
   }
@@ -152,66 +172,68 @@ export const CategoriesPage = () => {
 
   return (
     <div className='mc-container-page'>
-      <div className='mc-container-box mc-container-categories'>
-        <Button variant="contained" color="secondary" size="small"
-          onClick={() => handleOpenModalCreateOrEdit()}
-          disabled={SessionStorage.getItem("user").role === "GUEST"}
-        >
-          <AddIcon fontSize="small"/>
-        </Button>
+      <Spinner active={state.activeSpinner}>
+        <div className='mc-container-box mc-container-categories'>
+          <Button variant="contained" color="secondary" size="small"
+            onClick={() => handleOpenModalCreateOrEdit()}
+            disabled={SessionStorage.getItem("user").role === "GUEST"}
+          >
+            <AddIcon fontSize="small"/>
+          </Button>
 
-        <div className='mc-categories-info'>
-          <div>
-            Total categories: {state.categories.results}
+          <div className='mc-categories-info'>
+            <div>
+              Total categories: {state.categories.results}
+            </div>
+            <div>
+              Total commands: {state.categories.totalCommands}
+            </div>
           </div>
-          <div>
-            Total commands: {state.categories.totalCommands}
-          </div>
-        </div>
 
-        <div className='mc-table-categories'>
-          <table className='mc-table'>
-            {/* Header */}
-            <tr className='mc-table--header'>
-              <th>Category</th>
-              <th>Version</th>
-              <th>Created At</th>
-              <th>Updated At</th>
-              <th>Commands</th>
-            </tr>
-
-            {/* Body */}
-            {state.categories.data?.map( ({ category, version, createdAt, updatedAt, results, _id }) => (
-              <tr key={_id}>
-                <td>{category}</td>
-                <td>{version}</td>
-                <td>{moment(createdAt).format("YYYY-MM-DD")}</td>
-                <td>{moment(updatedAt).format("YYYY-MM-DD")}</td>
-                <td>{results}</td>
-
-                <td>
-                  <Button variant="contained" color='secondary' size="small" className='mc-btn'
-                    disabled={SessionStorage.getItem("user").role === "GUEST"}
-                    onClick={() => handleOpenModalCreateOrEdit({category, version, _id: _id })}
-                  >
-                    <EditIcon fontSize="small"/>
-                  </Button>
-                </td>
-
-                <td>
-                  <Button variant="contained" color='secondary' size="small" className='mc-btn'
-                    disabled={SessionStorage.getItem("user").role === "GUEST"}
-                    onClick={() => handleOpenModalDelete({category, version, _id: _id })}
-                  >
-                    <DeleteIcon fontSize="small"/>
-                  </Button>
-                </td>
-
+          <div className='mc-table-categories'>
+            <table className='mc-table'>
+              {/* Header */}
+              <tr className='mc-table--header'>
+                <th>Category</th>
+                <th>Version</th>
+                <th>Created At</th>
+                <th>Updated At</th>
+                <th>Commands</th>
               </tr>
-            ))}
-          </table>
+
+              {/* Body */}
+              {state.categories.data?.map( ({ category, version, createdAt, updatedAt, results, _id }) => (
+                <tr key={_id}>
+                  <td>{category}</td>
+                  <td>{version}</td>
+                  <td>{moment(createdAt).format("YYYY-MM-DD")}</td>
+                  <td>{moment(updatedAt).format("YYYY-MM-DD")}</td>
+                  <td>{results}</td>
+
+                  <td>
+                    <Button variant="contained" color='secondary' size="small" className='mc-btn'
+                      disabled={SessionStorage.getItem("user").role === "GUEST"}
+                      onClick={() => handleOpenModalCreateOrEdit({category, version, _id: _id })}
+                    >
+                      <EditIcon fontSize="small"/>
+                    </Button>
+                  </td>
+
+                  <td>
+                    <Button variant="contained" color='secondary' size="small" className='mc-btn'
+                      disabled={SessionStorage.getItem("user").role === "GUEST"}
+                      onClick={() => handleOpenModalDelete({category, version, _id: _id })}
+                    >
+                      <DeleteIcon fontSize="small"/>
+                    </Button>
+                  </td>
+
+                </tr>
+              ))}
+            </table>
+          </div>
         </div>
-      </div>
+      </Spinner>
 
       {/* Modal: create or edit category */}
       <Modal

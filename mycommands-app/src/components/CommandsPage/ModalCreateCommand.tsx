@@ -9,9 +9,6 @@ import { useFormik } from 'formik';
 import * as Yup         from 'yup';
 import { ServicesCategories } from '../../services/ServicesCategories';
 import { InterfaceGetFilters } from '../../interfaces/Categories';
-import InputLabel from '@mui/material/InputLabel';
-import FormControl from '@mui/material/FormControl';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import { parseVersion } from '../../utils/ParseData';
 import TextField from '@mui/material/TextField';
@@ -19,6 +16,7 @@ import { constLanguages } from '../../utils/Constants';
 import Editor from '@monaco-editor/react';
 import './ModalCreateCommand.css';
 import { ServicesCommands } from '../../services/ServicesCommands';
+import { toast } from 'react-toastify';
 
 type PropsModalCreateCommand = {
   getCommands: () => void
@@ -73,8 +71,13 @@ export const ModalCreateCommand = ({ getCommands }: PropsModalCreateCommand) => 
       const newValues = structuredClone(values);
       // @ts-ignore
       delete newValues.id_category;
+
       await ServicesCommands.createCommand(values.id_category, newValues);
-      console.log(values)
+      // Active toastify
+      toast.success("Created command sucessfully", {
+        position: toast.POSITION.BOTTOM_LEFT
+      });
+
       handleCloseModalCreate();
       getCommands();
     }
