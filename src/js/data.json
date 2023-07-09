@@ -45,8 +45,8 @@
             "es": "Creado en: "
         },
         "version": {
-            "en": "Version 0.0.1",
-            "es": "Versión 0.0.1"
+            "en": "Version 0.0.2",
+            "es": "Versión 0.0.2"
         },
         "0.0.1_1": {
             "en": "Added control of app’s vesion",
@@ -55,6 +55,10 @@
         "0.0.1_2": {
             "en": "Added styles of code in each command",
             "es": "Añadido estilos del código de cada comando"
+        },
+        "0.0.2_1": {
+            "en": "Added web application to handle all resources",
+            "es": "Añadida la aplicación web para el manejo de todos los recursos"
         }
     }
 }
