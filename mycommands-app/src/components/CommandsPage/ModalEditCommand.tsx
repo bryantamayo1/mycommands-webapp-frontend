@@ -50,7 +50,6 @@ export const ModalEditCommand = ({ getCommands, item }: PropsModalCreateCommand)
   const [state, setState] = useState(StateInitial);
 
   useEffect(() => {
-    console.log(item)
     setState(prevState => ({
       ...prevState, 
       categories: [

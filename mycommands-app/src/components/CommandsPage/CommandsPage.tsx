@@ -5,7 +5,7 @@ import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import TextField from '@mui/material/TextField';
 import { ServicesCategories } from '../../services/ServicesCategories';
-import { useEffect, useState, useCallback, ChangeEvent } from 'react';
+import { useEffect, useState, ChangeEvent } from 'react';
 import { InterfaceGetFilters } from '../../interfaces/Categories';
 import { parseVersion } from '../../utils/ParseData';
 import Checkbox from '@mui/material/Checkbox';
@@ -17,30 +17,35 @@ import { ServicesCommands } from '../../services/ServicesCommands';
 import CodeMirror from '@uiw/react-codemirror';
 import { loadLanguage } from '@uiw/codemirror-extensions-langs';
 import {xcodeDark} from '@uiw/codemirror-theme-xcode';
-import Editor from '@monaco-editor/react';
 import { CommandData, InterfaceCommands } from '../../interfaces/Commands';
-import EditIcon from '@mui/icons-material/Edit';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-import CloseIcon from '@mui/icons-material/Close';
-import SaveIcon from '@mui/icons-material/Save';
-import CodeIcon from '@mui/icons-material/Code';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
 import { SessionStorage } from '../../utils/SessionStorage';
 import { ModalCreateCommand } from './ModalCreateCommand';
 import { ModalConfirmDelete } from '../common/ModalConfirmDelete';
 import { ModalEditCommand } from './ModalEditCommand';
+import { createPagination } from '../../utils/Constants';
+
+// Types
+type typePagination = {
+  active: boolean,
+  index: number
+}
 
 type typeStateInitial = {
   categories: InterfaceGetFilters,
   commands: InterfaceCommands,
-  commandsBackup: InterfaceCommands,
   selectedSearchCommandFilter: string,
   selectedCategoryFilter: string,
   checkCommandAndMenaning: boolean,
   checkCommands: boolean,
   checkMeaning: boolean,
   openModalDelete: boolean
+
+  // Pagination
+  pagination: typePagination[],
+  activedPage: number
 
   // List of commands
   selectedCommand: CommandData
@@ -49,7 +54,6 @@ type typeStateInitial = {
 const StateInitial:typeStateInitial = {
   categories: {} as InterfaceGetFilters,
   commands: {} as InterfaceCommands,
-  commandsBackup: {} as InterfaceCommands,
   selectedSearchCommandFilter: '',
   selectedCategoryFilter: "",
   checkCommandAndMenaning: true,
@@ -57,11 +61,20 @@ const StateInitial:typeStateInitial = {
   checkMeaning: false,
   openModalDelete: false,
 
+  // Pagination
+  pagination: createPagination(),
+  activedPage: 1,
+
   // List of commands
   selectedCommand: {} as CommandData
 }
 
-export const CommandsPage = () => {
+export const CommandsPage = () => { 
+  ////////////
+  // Constants
+  ////////////
+  const limitPagination = 5;
+
   ////////
   // Hooks
   ////////
@@ -69,6 +82,8 @@ export const CommandsPage = () => {
 
   useEffect(() => {
     getCategories();
+
+    createPagination();
 
     getCommands({
       page: 1,
@@ -84,15 +99,37 @@ export const CommandsPage = () => {
     setState(prevState => ({ ...prevState, categories: resp, selectedCategoryFilter: "all" }));
   }
 
+  /**
+   * Get commands and calculate pagination 
+   */
   const getCommands = async (query: any) => {
+    // 1* Get commands
     const resp = await ServicesCommands.getCommands(query);
 
     // Fill with property active
     resp.data.map(item => {
       item.active = false;
     });
-    console.log("resp: ", resp)
-    setState(prevState => ({ ...prevState, commands: resp, commandsBackup: resp }));
+
+    // 2º Calculate  and build pagination
+    let pagination = [] as typePagination[];
+    pagination = state.pagination.map(i => {
+      if(i.index === resp.page -1){
+        i.active = true;
+      }else{
+        i.active = false;
+      } 
+      return i;
+    });
+    setState(prevState => ({ ...prevState, commands: resp, pagination, activedPage: resp.page }));
+  }
+
+  const createPagination = () => {
+    let pagination = [] as typePagination[];
+    for (let i = 0; i < limitPagination; i++) {
+      pagination.push({ index: i, active: false });
+    }
+    setState(prevState => ({ ...prevState, pagination }));
   }
 
   const handleChangeSelect = (event: SelectChangeEvent) => {
@@ -142,7 +179,7 @@ export const CommandsPage = () => {
     setState(prevState => ({ ...prevState, selectedSearchCommandFilter: target.value }));
   }
 
-  const searchCommands = () => {
+  const searchCommands = (page: number = 1)  => {
     // Prepare query
     const {selectedSearchCommandFilter, selectedCategoryFilter, 
     checkCommandAndMenaning, checkCommands, checkMeaning} = state;
@@ -158,7 +195,7 @@ export const CommandsPage = () => {
     }
 
     getCommands({
-      page: 1,
+      page,
       category: selectedCategoryFilter? selectedCategoryFilter : "all",
       ...query
     });
@@ -167,17 +204,6 @@ export const CommandsPage = () => {
   ///////////
   // Commands
   ///////////
-  const enableEditCommand = (clickedItem: CommandData) => {
-    
-    // const newData = structuredClone(state.commands);
-    // newData.data.forEach( (item: CommandData) => {
-    //   if(item._id === clickedItem._id){
-    //     item.active = true;
-    //   }
-    // });
-    // setState(prevState => ({ ...prevState, commands: newData }));
-  }
-
   const openConfirmDeleteCommand  = (clickedItem: CommandData) => {
     setState(prevState => ({ ...prevState, selectedCommand: clickedItem, openModalDelete: true }));
   }
@@ -198,6 +224,25 @@ export const CommandsPage = () => {
     await ServicesCommands.deleteCommand(state.selectedCommand.categoryFather._id, state.selectedCommand._id);
     searchCommands();
     handleCloseModalDelete();
+  }
+
+  const handleBtnPagination = (item: typePagination) => {
+    searchCommands(item.index + 1);
+  }
+
+  const handleBtnMorePages = (more: number) => {
+    const cleanedpagination = state.pagination.map(e => {
+      e.active = false;
+      e.index += more;
+      return e;
+    });
+    const newPagination = cleanedpagination.map( i => {
+      if(i.index === state.activedPage - 1){
+        i.active = true;
+      }
+      return i;
+    });
+    setState(prevState => ({ ...prevState, pagination: newPagination }));
   }
 
   return (
@@ -272,7 +317,7 @@ export const CommandsPage = () => {
         />
 
         <Button variant="contained" color="secondary" size="small" style={{ minWidth: 50 }}
-          onClick={searchCommands}
+          onClick={() => searchCommands()}
         >
           <SearchIcon fontSize="small"/>
         </Button>
@@ -282,6 +327,11 @@ export const CommandsPage = () => {
 
       {/* List of commands */}
       <div className='mc-container-commands'>
+        {/* Info of results */}
+        <p className='mc-container-commands__info-results'>
+          {state.commands.total} commands
+        </p>
+
         {state.commands.data?.map(item => (
           <div className='mc-container-row' key={item._id}>
 
@@ -300,6 +350,8 @@ export const CommandsPage = () => {
 
               <Button variant="contained" color='secondary' size='small'
                 style={{ minWidth: 40, width: 40 }}
+                disabled={SessionStorage.getItem("user").role === "GUEST"}
+
                 onClick={() => openConfirmDeleteCommand(item)}
               >
                 <DeleteForeverIcon fontSize="small"/>
@@ -329,14 +381,6 @@ export const CommandsPage = () => {
                   className='mc-container-commands__command mc-code-style'
                 />
               </div>
-               {/* <Editor
-                value={item.command}
-                height="150px"
-                theme="vs-dark"
-                defaultLanguage="javascript"
-                defaultValue="// some comment"
-                onChange={(value, viewUpdate) => onChangeCommand(value, viewUpdate, item, "command")}
-              /> */}
               <div className='mc-container-commands__meanings'>
                 <div className='mc-container-command'>
                   <span>
@@ -359,14 +403,6 @@ export const CommandsPage = () => {
                     className='mc-code-style'
                   />
                 </div>
-                {/* <Editor
-                  value={item.en}
-                  height="150px"
-                  theme="vs-dark"
-                  defaultLanguage="javascript"
-                  defaultValue="// some comment"
-                  onChange={(value, viewUpdate) => onChangeCommand(value, viewUpdate, item, "en", item.active!)}
-                /> */}
                 <div className='mc-container-command'>
                   <span>
                     <Button variant="contained" color='secondary' size='small' style={{ minWidth: 40, width: 40 }}
@@ -387,27 +423,40 @@ export const CommandsPage = () => {
                     className='mc-code-style'
                   />
                 </div>
-                {/* <Editor
-                  value={item.es}
-                  height="150px"
-                  theme="vs-dark"
-                  defaultLanguage="javascript"
-                  defaultValue="// some comment"
-                  onChange={(value, viewUpdate) => onChangeCommand(value, viewUpdate, item, "es", item.active!)}
-                /> */}
               </div>
             </div>
-
           </div>
         ))}
+
+        {/* Pagination */}
+        <div className='mc-container-pagination'>
+          {state.pagination[0]?.index !== 0 && (
+            <button
+              onClick={() => handleBtnMorePages(-1)}
+            >
+              {"<"}
+            </button>
+          )}
+          
+          {state.pagination.map(item => (
+            <button
+              className={item.active? "mc-container-pagination__selected" : ""}
+              onClick={() => handleBtnPagination(item)}
+              key={item.index.toString()}
+            >
+              {item.index + 1}
+            </button>
+          ))}
+          
+          {state.pagination[state.pagination.length - 1]?.index + 1 !== state.commands.pages && (
+            <button
+              onClick={() => handleBtnMorePages(1)}
+            >
+              {">"}
+            </button>
+          )}
+        </div>
       </div>
-      {/* <Editor
-        value=''
-        height="10vh"
-        theme="vs-dark"
-        defaultLanguage="javascript"
-        defaultValue="// some comment"
-      /> */}
 
       {/* Modal: delete command */}
       <ModalConfirmDelete

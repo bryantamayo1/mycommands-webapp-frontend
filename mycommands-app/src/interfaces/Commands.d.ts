@@ -5,6 +5,7 @@ export interface InterfaceCommands {
     total:          number;
     resultsForPage: number;
     page:           number;
+    pages:           number;
     limitPage:      number;
     lang:           string;
     data:           CommandData[];
