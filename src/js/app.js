@@ -416,6 +416,7 @@ export const handleToggleFiletrs = async(lang = "/en") => {
     const filters = document.getElementsByClassName("filters")[0];
     const data = await Services.getFilters(lang);
     const info = data.data;
+    info.shift();
 
     /**
      * Push filters of 'Search by: 
