@@ -1,11 +1,11 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { ProtectedPage } from "./ProtectedPage";
-import { HomePage } from "../components/HomePage";
+import { HomePage } from "../components/HomePage/HomePage";
 import { ProtectedAnyRoute } from "./ProtectedAnyRoute";
 import { ProtectedRoute } from "./ProtectedRoute";
 import { AppPage } from "../components/AppPage";
 import { CategoriesPage } from "../components/CategoriesPage/CategoriesPage";
-import { UserPage } from "../components/UserPage";
+import { UserPage } from "../components/UserPage/UserPage";
 import { CommandsPage } from "../components/CommandsPage/CommandsPage";
 
 export const AppRouter = () => {
@@ -24,7 +24,7 @@ export const AppRouter = () => {
           <Route path="/commands" element={<ProtectedRoute><CommandsPage/></ProtectedRoute>}/>
           <Route path="/user" element={<ProtectedRoute><UserPage/></ProtectedRoute>}/>
         </Route>
-
+        
         {/* Any route */}
         <Route path="*" element={<ProtectedAnyRoute/>}/>
         

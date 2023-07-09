@@ -6,6 +6,7 @@ import * as Yup         from 'yup';
 import { AuthContext } from '../../auth/AuthContext';
 import { LocalStorage } from '../../utils/LocalStorage';
 import CircularProgress from '@mui/material/CircularProgress';
+import Snackbar from '@mui/material/Snackbar';
 
 export const LoginPage = () => {
   ////////
@@ -37,14 +38,11 @@ export const LoginPage = () => {
       password: Yup.string().required('Contraseña requerida')
     }),
     onSubmit: async values => {
-      try{
-        await login(structuredClone(values));
-        
-        // Store email of user in localStorage
-        if(values.rememberMe){
-          LocalStorage.setItem('email', values.email);
-        }
-      }catch(error){
+      await login(structuredClone(values));
+      
+      // Store email of user in localStorage
+      if(values.rememberMe){
+        LocalStorage.setItem('email', values.email);
       }
     }
   });
@@ -111,6 +109,18 @@ export const LoginPage = () => {
 
           </div>
         </form>
+
+        {/* Info */}
+        <Snackbar
+          open={true}
+          autoHideDuration={6000}
+          anchorOrigin={{ vertical: "bottom", horizontal: "center"}}
+          message={
+            <span style={{ color: "#c0c0c0" }}>
+              Guest user: guest@guest.com. Password: guest-guest
+            </span>
+          }
+        />
       </div>
     </div>
   )

@@ -20,7 +20,6 @@ body{
   font-family: 'Lato', sans-serif;
 }
 .mc-container-page{
-  /* border: 1px solid red; */
   margin: 20px;
 }
 .mc-container-box {
@@ -28,5 +27,8 @@ body{
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
   box-sizing: border-box;
   color: #FFF;
-  padding: 10px;
+  padding: 15px;
+}
+.mc-modal-btn-close {
+  text-align: end;
 }
