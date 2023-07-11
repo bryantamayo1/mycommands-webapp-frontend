@@ -7,8 +7,21 @@ import { AppPage } from "../components/AppPage";
 import { CategoriesPage } from "../components/CategoriesPage/CategoriesPage";
 import { UserPage } from "../components/UserPage/UserPage";
 import { CommandsPage } from "../components/CommandsPage/CommandsPage";
+import { toast } from "react-toastify";
 
 export const AppRouter = () => {
+
+  // Handle global errors
+  window.addEventListener("unhandledrejection", ({reason}: any) => {
+    // Handle error according response of API
+    if(reason.error && (reason.error.statusCode >= 400 || reason.error.statusCode <=599) ){
+    // Active toastify
+    toast.success(reason.message, {
+      position: toast.POSITION.BOTTOM_LEFT
+    });
+    }
+  });
+
   return (
     <BrowserRouter>
       <Routes>

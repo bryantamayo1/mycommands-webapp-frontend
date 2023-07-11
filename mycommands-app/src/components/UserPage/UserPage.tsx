@@ -13,6 +13,16 @@ const ColoredLine = () => (
 );
 
 export const UserPage = () => {
+  ////////
+  // Hooks
+  ////////
+  useEffect(() => {
+    // Update title
+    document.title = "My commands | User";
+  }, []);
+  
+
+
   return (
     <div className='mc-container-page'>
       <div className='mc-container-box mc-container-userpage'>

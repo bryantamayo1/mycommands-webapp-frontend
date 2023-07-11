@@ -4,7 +4,7 @@ import { InterfaceResponse } from "../interfaces/DataResponse";
 
 export abstract class ServicesCategories{
     static getCategories(){
-        return Api.get<InterfaceGetFilters>("/filters/en");
+        return Api.get<InterfaceGetFilters>("/filterss/en");
     }
 
     static createCategory(body: any){

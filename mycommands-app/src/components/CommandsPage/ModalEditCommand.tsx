@@ -20,7 +20,7 @@ import { toast } from 'react-toastify';
 
 type PropsModalCreateCommand = {
   getCommands: () => void,
-  item: CommandData
+  item: CommandData,
 }
 
 type categoryFather = {
@@ -32,11 +32,13 @@ type categoryFather = {
 type typeStateInitial = {
   openModalEdit: boolean,
   categories: categoryFather[],
+  user: any
 }
 
 const StateInitial: typeStateInitial = {
   openModalEdit: false,
   categories: [],
+  user: SessionStorage.getItem("user")
 }
 
 export const ModalEditCommand = ({ getCommands, item }: PropsModalCreateCommand) => {
@@ -141,7 +143,7 @@ export const ModalEditCommand = ({ getCommands, item }: PropsModalCreateCommand)
       <Button variant="contained" color='secondary' size='small'
         onClick={() => handleOpenModal()}
         style={{ minWidth: 40, width: 40 }}
-        disabled={SessionStorage.getItem("user").role === "GUEST"}
+        disabled={state.user.role === "GUEST" || state.user._id !== item.owner }
       >
         <EditIcon fontSize="small"/>
       </Button>

@@ -53,6 +53,8 @@ type typeStateInitial = {
   selectedCommand: CommandData,
 
   activeSpinner: boolean
+
+  user: any
 }
 
 const StateInitial:typeStateInitial = {
@@ -72,7 +74,9 @@ const StateInitial:typeStateInitial = {
   // List of commands
   selectedCommand: {} as CommandData,
 
-  activeSpinner: false
+  activeSpinner: false,
+
+  user: SessionStorage.getItem("user")
 }
 
 export const CommandsPage = () => { 
@@ -87,6 +91,9 @@ export const CommandsPage = () => {
   const [state, setState] = useState(StateInitial);
 
   useEffect(() => {
+    // Update title
+    document.title = "My commands | Commands";
+
     getCategories();
 
     createPagination();
@@ -364,7 +371,7 @@ export const CommandsPage = () => {
 
                 <Button variant="contained" color='secondary' size='small'
                   style={{ minWidth: 40, width: 40 }}
-                  disabled={SessionStorage.getItem("user").role === "GUEST"}
+                  disabled={state.user.role === "GUEST" || item.owner !== state.user._id }
 
                   onClick={() => openConfirmDeleteCommand(item)}
                 >

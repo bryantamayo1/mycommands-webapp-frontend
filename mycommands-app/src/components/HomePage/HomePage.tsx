@@ -33,6 +33,9 @@ export const HomePage = () => {
 
 
   useEffect(() => {
+    // Update title
+    document.title = "Home";
+
     getCategories();
   }, []);
 

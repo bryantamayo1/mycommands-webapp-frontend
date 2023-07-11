@@ -27,7 +27,8 @@ export interface CommandData {
     es:            string;
     _id:           string;
     active?:       boolean,
-    categoryFather: CategoryFather
+    categoryFather: CategoryFather,
+    owner:          string
 }
 
 export interface CategoryFather {
