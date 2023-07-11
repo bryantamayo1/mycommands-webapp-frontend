@@ -1,22 +1,22 @@
-import {useState, useEffect} from 'react'
-import Button from '@mui/material/Button';
-import AddIcon from '@mui/icons-material/Add';
-import { SessionStorage } from '../../utils/SessionStorage';
-import Modal from '@mui/material/Modal';
-import Box from '@mui/material/Box';
-import CloseIcon from '@mui/icons-material/Close';
-import { useFormik } from 'formik';
-import * as Yup         from 'yup';
-import { ServicesCategories } from '../../services/ServicesCategories';
-import { InterfaceGetFilters } from '../../interfaces/Categories';
-import MenuItem from '@mui/material/MenuItem';
-import { parseVersion } from '../../utils/ParseData';
-import TextField from '@mui/material/TextField';
-import { constLanguages } from '../../utils/Constants';
-import Editor from '@monaco-editor/react';
 import './ModalCreateCommand.css';
-import { ServicesCommands } from '../../services/ServicesCommands';
-import { toast } from 'react-toastify';
+import {useState, useEffect}      from 'react'
+import Button                     from '@mui/material/Button';
+import AddIcon                    from '@mui/icons-material/Add';
+import { SessionStorage }         from '../../utils/SessionStorage';
+import Modal                      from '@mui/material/Modal';
+import Box                        from '@mui/material/Box';
+import CloseIcon                  from '@mui/icons-material/Close';
+import { useFormik }              from 'formik';
+import * as Yup                   from 'yup';
+import { ServicesCategories }     from '../../services/ServicesCategories';
+import { InterfaceGetFilters }    from '../../interfaces/Categories';
+import MenuItem                   from '@mui/material/MenuItem';
+import { parseVersion }           from '../../utils/ParseData';
+import TextField                  from '@mui/material/TextField';
+import { constLanguages }         from '../../utils/Constants';
+import Editor                     from '@monaco-editor/react';
+import { ServicesCommands }       from '../../services/ServicesCommands';
+import { toast }                  from 'react-toastify';
 
 type PropsModalCreateCommand = {
   getCommands: () => void

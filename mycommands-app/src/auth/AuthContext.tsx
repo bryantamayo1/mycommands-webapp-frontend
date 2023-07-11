@@ -1,10 +1,10 @@
-import { createContext } from 'react';
-import { GeneralProps } from '../interfaces/General';
-import { loginInputs } from '../interfaces/Login';
-import { useState } from 'react';
-import { ServicesLogin } from '../services/ServicesLogin';
+import { createContext }  from 'react';
+import { GeneralProps }   from '../interfaces/General';
+import { loginInputs }    from '../interfaces/Login';
+import { useState }       from 'react';
+import { ServicesLogin }  from '../services/ServicesLogin';
 import { SessionStorage } from '../utils/SessionStorage';
-import { LocalStorage } from '../utils/LocalStorage';
+import { LocalStorage }   from '../utils/LocalStorage';
 
 type AuthState = {
   status: "checking" | "not-authenticated" | "authenticated" | "error",

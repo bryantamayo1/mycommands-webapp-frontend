@@ -1,13 +1,13 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { ProtectedPage } from "./ProtectedPage";
-import { HomePage } from "../components/HomePage/HomePage";
-import { ProtectedAnyRoute } from "./ProtectedAnyRoute";
-import { ProtectedRoute } from "./ProtectedRoute";
-import { AppPage } from "../components/AppPage";
-import { CategoriesPage } from "../components/CategoriesPage/CategoriesPage";
-import { UserPage } from "../components/UserPage/UserPage";
-import { CommandsPage } from "../components/CommandsPage/CommandsPage";
-import { toast } from "react-toastify";
+import { BrowserRouter, Route, Routes }   from "react-router-dom";
+import { ProtectedPage }                  from "./ProtectedPage";
+import { HomePage }                       from "../components/HomePage/HomePage";
+import { ProtectedAnyRoute }              from "./ProtectedAnyRoute";
+import { ProtectedRoute }                 from "./ProtectedRoute";
+import { AppPage }                        from "../components/AppPage";
+import { CategoriesPage }                 from "../components/CategoriesPage/CategoriesPage";
+import { UserPage }                       from "../components/UserPage/UserPage";
+import { CommandsPage }                   from "../components/CommandsPage/CommandsPage";
+import { toast }                          from "react-toastify";
 
 export const AppRouter = () => {
 

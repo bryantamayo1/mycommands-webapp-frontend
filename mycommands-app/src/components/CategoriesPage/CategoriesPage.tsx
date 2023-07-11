@@ -1,22 +1,22 @@
 import './CategoriesPage.css';
-import { useEffect, useState } from 'react';
-import { ServicesCategories } from '../../services/ServicesCategories';
-import { InterfaceGetFilters } from '../../interfaces/Categories';
-import Button from '@mui/material/Button';
-import AddIcon from '@mui/icons-material/Add';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import Modal from '@mui/material/Modal';
-import Box from '@mui/material/Box';
-import moment from 'moment';
-import { useFormik } from 'formik';
-import * as Yup         from 'yup';
-import { TextField } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
-import { SessionStorage } from '../../utils/SessionStorage';
-import { ModalConfirmDelete } from '../common/ModalConfirmDelete';
-import { toast } from 'react-toastify';
-import { Spinner } from '../common/Spinner/Spinner';
+import { useEffect, useState }  from 'react';
+import { ServicesCategories }   from '../../services/ServicesCategories';
+import { InterfaceGetFilters }  from '../../interfaces/Categories';
+import Button                   from '@mui/material/Button';
+import AddIcon                  from '@mui/icons-material/Add';
+import EditIcon                 from '@mui/icons-material/Edit';
+import DeleteIcon               from '@mui/icons-material/Delete';
+import Modal                    from '@mui/material/Modal';
+import Box                      from '@mui/material/Box';
+import moment                   from 'moment';
+import { useFormik }            from 'formik';
+import * as Yup                 from 'yup';
+import { TextField }            from '@mui/material';
+import CloseIcon                from '@mui/icons-material/Close';
+import { SessionStorage }       from '../../utils/SessionStorage';
+import { ModalConfirmDelete }   from '../common/ModalConfirmDelete';
+import { toast }                from 'react-toastify';
+import { Spinner }              from '../common/Spinner/Spinner';
 
 type typeCreateOrEditCategory = {
   category: string,

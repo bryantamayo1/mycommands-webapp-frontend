@@ -1,5 +1,5 @@
-import { Api } from "../api/Api";
-import { InterfaceCommands } from "../interfaces/Commands";
+import { Api }                from "../api/Api";
+import { InterfaceCommands }  from "../interfaces/Commands";
 
 export abstract class ServicesCommands{
   static getCommands(query: any){

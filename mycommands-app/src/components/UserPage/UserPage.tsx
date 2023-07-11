@@ -1,6 +1,5 @@
 import './UserPage.css';
-import { useEffect } from 'react';
-import useState from 'react';
+import { useEffect }      from 'react';
 import { SessionStorage } from '../../utils/SessionStorage';
 
 const ColoredLine = () => (

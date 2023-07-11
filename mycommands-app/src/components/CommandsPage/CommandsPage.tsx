@@ -1,33 +1,32 @@
 import './CommandsPage.css';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
-import InputLabel from '@mui/material/InputLabel';
-import FormControl from '@mui/material/FormControl';
-import TextField from '@mui/material/TextField';
-import { ServicesCategories } from '../../services/ServicesCategories';
+import Select, { SelectChangeEvent }  from '@mui/material/Select';
+import MenuItem                       from '@mui/material/MenuItem';
+import InputLabel                     from '@mui/material/InputLabel';
+import FormControl                    from '@mui/material/FormControl';
+import TextField                      from '@mui/material/TextField';
+import { ServicesCategories }         from '../../services/ServicesCategories';
 import { useEffect, useState, ChangeEvent } from 'react';
-import { InterfaceGetFilters } from '../../interfaces/Categories';
-import { parseVersion } from '../../utils/ParseData';
-import Checkbox from '@mui/material/Checkbox';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Button from '@mui/material/Button';
-import SearchIcon from '@mui/icons-material/Search';
-import { ServicesCommands } from '../../services/ServicesCommands';
-import CodeMirror from '@uiw/react-codemirror';
-import { loadLanguage } from '@uiw/codemirror-extensions-langs';
-import {xcodeDark} from '@uiw/codemirror-theme-xcode';
+import { InterfaceGetFilters }        from '../../interfaces/Categories';
+import { parseVersion }               from '../../utils/ParseData';
+import Checkbox                       from '@mui/material/Checkbox';
+import FormControlLabel               from '@mui/material/FormControlLabel';
+import Button                         from '@mui/material/Button';
+import SearchIcon                     from '@mui/icons-material/Search';
+import { ServicesCommands }           from '../../services/ServicesCommands';
+import CodeMirror                     from '@uiw/react-codemirror';
+import { loadLanguage }               from '@uiw/codemirror-extensions-langs';
+import {xcodeDark}                    from '@uiw/codemirror-theme-xcode';
 import { CommandData, InterfaceCommands } from '../../interfaces/Commands';
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import ContentCopyIcon                from '@mui/icons-material/ContentCopy';
+import DeleteForeverIcon              from '@mui/icons-material/DeleteForever';
 
-import { SessionStorage } from '../../utils/SessionStorage';
-import { ModalCreateCommand } from './ModalCreateCommand';
-import { ModalConfirmDelete } from '../common/ModalConfirmDelete';
-import { ModalEditCommand } from './ModalEditCommand';
-import { createPagination } from '../../utils/Constants';
-import { toast } from 'react-toastify';
-import { Spinner } from '../common/Spinner/Spinner';
-
+import { SessionStorage }             from '../../utils/SessionStorage';
+import { ModalCreateCommand }         from './ModalCreateCommand';
+import { ModalConfirmDelete }         from '../common/ModalConfirmDelete';
+import { ModalEditCommand }           from './ModalEditCommand';
+import { createPagination }           from '../../utils/Constants';
+import { toast }                      from 'react-toastify';
+import { Spinner }                    from '../common/Spinner/Spinner';
 
 // Types
 type typePagination = {
