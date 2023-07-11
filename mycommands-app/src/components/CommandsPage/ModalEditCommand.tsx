@@ -1,26 +1,25 @@
-import {useState, useEffect} from 'react'
-import Button from '@mui/material/Button';
-import AddIcon from '@mui/icons-material/Add';
-import { SessionStorage } from '../../utils/SessionStorage';
-import Modal from '@mui/material/Modal';
-import Box from '@mui/material/Box';
-import CloseIcon from '@mui/icons-material/Close';
-import { useFormik } from 'formik';
-import * as Yup         from 'yup';
-import MenuItem from '@mui/material/MenuItem';
-import { parseVersion } from '../../utils/ParseData';
-import TextField from '@mui/material/TextField';
-import { constLanguages } from '../../utils/Constants';
-import Editor from '@monaco-editor/react';
 import './ModalEditCommand.css';
-import { ServicesCommands } from '../../services/ServicesCommands';
-import EditIcon from '@mui/icons-material/Edit';
-import { CommandData } from '../../interfaces/Commands';
-import { toast } from 'react-toastify';
+import {useState, useEffect}    from 'react'
+import Button                   from '@mui/material/Button';
+import { SessionStorage }       from '../../utils/SessionStorage';
+import Modal                    from '@mui/material/Modal';
+import Box                      from '@mui/material/Box';
+import CloseIcon                from '@mui/icons-material/Close';
+import { useFormik }            from 'formik';
+import * as Yup                 from 'yup';
+import MenuItem                 from '@mui/material/MenuItem';
+import { parseVersion }         from '../../utils/ParseData';
+import TextField                from '@mui/material/TextField';
+import { constLanguages }       from '../../utils/Constants';
+import Editor                   from '@monaco-editor/react';
+import { ServicesCommands }     from '../../services/ServicesCommands';
+import EditIcon                 from '@mui/icons-material/Edit';
+import { CommandData }          from '../../interfaces/Commands';
+import { toast }                from 'react-toastify';
 
 type PropsModalCreateCommand = {
   getCommands: () => void,
-  item: CommandData
+  item: CommandData,
 }
 
 type categoryFather = {
@@ -32,11 +31,13 @@ type categoryFather = {
 type typeStateInitial = {
   openModalEdit: boolean,
   categories: categoryFather[],
+  user: any
 }
 
 const StateInitial: typeStateInitial = {
   openModalEdit: false,
   categories: [],
+  user: SessionStorage.getItem("user")
 }
 
 export const ModalEditCommand = ({ getCommands, item }: PropsModalCreateCommand) => {
@@ -141,7 +142,7 @@ export const ModalEditCommand = ({ getCommands, item }: PropsModalCreateCommand)
       <Button variant="contained" color='secondary' size='small'
         onClick={() => handleOpenModal()}
         style={{ minWidth: 40, width: 40 }}
-        disabled={SessionStorage.getItem("user").role === "GUEST"}
+        disabled={state.user.role === "GUEST" || state.user._id !== item.owner }
       >
         <EditIcon fontSize="small"/>
       </Button>

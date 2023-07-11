@@ -14,12 +14,14 @@ export interface CategoryData {
     updatedAt:      string;
     results:        number;
     _id:            string;
+    owner:          string;
 }
 
 export interface SubCategory {
     en:    string;
     color: string;
     _id:   string;
+    owner: string;
 }
 
 export interface InterfaceCreateCategory {

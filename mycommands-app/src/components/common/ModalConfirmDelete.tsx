@@ -1,9 +1,8 @@
-import React from 'react'
-import Modal from '@mui/material/Modal';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import CloseIcon from '@mui/icons-material/Close';
-import { Alert } from '../common/Alert';
+import Modal        from '@mui/material/Modal';
+import Box          from '@mui/material/Box';
+import Button       from '@mui/material/Button';
+import CloseIcon    from '@mui/icons-material/Close';
+import { Alert }    from '../common/Alert';
 
 type ModalConfirmDeleteProps = {
   open: boolean,

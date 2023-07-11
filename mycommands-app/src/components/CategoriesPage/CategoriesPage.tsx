@@ -1,22 +1,22 @@
 import './CategoriesPage.css';
-import { useEffect, useState } from 'react';
-import { ServicesCategories } from '../../services/ServicesCategories';
-import { InterfaceGetFilters } from '../../interfaces/Categories';
-import Button from '@mui/material/Button';
-import AddIcon from '@mui/icons-material/Add';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import Modal from '@mui/material/Modal';
-import Box from '@mui/material/Box';
-import moment from 'moment';
-import { useFormik } from 'formik';
-import * as Yup         from 'yup';
-import { TextField } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
-import { SessionStorage } from '../../utils/SessionStorage';
-import { ModalConfirmDelete } from '../common/ModalConfirmDelete';
-import { toast } from 'react-toastify';
-import { Spinner } from '../common/Spinner/Spinner';
+import { useEffect, useState }  from 'react';
+import { ServicesCategories }   from '../../services/ServicesCategories';
+import { InterfaceGetFilters }  from '../../interfaces/Categories';
+import Button                   from '@mui/material/Button';
+import AddIcon                  from '@mui/icons-material/Add';
+import EditIcon                 from '@mui/icons-material/Edit';
+import DeleteIcon               from '@mui/icons-material/Delete';
+import Modal                    from '@mui/material/Modal';
+import Box                      from '@mui/material/Box';
+import moment                   from 'moment';
+import { useFormik }            from 'formik';
+import * as Yup                 from 'yup';
+import { TextField }            from '@mui/material';
+import CloseIcon                from '@mui/icons-material/Close';
+import { SessionStorage }       from '../../utils/SessionStorage';
+import { ModalConfirmDelete }   from '../common/ModalConfirmDelete';
+import { toast }                from 'react-toastify';
+import { Spinner }              from '../common/Spinner/Spinner';
 
 type typeCreateOrEditCategory = {
   category: string,
@@ -30,7 +30,8 @@ type typeStateInitial = {
   selectedCategory: typeCreateOrEditCategory
   createOrEdit: boolean,   // false = create, true = edit
   openModalDelete: boolean,
-  activeSpinner: boolean
+  activeSpinner: boolean,
+  user: any
 }
 
 const StateInitial:typeStateInitial = {
@@ -39,7 +40,8 @@ const StateInitial:typeStateInitial = {
   selectedCategory: {} as typeCreateOrEditCategory,
   createOrEdit: false,
   openModalDelete: false,
-  activeSpinner: false
+  activeSpinner: false,
+  user: SessionStorage.getItem("user")
 }
 
 export const CategoriesPage = () => {
@@ -85,6 +87,9 @@ export const CategoriesPage = () => {
   });
 
   useEffect(() => {
+    // Update title
+    document.title = "My commands | Categories";
+
     getCategories();
   }, []);
   
@@ -176,7 +181,7 @@ export const CategoriesPage = () => {
         <div className='mc-container-box mc-container-categories'>
           <Button variant="contained" color="secondary" size="small"
             onClick={() => handleOpenModalCreateOrEdit()}
-            disabled={SessionStorage.getItem("user").role === "GUEST"}
+            disabled={state.user.role === "GUEST"}
           >
             <AddIcon fontSize="small"/>
           </Button>
@@ -202,7 +207,7 @@ export const CategoriesPage = () => {
               </tr>
 
               {/* Body */}
-              {state.categories.data?.map( ({ category, version, createdAt, updatedAt, results, _id }) => (
+              {state.categories.data?.map( ({ category, version, createdAt, updatedAt, results, _id, owner }) => (
                 <tr key={_id}>
                   <td>{category}</td>
                   <td>{version}</td>
@@ -212,7 +217,7 @@ export const CategoriesPage = () => {
 
                   <td>
                     <Button variant="contained" color='secondary' size="small" className='mc-btn'
-                      disabled={SessionStorage.getItem("user").role === "GUEST"}
+                      disabled={state.user.role === "GUEST" || owner !== state.user._id }
                       onClick={() => handleOpenModalCreateOrEdit({category, version, _id: _id })}
                     >
                       <EditIcon fontSize="small"/>
@@ -221,7 +226,7 @@ export const CategoriesPage = () => {
 
                   <td>
                     <Button variant="contained" color='secondary' size="small" className='mc-btn'
-                      disabled={SessionStorage.getItem("user").role === "GUEST"}
+                      disabled={state.user.role === "GUEST" || owner !== state.user._id }
                       onClick={() => handleOpenModalDelete({category, version, _id: _id })}
                     >
                       <DeleteIcon fontSize="small"/>

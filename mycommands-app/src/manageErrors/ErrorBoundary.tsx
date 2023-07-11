@@ -1,6 +1,6 @@
 import './ErrorBoundary.css';
-import {Component} from 'react';
-import Button from '@mui/material/Button';
+import {Component}    from 'react';
+import Button         from '@mui/material/Button';
 
 type ErrorBoundaryProps = {
   children: React.ReactNode,

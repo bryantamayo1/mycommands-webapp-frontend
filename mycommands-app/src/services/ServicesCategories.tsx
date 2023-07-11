@@ -1,6 +1,6 @@
-import { Api } from "../api/Api";
 import { InterfaceCreateCategory, InterfaceGetFilters } from "../interfaces/Categories";
-import { InterfaceResponse } from "../interfaces/DataResponse";
+import { Api }                  from "../api/Api";
+import { InterfaceResponse }    from "../interfaces/DataResponse";
 
 export abstract class ServicesCategories{
     static getCategories(){

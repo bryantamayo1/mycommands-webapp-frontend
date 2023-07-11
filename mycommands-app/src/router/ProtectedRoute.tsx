@@ -1,7 +1,7 @@
-import { useContext } from 'react';
-import { AuthContext } from '../auth/AuthContext';
-import { GeneralProps } from '../interfaces/General';
-import { Navigate } from 'react-router-dom';
+import { useContext }       from 'react';
+import { AuthContext }      from '../auth/AuthContext';
+import { GeneralProps }     from '../interfaces/General';
+import { Navigate }         from 'react-router-dom';
 
 export const ProtectedRoute = ({ children }:GeneralProps) => {
   ////////

@@ -59,7 +59,11 @@ export const handleLanguages = (lang = "en") => {
     const v_0_0_1_2 = document.getElementById("0.0.1_2");
     v_0_0_1_2.innerHTML = data["0.0.1_2"][lang];
 
-    // Version 0.0.1_2
+    // Version 0.0.2_1
     const v_0_0_2_1 = document.getElementById("0.0.2_1");
     v_0_0_2_1.innerHTML = data["0.0.2_1"][lang];
+
+    // Version 0.0.3_1
+    const v_0_0_3_1 = document.getElementById("0.0.3_1");
+    v_0_0_3_1.innerHTML = data["0.0.3_1"][lang];
 }

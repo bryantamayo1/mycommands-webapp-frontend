@@ -1,10 +1,10 @@
 import './HomePage.css';
-import { PieChart, Pie, Legend, Tooltip, ResponsiveContainer, Cell } from 'recharts';
-import { useCallback, useEffect, useState } from 'react';
-import { ServicesCategories } from '../../services/ServicesCategories';
-import { InterfaceGetFilters } from '../../interfaces/Categories';
-import { useCalculateWindow } from '../../hooks/useCalculateWindow';
-import { Spinner } from '../common/Spinner/Spinner';
+import { PieChart, Pie, Tooltip, ResponsiveContainer, Cell } from 'recharts';
+import { useEffect, useState }        from 'react';
+import { ServicesCategories }         from '../../services/ServicesCategories';
+import { InterfaceGetFilters }        from '../../interfaces/Categories';
+import { useCalculateWindow }         from '../../hooks/useCalculateWindow';
+import { Spinner }                    from '../common/Spinner/Spinner';
 
 type typePieChart = {
   name: string,
@@ -33,6 +33,9 @@ export const HomePage = () => {
 
 
   useEffect(() => {
+    // Update title
+    document.title = "Home";
+
     getCategories();
   }, []);
 
