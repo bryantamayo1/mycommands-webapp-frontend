@@ -24,3 +24,6 @@ yarn-error.log*
 
 # Notes
 my-notes.txt
+
+# Visual Studio Code
+.vscode
