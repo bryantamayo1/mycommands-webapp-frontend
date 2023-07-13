@@ -95,7 +95,6 @@ export const CommandsPage = () => {
 
     getUserSessionStorage();
 
-
     getCategories();
 
     createPagination();
@@ -133,10 +132,18 @@ export const CommandsPage = () => {
       item.active = false;
     });
 
-    // 2º Calculate  and build pagination
+    // 2º Calculate and build pagination
     let pagination = [] as typePagination[];
-    pagination = state.pagination.map(i => {
-      if(i.index === resp.page -1){
+    const round = Math.ceil(resp.total / resp.limitPage);
+    console.log(round)
+    let maxPagination = 0;
+    if(round < 5){
+      maxPagination = round;
+    }else{
+      maxPagination = 5;
+    }
+    pagination = state.pagination.slice (0, maxPagination).map(i => {
+      if(i.index === resp.page - 1){
         i.active = true;
       }else{
         i.active = false;
