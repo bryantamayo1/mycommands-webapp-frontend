@@ -112,7 +112,6 @@ export const CommandsPage = () => {
     setState(prevState => ({ ...prevState, user: SessionStorage.getItem("user") }));
   }
 
-
   const getCategories = async () => {
     const resp = await ServicesCategories.getCategories();
     setState(prevState => ({ ...prevState, categories: resp, selectedCategoryFilter: "all" }));

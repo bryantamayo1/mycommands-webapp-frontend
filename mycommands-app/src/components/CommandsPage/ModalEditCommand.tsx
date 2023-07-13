@@ -37,7 +37,7 @@ type typeStateInitial = {
 const StateInitial: typeStateInitial = {
   openModalEdit: false,
   categories: [],
-  user: SessionStorage.getItem("user")
+  user: ""
 }
 
 export const ModalEditCommand = ({ getCommands, item }: PropsModalCreateCommand) => {
@@ -47,6 +47,8 @@ export const ModalEditCommand = ({ getCommands, item }: PropsModalCreateCommand)
   const [state, setState] = useState(StateInitial);
 
   useEffect(() => {
+    getUserSessionStorage();
+
     setState(prevState => ({
       ...prevState, 
       categories: [
@@ -102,6 +104,10 @@ export const ModalEditCommand = ({ getCommands, item }: PropsModalCreateCommand)
   ////////////
   // Functions
   ////////////
+  const getUserSessionStorage = () => {
+    setState(prevState => ({ ...prevState, user: SessionStorage.getItem("user") }));
+  }
+
   const handleOpenModal = () => {
     setState( prevstate => ({...prevstate, openModalEdit: !prevstate.openModalEdit}));
   }
