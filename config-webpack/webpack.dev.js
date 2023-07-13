@@ -6,7 +6,7 @@ const HtmlWebpackPlugin     = require('html-webpack-plugin');
 module.exports = {
   entry: "./src/js/index.js",
   output: {
-    clean: true,
+    clean: false,
     // Name of file in dev
     filename: "index.js",
     // Keep original file’s name

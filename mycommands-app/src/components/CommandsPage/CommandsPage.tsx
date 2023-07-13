@@ -75,7 +75,7 @@ const StateInitial:typeStateInitial = {
 
   activeSpinner: false,
 
-  user: SessionStorage.getItem("user")
+  user: ""
 }
 
 export const CommandsPage = () => { 
@@ -93,6 +93,9 @@ export const CommandsPage = () => {
     // Update title
     document.title = "My commands | Commands";
 
+    getUserSessionStorage();
+
+
     getCategories();
 
     createPagination();
@@ -106,6 +109,11 @@ export const CommandsPage = () => {
   ////////////
   // Functions
   ////////////
+  const getUserSessionStorage = () => {
+    setState(prevState => ({ ...prevState, user: SessionStorage.getItem("user") }));
+  }
+
+
   const getCategories = async () => {
     const resp = await ServicesCategories.getCategories();
     setState(prevState => ({ ...prevState, categories: resp, selectedCategoryFilter: "all" }));

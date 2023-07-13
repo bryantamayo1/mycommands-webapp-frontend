@@ -41,7 +41,7 @@ const StateInitial:typeStateInitial = {
   createOrEdit: false,
   openModalDelete: false,
   activeSpinner: false,
-  user: SessionStorage.getItem("user")
+  user: ""
 }
 
 export const CategoriesPage = () => {
@@ -90,12 +90,18 @@ export const CategoriesPage = () => {
     // Update title
     document.title = "My commands | Categories";
 
+    getUserSessionStorage();
+
     getCategories();
   }, []);
   
   ////////////
   // Functions
   ////////////
+  const getUserSessionStorage = () => {
+    setState(prevState => ({ ...prevState, user: SessionStorage.getItem("user") }));
+  }
+
   const getCategories = async () => {
     // Active spinner
     setState(prevState => ({ ...prevState, activeSpinner: true }));
