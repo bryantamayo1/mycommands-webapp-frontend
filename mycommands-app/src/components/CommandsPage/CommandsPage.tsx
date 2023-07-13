@@ -378,7 +378,7 @@ export const CommandsPage = () => {
 
                 <Button variant="contained" color='secondary' size='small'
                   style={{ minWidth: 40, width: 40 }}
-                  disabled={state.user.role === "GUEST" || item.owner !== state.user._id }
+                  disabled={state.user?.role === "GUEST" || item.owner !== state.user?._id }
 
                   onClick={() => openConfirmDeleteCommand(item)}
                 >

@@ -187,7 +187,7 @@ export const CategoriesPage = () => {
         <div className='mc-container-box mc-container-categories'>
           <Button variant="contained" color="secondary" size="small"
             onClick={() => handleOpenModalCreateOrEdit()}
-            disabled={state.user.role === "GUEST"}
+            disabled={state.user?.role === "GUEST"}
           >
             <AddIcon fontSize="small"/>
           </Button>
@@ -223,7 +223,7 @@ export const CategoriesPage = () => {
 
                   <td>
                     <Button variant="contained" color='secondary' size="small" className='mc-btn'
-                      disabled={state.user.role === "GUEST" || owner !== state.user._id }
+                      disabled={state.user?.role === "GUEST" || owner !== state.user?._id }
                       onClick={() => handleOpenModalCreateOrEdit({category, version, _id: _id })}
                     >
                       <EditIcon fontSize="small"/>
@@ -232,7 +232,7 @@ export const CategoriesPage = () => {
 
                   <td>
                     <Button variant="contained" color='secondary' size="small" className='mc-btn'
-                      disabled={state.user.role === "GUEST" || owner !== state.user._id }
+                      disabled={state.user?.role === "GUEST" || owner !== state.user?._id }
                       onClick={() => handleOpenModalDelete({category, version, _id: _id })}
                     >
                       <DeleteIcon fontSize="small"/>

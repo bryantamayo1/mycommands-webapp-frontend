@@ -142,7 +142,7 @@ export const ModalEditCommand = ({ getCommands, item }: PropsModalCreateCommand)
       <Button variant="contained" color='secondary' size='small'
         onClick={() => handleOpenModal()}
         style={{ minWidth: 40, width: 40 }}
-        disabled={state.user.role === "GUEST" || state.user._id !== item.owner }
+        disabled={state.user?.role === "GUEST" || state.user?._id !== item.owner }
       >
         <EditIcon fontSize="small"/>
       </Button>
