@@ -1,11 +1,12 @@
 export const constLanguages = Object.freeze([
-  'js',
-  'git',
-  'sql',
-  'jsx',
-  'tsx',
-  'css',
   'bash',
+  'css',
+  'git',
+  'js',
+  'jsx',
+  'php',
+  'sql',
+  'tsx',
 ]);
 
 export const createPagination = () => {
