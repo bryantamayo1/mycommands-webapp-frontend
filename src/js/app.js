@@ -56,7 +56,6 @@ export const componentDidMount = () => {
         // Get info web page
         await Services.getInfoWebPage();
 
-
         // Check category in query
         const {category, command, meaning, subcategory} = getQueries(window.location.search);
         if(category) queryOfFirstChargePage.category = category;

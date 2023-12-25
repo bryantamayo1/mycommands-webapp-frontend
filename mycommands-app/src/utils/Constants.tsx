@@ -1,5 +1,6 @@
 export const constLanguages = Object.freeze([
   'bash',
+  'c',
   'css',
   'git',
   'js',

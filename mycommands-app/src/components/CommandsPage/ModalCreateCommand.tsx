@@ -63,9 +63,9 @@ export const ModalCreateCommand = ({ getCommands }: PropsModalCreateCommand) => 
     validationSchema: Yup.object({
       id_category: Yup.string().required('Category is required'),
       language: Yup.string().required('Language is required'),
-      command: Yup.string().required('Command is required').max(500, "500 characters is maximum"),
-      en: Yup.string().required('Meaning english is required').max(500, "500 characters is maximum"),
-      es: Yup.string().required('Meaning spanish is required').max(500, "500 characters is maximum"),
+      command: Yup.string().required('Command is required').max(10000, "10000 characters is maximum"),
+      en: Yup.string().required('Meaning english is required').max(10000, "10000 characters is maximum"),
+      es: Yup.string().required('Meaning spanish is required').max(10000, "10000 characters is maximum"),
     }),
     onSubmit: async values => {
       const newValues = structuredClone(values);

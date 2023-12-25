@@ -7,35 +7,54 @@ const global_limit_btns = 5;
 
 /**
  * Hnadle pagination according to GET /commands
- * @param {object} data 
+ * @param {object} data providing of BE
  * @param {boolean} btn_search 
  */
 export const handlePagination = (data) => {    
+    debugger
     const amount_pages = Math.ceil(data.total / data.limitPage);
     data.amount_pages = amount_pages;
+
+    // Create start actived position
+    global_buffer_pagination[0] = { active: true, page: data.page }
     
-    // Push global_buffer_pagination, because this function is called several times
-    if(!global_buffer_pagination.length){
-        for(let i = 1; i <= global_limit_btns; i++){
-            global_buffer_pagination.push({ active: false, page: i });
-        }
-
-        // Special case
-        // Fill page according this conditions
-        if(data.page - 1 >= global_limit_btns){
-            for(let i = global_limit_btns + 1; i <= data.page; i++){
-                global_buffer_pagination.push({ active: false, page: i });
-            }
-        }
-
-        global_buffer_pagination[data.page - 1] = {active: true, page: data.page}
-    }else{
-        // Check last number in pagination in new search
-        const page_current = global_buffer_pagination.find(i => i.page === data.page);
-        if(!page_current){
-            global_buffer_pagination.forEach((item, index) => item.page = index + 1);
-        }
+    // Create limit position
+    let aux_rest = data.pages - data.page;
+    let limitPage = global_limit_btns;
+    if(aux_rest <= global_limit_btns){
+        limitPage = aux_rest;
     }
+
+    // Fill pagination's buffer
+    for(let i = 2; i <= limitPage; i++){
+        global_buffer_pagination.push({ active: false, page: i });
+    }
+
+    // Push global_buffer_pagination, because this function is called several times
+    // if(!global_buffer_pagination.length){
+    //     for(let i = 1; i <= global_limit_btns; i++){
+    //         global_buffer_pagination.push({ active: false, page: i });
+    //     }
+
+    //     // Special case
+    //     // Fill page according this conditions
+    //     if(data.page - 1 >= global_limit_btns){
+    //         for(let i = global_limit_btns + 1; i <= data.page; i++){
+    //             global_buffer_pagination.push({ active: false, page: i });
+    //         }
+    //     }
+
+    //     // Active btn page
+    //     global_buffer_pagination[data.page - 1] = {active: true, page: data.page}
+    // }else{
+    //     // Check last number in pagination in new search
+    //     const page_current = global_buffer_pagination.find(i => i.page === data.page);
+    //     if(!page_current){
+    //         global_buffer_pagination.forEach((item, index) => item.page = index + 1);
+    //     }
+    // }
+    // console.log("1º global_buffer_pagination: ", global_buffer_pagination);
+
     createBtnPagination(amount_pages, data);
 }
 
@@ -128,6 +147,9 @@ const createBtnPagination = (amount_pages, data, increase = 0) => {
         btn_pagination.appendChild( document.createTextNode("<") );
         pagination_container.insertBefore(btn_pagination, btn_pagination_first);
     }
+
+    console.log("2º global_buffer_pagination: ", global_buffer_pagination);
+
 }
 
 /**
@@ -147,5 +169,6 @@ const createBtnPagination = (amount_pages, data, increase = 0) => {
  * @param {*} event 
  */
 const handleNextPagination = (event, amount_pages, data, index_to_move) => {
+    debugger
     createBtnPagination(amount_pages, data, index_to_move);
 }
